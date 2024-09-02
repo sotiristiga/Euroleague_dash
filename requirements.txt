@@ -6,3 +6,5 @@ numpy
 matplotlib
 openpyxl
 streamlit-dynamic-filters
+dplython
+itables

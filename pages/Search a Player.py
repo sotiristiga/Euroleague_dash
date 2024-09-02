@@ -19,7 +19,7 @@ from itables import to_html_datatable
 from streamlit.components.v1 import html
 
 
-st.set_page_config(layout='wide',page_title="Euroleague")
+st.set_page_config(layout='wide',page_title="Search a Player")
 def fixture_format1(Fixture):
     if Fixture<=15:
         return "First Round"

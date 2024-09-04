@@ -227,8 +227,8 @@ compute_player_total_stats_season=(compute_player_total_stats_season.add_prefix(
 compute_player_mean_stats_season=pd.merge(compute_player_mean_stats_season,compute_player_games_season,on=['Player','Season'])
 compute_player_mean_stats_season=pd.merge(compute_player_mean_stats_season,compute_player_total_stats_season,on=['Player','Season'])
 compute_player_mean_stats_season=compute_player_mean_stats_season.loc[compute_player_mean_stats_season['Games']>15]
-games = st.sidebar.slider("Pick Number of games", 0, 200)
-Shoots = st.sidebar.slider("Pick Number of Shoots", 0, 200)
+games = st.sidebar.slider("Pick Number of games", 0, 200,value=17)
+Shoots = st.sidebar.slider("Pick Number of Shoots", 0, 200,value=100)
 
 
 
@@ -2551,7 +2551,10 @@ with advanced:
         with av:
             st.write("##### Free Throw Ratio per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Shoots slider)')
-            av_FTR = compute_player_stats.loc[(compute_player_stats['Total_FTA']>Shoots)][['Player','FTR']].sort_values('FTR',ascending=False).head(10).round(1).reset_index().rename(columns={'FTR': 'Free Throws Ratio'})
+            av_FTR = compute_player_stats.loc[(compute_player_stats['Total_FTA'] > Shoots)][
+                ['Player', 'FTR']].sort_values('FTR', ascending=False).round(1)
+            av_FTR=av_FTR.loc[av_FTR.FTR<100].reset_index()
+            av_FTR = av_FTR.head(10).rename(columns={'FTR': 'Free Throws Ratio'})
             av_FTR.drop("index", axis=1, inplace=True)
             av_FTR = av_FTR.reset_index()
             av_FTR['No.'] = av_FTR['index'] + 1
@@ -2639,7 +2642,8 @@ with advanced:
             bs_ASTOR = compute_player_mean_stats_season[['Player_Season', 'ASTOR']].sort_values('ASTOR',
                                                                                             ascending=False).head(
                 10).round(
-                1).reset_index().rename(columns={'ASTOR': 'Assists-Turnover ratio', 'Player_Season': 'Player(Season)'})
+                1).reset_index()
+            bs_ASTOR=bs_ASTOR.loc[bs_ASTOR.ASTOR<100].rename(columns={'ASTOR': 'Assists-Turnover ratio', 'Player_Season': 'Player(Season)'})
             bs_ASTOR.drop("index", axis=1, inplace=True)
             bs_ASTOR = bs_ASTOR.reset_index()
             bs_ASTOR['No.'] = bs_ASTOR['index'] + 1

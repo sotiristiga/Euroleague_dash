@@ -203,8 +203,32 @@ compute_player_games=compute_player_games.rename(columns={'count':'Games'})
 compute_player_stats=pd.merge(compute_player_games,compute_player_mean_stats)
 compute_player_stats=pd.merge(compute_player_stats,compute_player_total_stats)
 
-games = st.sidebar.slider("Pick Number of games", 0, 1000)
-Shoots = st.sidebar.slider("Pick Number of Shoots", 0, 2000)
+
+compute_player_mean_stats_season=All_Seasons_filter.groupby(['Player','Season'])[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF' ]].mean().reset_index()
+compute_player_mean_stats_season['P2']=100*(compute_player_mean_stats_season['F2M']/compute_player_mean_stats_season['F2A'])
+compute_player_mean_stats_season['P3']=100*(compute_player_mean_stats_season['F3M']/compute_player_mean_stats_season['F3A'])
+compute_player_mean_stats_season['PFT']=100*(compute_player_mean_stats_season['FTM']/compute_player_mean_stats_season['FTA'])
+compute_player_mean_stats_season['POS']=0.96*(compute_player_mean_stats_season['F2A']+compute_player_mean_stats_season['F3A']-compute_player_mean_stats_season['OR']+compute_player_mean_stats_season['TO']+0.44*compute_player_mean_stats_season['FTA'])
+compute_player_mean_stats_season['ORA']=100*(compute_player_mean_stats_season['PTS']/compute_player_mean_stats_season['POS'])
+compute_player_mean_stats_season['EFG']=100*(compute_player_mean_stats_season['F2M']+1.5*compute_player_mean_stats_season['F3M'])/(compute_player_mean_stats_season['F2A']+compute_player_mean_stats_season['F3A'])
+compute_player_mean_stats_season['TS']=100*(compute_player_mean_stats_season['PTS'])/(2*(compute_player_mean_stats_season['F2A']+compute_player_mean_stats_season['F3A']+0.44*compute_player_mean_stats_season['FTA']))
+compute_player_mean_stats_season['FTR']=compute_player_mean_stats_season['FTA']/(compute_player_mean_stats_season['F3A']+compute_player_mean_stats_season['F2A'])
+compute_player_mean_stats_season['ASTOR']=compute_player_mean_stats_season['AS']/compute_player_mean_stats_season['TO']
+compute_player_mean_stats_season['TOR']=100*(compute_player_mean_stats_season['TO']/compute_player_mean_stats_season['POS'])
+compute_player_mean_stats_season['ASR']=100*(compute_player_mean_stats_season['AS']/compute_player_mean_stats_season['POS'])
+compute_player_mean_stats_season['USG'] = 100 * (((compute_player_mean_stats_season['F3A'] + compute_player_mean_stats_season['F2A']) + 0.44 * compute_player_mean_stats_season['FTA'] + compute_player_mean_stats_season['TO']) * (40)) / (compute_player_mean_stats_season['MIN'] * (compute_player_mean_stats_season['Team_F2A'] +compute_player_mean_stats_season['Team_F3A'] + 0.44 * compute_player_mean_stats_season['Team_FTA'] + compute_player_mean_stats_season['Team_TO']))
+compute_player_mean_stats_season['ORP'] = (100 * compute_player_mean_stats_season['OR']) / (compute_player_mean_stats_season['Team_OR'] + compute_player_mean_stats_season['Team_opp_OR'])
+compute_player_mean_stats_season['Player_Season']=compute_player_mean_stats_season['Player']+"("+compute_player_mean_stats_season['Season']+")"
+compute_player_games_season=All_Seasons_filter[['Player','Season']].value_counts().reset_index()
+compute_player_games_season=compute_player_games_season.rename(columns={'count':'Games'})
+compute_player_total_stats_season=All_Seasons_filter.groupby(['Player','Season'])[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR']].sum().reset_index()
+
+compute_player_total_stats_season=(compute_player_total_stats_season.add_prefix('Total_')).rename(columns={'Total_Player':'Player','Total_Season':'Season'})
+compute_player_mean_stats_season=pd.merge(compute_player_mean_stats_season,compute_player_games_season,on=['Player','Season'])
+compute_player_mean_stats_season=pd.merge(compute_player_mean_stats_season,compute_player_total_stats_season,on=['Player','Season'])
+compute_player_mean_stats_season=compute_player_mean_stats_season.loc[compute_player_mean_stats_season['Games']>15]
+games = st.sidebar.slider("Pick Number of games", 0, 200)
+Shoots = st.sidebar.slider("Pick Number of Shoots", 0, 200)
 
 
 
@@ -214,7 +238,7 @@ with basic:
         ['Points', "Assists", "Total Reb", "Off Reb", 'Def Reb', "Steals", 'Turnovers', 'Blocks', 'Blocks Reversed',
          'Fouls Made', "Fouls Drawn"])
     with pts:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best on Season'])
         with av:
             st.write("##### Average points per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -299,9 +323,35 @@ with basic:
                 ))
 
             st.write(rec_pts_fig)
-       
+        with bs:
+             st.write("##### Best by Season on points in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+             bs_pts = compute_player_mean_stats_season[['Player_Season', 'PTS']].sort_values('PTS', ascending=False).head(10).round(
+                 1).reset_index().rename(columns={'PTS': 'Average Points', 'Player_Season': 'Player(Season)'})
+             bs_pts.drop("index", axis=1, inplace=True)
+             bs_pts = bs_pts.reset_index()
+             bs_pts['No.'] = bs_pts['index'] + 1
+             bs_pts_fig = go.Figure(data=go.Table(header=dict(
+                 values=list(
+                     bs_pts[['No.', 'Player(Season)', 'Average Points']].columns),
+                 align='center', font_size=18, height=30), cells=dict(
+                 values=[bs_pts['No.'], bs_pts['Player(Season)'], bs_pts['Average Points']],
+                 align='center', font_size=16, height=30)))
+
+             bs_pts_fig.update_layout(
+                 autosize=True,
+                 width=1000,
+                 height=800,
+                 margin=dict(
+                     l=1,
+                     r=1,
+                     b=100,
+                     t=80,
+                     pad=10
+                 ))
+
+             st.write(bs_pts_fig)
     with ass:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best on Season'])
         with av:
             st.write("##### Average Assists per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -382,8 +432,37 @@ with basic:
                 ))
 
             st.write(rec_as_fig)
+        with bs:
+            st.write("##### Best by Season on assists in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_as = compute_player_mean_stats_season[['Player_Season', 'AS']].sort_values('AS',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'AS': 'Average Assists', 'Player_Season': 'Player(Season)'})
+            bs_as.drop("index", axis=1, inplace=True)
+            bs_as = bs_as.reset_index()
+            bs_as['No.'] = bs_as['index'] + 1
+            bs_as_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_as[['No.', 'Player(Season)', 'Average Assists']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_as['No.'], bs_as['Player(Season)'], bs_as['Average Assists']],
+                align='center', font_size=16, height=30)))
+
+            bs_as_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_as_fig)
     with tr:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best on Season'])
         with av:
             st.write("##### Average rebounds per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -464,8 +543,37 @@ with basic:
                 ))
 
             st.write(rec_tr_fig)
+        with bs:
+            st.write("##### Best by Season on rebounds in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_tr = compute_player_mean_stats_season[['Player_Season', 'TR']].sort_values('TR',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'TR': 'Average Rebounds', 'Player_Season': 'Player(Season)'})
+            bs_tr.drop("index", axis=1, inplace=True)
+            bs_tr = bs_tr.reset_index()
+            bs_tr['No.'] = bs_tr['index'] + 1
+            bs_tr_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_tr[['No.', 'Player(Season)', 'Average Rebounds']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_tr['No.'], bs_tr['Player(Season)'], bs_tr['Average Rebounds']],
+                align='center', font_size=16, height=30)))
+
+            bs_tr_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_tr_fig)
     with ofr:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats',"Best on Season"])
         with av:
             st.write("##### Average offensive rebounds per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -546,9 +654,37 @@ with basic:
                 ))
 
             st.write(rec_or_fig)
+        with bs:
+            st.write("##### Best by Season on offensive rebounds in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_or = compute_player_mean_stats_season[['Player_Season', 'OR']].sort_values('OR',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'OR': 'Average Offensive Rebounds', 'Player_Season': 'Player(Season)'})
+            bs_or.drop("index", axis=1, inplace=True)
+            bs_or = bs_or.reset_index()
+            bs_or['No.'] = bs_or['index'] + 1
+            bs_or_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_or[['No.', 'Player(Season)', 'Average Offensive Rebounds']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_or['No.'], bs_or['Player(Season)'], bs_or['Average Offensive Rebounds']],
+                align='center', font_size=16, height=30)))
 
+            bs_or_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_or_fig)
     with der:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best on Season'])
         with av:
             st.write("##### Average defensive rebounds per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -629,8 +765,37 @@ with basic:
                 ))
 
             st.write(rec_dr_fig)
+        with bs:
+            st.write("##### Best by Season on defensive rebounds in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_dr = compute_player_mean_stats_season[['Player_Season', 'DR']].sort_values('DR',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'DR': 'Average Defensive Rebounds', 'Player_Season': 'Player(Season)'})
+            bs_dr.drop("index", axis=1, inplace=True)
+            bs_dr = bs_dr.reset_index()
+            bs_dr['No.'] = bs_dr['index'] + 1
+            bs_dr_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_dr[['No.', 'Player(Season)', 'Average Defensive Rebounds']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_dr['No.'], bs_dr['Player(Season)'], bs_dr['Average Defensive Rebounds']],
+                align='center', font_size=16, height=30)))
+
+            bs_dr_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_dr_fig)
     with ste:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec, bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best on Season'])
         with av:
             st.write("##### Average steals per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -711,8 +876,37 @@ with basic:
                 ))
 
             st.write(rec_st_fig)
+        with bs:
+            st.write("##### Best by Season on steals in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_st = compute_player_mean_stats_season[['Player_Season', 'ST']].sort_values('ST',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'ST': 'Average Steals', 'Player_Season': 'Player(Season)'})
+            bs_st.drop("index", axis=1, inplace=True)
+            bs_st = bs_st.reset_index()
+            bs_st['No.'] = bs_st['index'] + 1
+            bs_st_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_st[['No.', 'Player(Season)', 'Average Steals']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_st['No.'], bs_st['Player(Season)'], bs_st['Average Steals']],
+                align='center', font_size=16, height=30)))
+
+            bs_st_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_st_fig)
     with tur:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats',"Best by season"])
         with av:
             st.write("##### Average turnovers per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -793,9 +987,37 @@ with basic:
                 ))
 
             st.write(rec_to_fig)
+        with bs:
+            st.write("##### Best by Season on turnovers in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_to = compute_player_mean_stats_season[['Player_Season', 'TO']].sort_values('TO',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'TO': 'Average Turnovers', 'Player_Season': 'Player(Season)'})
+            bs_to.drop("index", axis=1, inplace=True)
+            bs_to = bs_to.reset_index()
+            bs_to['No.'] = bs_to['index'] + 1
+            bs_to_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_to[['No.', 'Player(Season)', 'Average Turnovers']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_to['No.'], bs_to['Player(Season)'], bs_to['Average Turnovers']],
+                align='center', font_size=16, height=30)))
 
+            bs_to_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_to_fig)
     with blk:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best by Season'])
         with av:
             st.write("##### Average blocks per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -876,8 +1098,37 @@ with basic:
                 ))
 
             st.write(rec_blk_fig)
+        with bs:
+            st.write("##### Best by Season on blocks in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_blk = compute_player_mean_stats_season[['Player_Season', 'BLK']].sort_values('BLK',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'BLK': 'Average Blocks', 'Player_Season': 'Player(Season)'})
+            bs_blk.drop("index", axis=1, inplace=True)
+            bs_blk = bs_blk.reset_index()
+            bs_blk['No.'] = bs_blk['index'] + 1
+            bs_blk_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_blk[['No.', 'Player(Season)', 'Average Blocks']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_blk['No.'], bs_blk['Player(Season)'], bs_blk['Average Blocks']],
+                align='center', font_size=16, height=30)))
+
+            bs_blk_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_blk_fig)
     with blkr:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best by Season'])
         with av:
             st.write("##### Average blocks reversed per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -933,36 +1184,65 @@ with basic:
                 ))
 
             st.write(tot_blkr_fig)
-    with rec:
-        st.write("##### Record blocks reversed on a game in Euroleague from 2016-2017 Season (Top 10)")
-        rec_blkr =All_Seasons_filter[['Player_Team', 'BLKR']].sort_values('BLKR', ascending=False).head(10).round(
-            1).reset_index().rename(columns={'BLKR':'Record Blocks Reversed','Player_Team':'Player(Team)'})
-        rec_blkr.drop("index", axis=1, inplace=True)
-        rec_blkr = rec_blkr.reset_index()
-        rec_blkr['No.'] = rec_blkr['index'] + 1
-        rec_blkr_fig = go.Figure(data=go.Table(header=dict(
-            values=list(
-                rec_blkr[['No.', 'Player(Team)','Record Blocks Reversed']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[rec_blkr['No.'], rec_blkr['Player(Team)'], rec_blkr['Record Blocks Reversed']],
-            align='center', font_size=16, height=30)))
 
-        rec_blkr_fig.update_layout(
-            autosize=True,
-            width=1000,
-            height=800,
-            margin=dict(
-                l=1,
-                r=1,
-                b=100,
-                t=80,
-                pad=10
-            ))
+        with rec:
+            st.write("##### Record blocks reversed on a game in Euroleague from 2016-2017 Season (Top 10)")
+            rec_blkr =All_Seasons_filter[['Player_Team', 'BLKR']].sort_values('BLKR', ascending=False).head(10).round(
+                1).reset_index().rename(columns={'BLKR':'Record Blocks Reversed','Player_Team':'Player(Team)'})
+            rec_blkr.drop("index", axis=1, inplace=True)
+            rec_blkr = rec_blkr.reset_index()
+            rec_blkr['No.'] = rec_blkr['index'] + 1
+            rec_blkr_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    rec_blkr[['No.', 'Player(Team)','Record Blocks Reversed']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[rec_blkr['No.'], rec_blkr['Player(Team)'], rec_blkr['Record Blocks Reversed']],
+                align='center', font_size=16, height=30)))
 
-        st.write(rec_blkr_fig)
+            rec_blkr_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
+            st.write(rec_blkr_fig)
+        with bs:
+            st.write("##### Best by Season on blocks in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_blkr = compute_player_mean_stats_season[['Player_Season', 'BLKR']].sort_values('BLKR',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'BLKR': 'Average Blocks Reversed', 'Player_Season': 'Player(Season)'})
+            bs_blkr.drop("index", axis=1, inplace=True)
+            bs_blkr = bs_blkr.reset_index()
+            bs_blkr['No.'] = bs_blkr['index'] + 1
+            bs_blkr_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_blkr[['No.', 'Player(Season)', 'Average Blocks Reversed']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_blkr['No.'], bs_blkr['Player(Season)'], bs_blkr['Average Blocks Reversed']],
+                align='center', font_size=16, height=30)))
+
+            bs_blkr_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_blkr_fig)
     with pf:
-        av, sum = st.tabs(['Average Stats', 'Total Stats'])
+        av, sum,bs = st.tabs(['Average Stats', 'Total Stats',"Best by Season"])
         with av:
             st.write("##### Average personal fouls per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -1018,36 +1298,38 @@ with basic:
                 ))
 
             st.write(tot_pf_fig)
-    with rec:
-        st.write("##### Record personal fouls on a game in Euroleague from 2016-2017 Season (Top 10)")
-        rec_pf =All_Seasons_filter[['Player_Team', 'PF']].sort_values('PF', ascending=False).head(10).round(
-            1).reset_index().rename(columns={'PF':'Record Personal Fouls','Player_Team':'Player(Team)'})
-        rec_pf.drop("index", axis=1, inplace=True)
-        rec_pf = rec_pf.reset_index()
-        rec_pf['No.'] = rec_pf['index'] + 1
-        rec_pf_fig = go.Figure(data=go.Table(header=dict(
-            values=list(
-                rec_pf[['No.', 'Player(Team)','Record Personal Fouls']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[rec_pf['No.'], rec_pf['Player(Team)'], rec_pf['Record Personal Fouls']],
-            align='center', font_size=16, height=30)))
 
-        rec_pf_fig.update_layout(
-            autosize=True,
-            width=1000,
-            height=800,
-            margin=dict(
-                l=1,
-                r=1,
-                b=100,
-                t=80,
-                pad=10
-            ))
+        with bs:
+            st.write("##### Best by Season on personal fouls in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_pf = compute_player_mean_stats_season[['Player_Season', 'PF']].sort_values('PF',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'PF': 'Average Personal Fouls', 'Player_Season': 'Player(Season)'})
+            bs_pf.drop("index", axis=1, inplace=True)
+            bs_pf = bs_pf.reset_index()
+            bs_pf['No.'] = bs_pf['index'] + 1
+            bs_pf_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_pf[['No.', 'Player(Season)', 'Average Personal Fouls']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_pf['No.'], bs_pf['Player(Season)'], bs_pf['Average Personal Fouls']],
+                align='center', font_size=16, height=30)))
 
-        st.write(rec_pf_fig)
+            bs_pf_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
+            st.write(bs_pf_fig)
     with rf:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best by Season'])
         with av:
             st.write("##### Average fouls drawn per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Games slider)')
@@ -1130,11 +1412,39 @@ with basic:
                 ))
 
             st.write(rec_rf_fig)
+        with bs:
+            st.write("##### Best by Season on fouls drawn in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_rf = compute_player_mean_stats_season[['Player_Season', 'RF']].sort_values('RF',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'RF': 'Average Fouls Drawn', 'Player_Season': 'Player(Season)'})
+            bs_rf.drop("index", axis=1, inplace=True)
+            bs_rf = bs_rf.reset_index()
+            bs_rf['No.'] = bs_rf['index'] + 1
+            bs_rf_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_rf[['No.', 'Player(Season)', 'Average Fouls Drawn']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_rf['No.'], bs_rf['Player(Season)'], bs_rf['Average Fouls Drawn']],
+                align='center', font_size=16, height=30)))
 
+            bs_rf_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_rf_fig)
 with shooting:
     f2m,f2a,p2,f3m,f3a,p3,ftm,fta,pft=st.tabs(['2P Made',"2P Attempt","2P(%)",'3P Made',"3P Attempt","3P(%)",'Free Throws Made',"Free Throws Attempt","FT(%)"])
     with f2m:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best by Season'])
         with av:
             st.write("##### Average 2p made per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Shoots slider)')
@@ -1217,8 +1527,37 @@ with shooting:
                 ))
 
             st.write(rec_f2m_fig)
+        with bs:
+            st.write("##### Best by Season on 2p made in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_f2m = compute_player_mean_stats_season[['Player_Season', 'F2M']].sort_values('F2M',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'F2M': 'Average 2P Made', 'Player_Season': 'Player(Season)'})
+            bs_f2m.drop("index", axis=1, inplace=True)
+            bs_f2m = bs_f2m.reset_index()
+            bs_f2m['No.'] = bs_f2m['index'] + 1
+            bs_f2m_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_f2m[['No.', 'Player(Season)', 'Average 2P Made']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_f2m['No.'], bs_f2m['Player(Season)'], bs_f2m['Average 2P Made']],
+                align='center', font_size=16, height=30)))
+
+            bs_f2m_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_f2m_fig)
     with f2a:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best by Season'])
         with av:
             st.write("##### Average 2p attempt per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Shoots slider)')
@@ -1301,35 +1640,98 @@ with shooting:
                 ))
 
             st.write(rec_f2a_fig)
+        with bs:
+            st.write("##### Best by Season on 2p attempt in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_f2a = compute_player_mean_stats_season[['Player_Season', 'F2A']].sort_values('F2A',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'F2A': 'Average 2P Attempt', 'Player_Season': 'Player(Season)'})
+            bs_f2a.drop("index", axis=1, inplace=True)
+            bs_f2a = bs_f2a.reset_index()
+            bs_f2a['No.'] = bs_f2a['index'] + 1
+            bs_f2a_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_f2a[['No.', 'Player(Season)', 'Average 2P Attempt']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_f2a['No.'], bs_f2a['Player(Season)'], bs_f2a['Average 2P Attempt']],
+                align='center', font_size=16, height=30)))
+
+            bs_f2a_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_f2a_fig)
     with p2:
-        st.write("##### Percentage of 2p per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Shoots slider)')
-        av_P2 = compute_player_stats.loc[compute_player_stats['Total_F2A']>Shoots][['Player','P2']].sort_values('P2',ascending=False).head(10).round(1).reset_index().rename(columns={'P2': '2P(%)'})
-        av_P2.drop("index", axis=1, inplace=True)
-        av_P2 = av_P2.reset_index()
-        av_P2['No.'] = av_P2['index'] + 1
-        av_P2_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_P2[['No.', 'Player', '2P(%)']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_P2['No.'], av_P2.Player, av_P2['2P(%)']],
-            align='center', font_size=16, height=30)))
+        av,  bs = st.tabs(['Total Stats', 'Best by Season'])
+        with av:
 
-        av_P2_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            st.write("##### Percentage of 2p per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Shoots slider)')
+            av_P2 = compute_player_stats.loc[compute_player_stats['Total_F2A']>Shoots][['Player','P2']].sort_values('P2',ascending=False).head(10).round(1).reset_index().rename(columns={'P2': '2P(%)'})
+            av_P2.drop("index", axis=1, inplace=True)
+            av_P2 = av_P2.reset_index()
+            av_P2['No.'] = av_P2['index'] + 1
+            av_P2_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_P2[['No.', 'Player', '2P(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_P2['No.'], av_P2.Player, av_P2['2P(%)']],
+                align='center', font_size=16, height=30)))
 
-        st.write(av_P2_fig)
+            av_P2_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(av_P2_fig)
+
+        with bs:
+            st.write(
+                "##### Best by Season on 2P percentage in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games  & at least 100 of 2P attempts in the season)")
+            bs_P2 = compute_player_mean_stats_season.loc[ compute_player_mean_stats_season['Total_F2A']>=100][['Player_Season', 'P2']].sort_values('P2',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'P2': '2P(%)', 'Player_Season': 'Player(Season)'})
+            bs_P2.drop("index", axis=1, inplace=True)
+            bs_P2 = bs_P2.reset_index()
+            bs_P2['No.'] = bs_P2['index'] + 1
+            bs_P2_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_P2[['No.', 'Player(Season)', '2P(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_P2['No.'], bs_P2['Player(Season)'], bs_P2['2P(%)']],
+                align='center', font_size=16, height=30)))
+
+            bs_P2_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_P2_fig)
 
     with f3m:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best by Season'])
         with av:
             st.write("##### Average 3p made per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Shoots slider)')
@@ -1412,8 +1814,38 @@ with shooting:
                     ))
 
                 st.write(rec_f3m_fig)
+
+        with bs:
+            st.write("##### Best by Season on 3p made in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_f3m = compute_player_mean_stats_season[['Player_Season', 'F3M']].sort_values('F3M',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'F3M': 'Average 3P Made', 'Player_Season': 'Player(Season)'})
+            bs_f3m.drop("index", axis=1, inplace=True)
+            bs_f3m = bs_f3m.reset_index()
+            bs_f3m['No.'] = bs_f3m['index'] + 1
+            bs_f3m_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_f3m[['No.', 'Player(Season)', 'Average 3P Made']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_f3m['No.'], bs_f3m['Player(Season)'], bs_f3m['Average 3P Made']],
+                align='center', font_size=16, height=30)))
+
+            bs_f3m_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_f3m_fig)
     with f3a:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best by Season'])
         with av:
             st.write("##### Average 3p attempt per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Shoots slider)')
@@ -1496,35 +1928,98 @@ with shooting:
                     ))
 
                 st.write(rec_f3a_fig)
+            with bs:
+                st.write(
+                    "##### Best by Season on 3p attempt in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+                bs_f3a = compute_player_mean_stats_season[['Player_Season', 'F3A']].sort_values('F3A',
+                                                                                                ascending=False).head(
+                    10).round(
+                    1).reset_index().rename(columns={'F3A': 'Average 3P Attempt', 'Player_Season': 'Player(Season)'})
+                bs_f3a.drop("index", axis=1, inplace=True)
+                bs_f3a = bs_f3a.reset_index()
+                bs_f3a['No.'] = bs_f3a['index'] + 1
+                bs_f3a_fig = go.Figure(data=go.Table(header=dict(
+                    values=list(
+                        bs_f3a[['No.', 'Player(Season)', 'Average 3P Attempt']].columns),
+                    align='center', font_size=18, height=30), cells=dict(
+                    values=[bs_f3a['No.'], bs_f3a['Player(Season)'], bs_f3a['Average 3P Attempt']],
+                    align='center', font_size=16, height=30)))
+
+                bs_f3a_fig.update_layout(
+                    autosize=True,
+                    width=1000,
+                    height=800,
+                    margin=dict(
+                        l=1,
+                        r=1,
+                        b=100,
+                        t=80,
+                        pad=10
+                    ))
+
+                st.write(bs_f3a_fig)
     with p3:
-        st.write("##### Percentage of 3p per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Shoots slider)')
-        av_P3 = compute_player_stats.loc[compute_player_stats['Total_F3A']>Shoots][['Player','P3']].sort_values('P3',ascending=False).head(10).round(1).reset_index().rename(columns={'P3': '3P(%)'})
-        av_P3.drop("index", axis=1, inplace=True)
-        av_P3 = av_P3.reset_index()
-        av_P3['No.'] = av_P3['index'] + 1
-        av_P3_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_P3[['No.', 'Player', '3P(%)']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_P3['No.'], av_P3.Player, av_P3['3P(%)']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Total Stats', 'Best by Season'])
+        with av:
+            st.write("##### Percentage of 3p per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Shoots slider)')
+            av_P3 = compute_player_stats.loc[compute_player_stats['Total_F3A']>Shoots][['Player','P3']].sort_values('P3',ascending=False).head(10).round(1).reset_index().rename(columns={'P3': '3P(%)'})
+            av_P3.drop("index", axis=1, inplace=True)
+            av_P3 = av_P3.reset_index()
+            av_P3['No.'] = av_P3['index'] + 1
+            av_P3_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_P3[['No.', 'Player', '3P(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_P3['No.'], av_P3.Player, av_P3['3P(%)']],
+                align='center', font_size=16, height=30)))
 
-        av_P3_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_P3_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_P3_fig)
+            st.write(av_P3_fig)
+
+        with bs:
+            st.write(
+                "##### Best by Season on 3P percentage in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games  & at least 100 of 3P attempts in the season)")
+            bs_P3 = compute_player_mean_stats_season.loc[ compute_player_mean_stats_season['Total_F3A']>=100][['Player_Season', 'P3']].sort_values('P3',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'P3': '3P(%)', 'Player_Season': 'Player(Season)'})
+            bs_P3.drop("index", axis=1, inplace=True)
+            bs_P3 = bs_P3.reset_index()
+            bs_P3['No.'] = bs_P3['index'] + 1
+            bs_P3_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_P3[['No.', 'Player(Season)', '3P(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_P3['No.'], bs_P3['Player(Season)'], bs_P3['3P(%)']],
+                align='center', font_size=16, height=30)))
+
+            bs_P3_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_P3_fig)
 
     with ftm:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best by Season'])
         with av:
             st.write("##### Average free throws made per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Shoots slider)')
@@ -1581,6 +2076,7 @@ with shooting:
                     ))
 
                 st.write(tot_ftm_fig)
+
             with rec:
                 st.write("##### Record free throws made on a game in Euroleague from 2016-2017 Season (Top 10)")
                 rec_ftm = All_Seasons_filter[['Player_Team', 'FTM']].sort_values('FTM', ascending=False).head(10).round(
@@ -1608,8 +2104,38 @@ with shooting:
                     ))
 
                 st.write(rec_ftm_fig)
+            with bs:
+                st.write(
+                    "##### Best by Season on Free throws made in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+                bs_ftm = compute_player_mean_stats_season[['Player_Season', 'FTM']].sort_values('FTM',
+                                                                                                ascending=False).head(
+                    10).round(
+                    1).reset_index().rename(columns={'FTM': 'Average Free Throws Made', 'Player_Season': 'Player(Season)'})
+                bs_ftm.drop("index", axis=1, inplace=True)
+                bs_ftm = bs_ftm.reset_index()
+                bs_ftm['No.'] = bs_ftm['index'] + 1
+                bs_ftm_fig = go.Figure(data=go.Table(header=dict(
+                    values=list(
+                        bs_ftm[['No.', 'Player(Season)', 'Average Free Throws Made']].columns),
+                    align='center', font_size=18, height=30), cells=dict(
+                    values=[bs_ftm['No.'], bs_ftm['Player(Season)'], bs_ftm['Average Free Throws Made']],
+                    align='center', font_size=16, height=30)))
+
+                bs_ftm_fig.update_layout(
+                    autosize=True,
+                    width=1000,
+                    height=800,
+                    margin=dict(
+                        l=1,
+                        r=1,
+                        b=100,
+                        t=80,
+                        pad=10
+                    ))
+
+                st.write(bs_ftm_fig)
     with fta:
-        av, sum, rec = st.tabs(['Average Stats', 'Total Stats', 'Record Stats'])
+        av, sum, rec,bs = st.tabs(['Average Stats', 'Total Stats', 'Record Stats','Best by Season'])
         with av:
             st.write("##### Average free throws attempt per game in Euroleague from 2016-2017 Season (Top 10)")
             st.write('(For better results move the Shoots slider)')
@@ -1636,87 +2162,150 @@ with shooting:
                 ))
 
             st.write(av_FTA_fig)
-            with sum:
-                st.write("##### Total free throws attempt in Euroleague from 2016-2017 Season (Top 10)")
-                tot_fta = compute_player_stats[['Player', 'Total_FTA']].sort_values('Total_FTA', ascending=False).head(
-                    10).round(
-                    1).reset_index().rename(columns={'Total_FTA': 'Total Free throws Attempt'})
-                tot_fta.drop("index", axis=1, inplace=True)
-                tot_fta = tot_fta.reset_index()
-                tot_fta['No.'] = tot_fta['index'] + 1
-                tot_fta_fig = go.Figure(data=go.Table(header=dict(
-                    values=list(
-                        tot_fta[['No.', 'Player', 'Total Free throws Attempt']].columns),
-                    align='center', font_size=18, height=30), cells=dict(
-                    values=[tot_fta['No.'], tot_fta.Player, tot_fta['Total Free throws Attempt']],
-                    align='center', font_size=16, height=30)))
+        with sum:
+            st.write("##### Total free throws attempt in Euroleague from 2016-2017 Season (Top 10)")
+            tot_fta = compute_player_stats[['Player', 'Total_FTA']].sort_values('Total_FTA', ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'Total_FTA': 'Total Free throws Attempt'})
+            tot_fta.drop("index", axis=1, inplace=True)
+            tot_fta = tot_fta.reset_index()
+            tot_fta['No.'] = tot_fta['index'] + 1
+            tot_fta_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    tot_fta[['No.', 'Player', 'Total Free throws Attempt']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[tot_fta['No.'], tot_fta.Player, tot_fta['Total Free throws Attempt']],
+                align='center', font_size=16, height=30)))
 
-                tot_fta_fig.update_layout(
-                    autosize=True,
-                    width=600,
-                    height=550,
-                    margin=dict(
-                        l=30,
-                        r=50,
-                        b=100,
-                        t=80,
-                        pad=10
-                    ))
+            tot_fta_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-                st.write(tot_fta_fig)
-            with rec:
-                st.write("##### Record free throws attempt on a game in Euroleague from 2016-2017 Season (Top 10)")
-                rec_fta = All_Seasons_filter[['Player_Team', 'FTA']].sort_values('FTA', ascending=False).head(10).round(
-                    1).reset_index().rename(columns={'FTA': 'Record Free throws Attempt', 'Player_Team': 'Player(Team)'})
-                rec_fta.drop("index", axis=1, inplace=True)
-                rec_fta = rec_fta.reset_index()
-                rec_fta['No.'] = rec_fta['index'] + 1
-                rec_fta_fig = go.Figure(data=go.Table(header=dict(
-                    values=list(
-                        rec_fta[['No.', 'Player(Team)', 'Record Free throws Attempt']].columns),
-                    align='center', font_size=18, height=30), cells=dict(
-                    values=[rec_fta['No.'], rec_fta['Player(Team)'], rec_fta['Record Free throws Attempt']],
-                    align='center', font_size=16, height=30)))
+            st.write(tot_fta_fig)
+        with rec:
+            st.write("##### Record free throws attempt on a game in Euroleague from 2016-2017 Season (Top 10)")
+            rec_fta = All_Seasons_filter[['Player_Team', 'FTA']].sort_values('FTA', ascending=False).head(10).round(
+                1).reset_index().rename(columns={'FTA': 'Record Free throws Attempt', 'Player_Team': 'Player(Team)'})
+            rec_fta.drop("index", axis=1, inplace=True)
+            rec_fta = rec_fta.reset_index()
+            rec_fta['No.'] = rec_fta['index'] + 1
+            rec_fta_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    rec_fta[['No.', 'Player(Team)', 'Record Free throws Attempt']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[rec_fta['No.'], rec_fta['Player(Team)'], rec_fta['Record Free throws Attempt']],
+                align='center', font_size=16, height=30)))
 
-                rec_fta_fig.update_layout(
-                    autosize=True,
-                    width=1000,
-                    height=800,
-                    margin=dict(
-                        l=1,
-                        r=1,
-                        b=100,
-                        t=80,
-                        pad=10
-                    ))
+            rec_fta_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-                st.write(rec_fta_fig)
+            st.write(rec_fta_fig)
+        with bs:
+            st.write(
+                "##### Best by Season on Free throws attempt in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_fta = compute_player_mean_stats_season[['Player_Season', 'FTA']].sort_values('FTA',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'FTA': 'Average Free Throws Attempt', 'Player_Season': 'Player(Season)'})
+            bs_fta.drop("index", axis=1, inplace=True)
+            bs_fta = bs_fta.reset_index()
+            bs_fta['No.'] = bs_fta['index'] + 1
+            bs_fta_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_fta[['No.', 'Player(Season)', 'Average Free Throws Attempt']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_fta['No.'], bs_fta['Player(Season)'], bs_fta['Average Free Throws Attempt']],
+                align='center', font_size=16, height=30)))
+
+            bs_fta_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_fta_fig)
     with pft:
-        st.write("##### Percentage of free throws per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Shoots slider)')
-        av_PFT = compute_player_stats.loc[compute_player_stats['Total_FTA']>Shoots][['Player','PFT']].sort_values('PFT',ascending=False).head(10).round(1).reset_index().rename(columns={'PFT': 'FT(%)'})
-        av_PFT.drop("index", axis=1, inplace=True)
-        av_PFT = av_PFT.reset_index()
-        av_PFT['No.'] = av_PFT['index'] + 1
-        av_PFT_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_PFT[['No.', 'Player', 'FT(%)']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_PFT['No.'], av_PFT.Player, av_PFT['FT(%)']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Total Stats', 'Best by Season'])
+        with av:
+            st.write("##### Percentage of free throws per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Shoots slider)')
+            av_PFT = compute_player_stats.loc[compute_player_stats['Total_FTA']>Shoots][['Player','PFT']].sort_values('PFT',ascending=False).head(10).round(1).reset_index().rename(columns={'PFT': 'FT(%)'})
+            av_PFT.drop("index", axis=1, inplace=True)
+            av_PFT = av_PFT.reset_index()
+            av_PFT['No.'] = av_PFT['index'] + 1
+            av_PFT_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_PFT[['No.', 'Player', 'FT(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_PFT['No.'], av_PFT.Player, av_PFT['FT(%)']],
+                align='center', font_size=16, height=30)))
 
-        av_PFT_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_PFT_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_PFT_fig)
+            st.write(av_PFT_fig)
+        with bs:
+            st.write(
+                "##### Best by Season on FT percentage in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games  & at least 100 of FT attempts in the season)")
+            bs_PFT = compute_player_mean_stats_season.loc[ compute_player_mean_stats_season['Total_FTA']>=100][['Player_Season', 'PFT']].sort_values('PFT',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'PFT': 'FT(%)', 'Player_Season': 'Player(Season)'})
+            bs_PFT.drop("index", axis=1, inplace=True)
+            bs_PFT = bs_PFT.reset_index()
+            bs_PFT['No.'] = bs_PFT['index'] + 1
+            bs_PFT_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_PFT[['No.', 'Player(Season)', 'FT(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_PFT['No.'], bs_PFT['Player(Season)'], bs_PFT['FT(%)']],
+                align='center', font_size=16, height=30)))
+
+            bs_PFT_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_PFT_fig)
+
 
 
 with advanced:
@@ -1724,276 +2313,593 @@ with advanced:
         ['Possessions', "Offensive Rating", "EFG(%)", 'TS(%)', "Free Throw Ratio", "Assists - Turnover Ratio", 'Turnover Ratio',
          "Assists Ratio", "Usage(%)",'OR(%)'])
     with pos:
-        st.write("##### Average possesions per game in Euroleague from 2016-2017 Season (Top 10)")
-        av_POS = compute_player_stats[['Player','POS']].sort_values('POS',ascending=False).head(10).round(1).reset_index().rename(columns={'POS': 'Possesions'})
-        av_POS.drop("index", axis=1, inplace=True)
-        av_POS = av_POS.reset_index()
-        av_POS['No.'] = av_POS['index'] + 1
-        av_POS_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_POS[['No.', 'Player', 'Possesions']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_POS['No.'], av_POS.Player, av_POS['Possesions']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Average Stats', 'Best by Season'])
+        with av:
+            st.write("##### Average possesions per game in Euroleague from 2016-2017 Season (Top 10)")
+            av_POS = compute_player_stats[['Player','POS']].sort_values('POS',ascending=False).head(10).round(1).reset_index().rename(columns={'POS': 'Possesions'})
+            av_POS.drop("index", axis=1, inplace=True)
+            av_POS = av_POS.reset_index()
+            av_POS['No.'] = av_POS['index'] + 1
+            av_POS_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_POS[['No.', 'Player', 'Possesions']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_POS['No.'], av_POS.Player, av_POS['Possesions']],
+                align='center', font_size=16, height=30)))
 
-        av_POS_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_POS_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_POS_fig)
+            st.write(av_POS_fig)
+        with bs:
+            st.write(
+                "##### Best by Season on average possesions per game in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_POS = compute_player_mean_stats_season[['Player_Season', 'POS']].sort_values('POS',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'POS': 'Possesions', 'Player_Season': 'Player(Season)'})
+            bs_POS.drop("index", axis=1, inplace=True)
+            bs_POS = bs_POS.reset_index()
+            bs_POS['No.'] = bs_POS['index'] + 1
+            bs_POS_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_POS[['No.', 'Player(Season)', 'Possesions']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_POS['No.'], bs_POS['Player(Season)'], bs_POS['Possesions']],
+                align='center', font_size=16, height=30)))
+
+            bs_POS_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_POS_fig)
 
     with ora:
-        st.write("##### Offensive Rating per game in Euroleague from 2016-2017 Season (Top 10)")
-        av_ORA = compute_player_stats.loc[compute_player_stats['POS']>10][['Player','ORA']].sort_values('ORA',ascending=False).head(10).round(1).reset_index().rename(columns={'ORA': 'Offensive Rating'})
-        av_ORA.drop("index", axis=1, inplace=True)
-        av_ORA = av_ORA.reset_index()
-        av_ORA['No.'] = av_ORA['index'] + 1
-        av_ORA_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_ORA[['No.', 'Player', 'Offensive Rating']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_ORA['No.'], av_ORA.Player, av_ORA['Offensive Rating']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Average Stats', 'Best by Season'])
+        with av:
+            st.write("##### Offensive Rating per game in Euroleague from 2016-2017 Season (Top 10)")
+            av_ORA = compute_player_stats.loc[compute_player_stats['POS']>10][['Player','ORA']].sort_values('ORA',ascending=False).head(10).round(1).reset_index().rename(columns={'ORA': 'Offensive Rating'})
+            av_ORA.drop("index", axis=1, inplace=True)
+            av_ORA = av_ORA.reset_index()
+            av_ORA['No.'] = av_ORA['index'] + 1
+            av_ORA_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_ORA[['No.', 'Player', 'Offensive Rating']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_ORA['No.'], av_ORA.Player, av_ORA['Offensive Rating']],
+                align='center', font_size=16, height=30)))
 
-        av_ORA_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_ORA_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_ORA_fig)
+            st.write(av_ORA_fig)
+        with bs:
+            st.write(
+                "##### Best by Season on offensive rating per game in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games & over 10 possesions per game in the season)")
+            bs_ORA = compute_player_mean_stats_season.loc[compute_player_mean_stats_season['POS']>10][['Player_Season', 'ORA']].sort_values('ORA',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'ORA': 'Offensive Rating', 'Player_Season': 'Player(Season)'})
+            bs_ORA.drop("index", axis=1, inplace=True)
+            bs_ORA = bs_ORA.reset_index()
+            bs_ORA['No.'] = bs_ORA['index'] + 1
+            bs_ORA_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_ORA[['No.', 'Player(Season)', 'Offensive Rating']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_ORA['No.'], bs_ORA['Player(Season)'], bs_ORA['Offensive Rating']],
+                align='center', font_size=16, height=30)))
+
+            bs_ORA_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_ORA_fig)
 
     with efg:
-        st.write("##### Effective Field Goal per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Shoots slider)')
-        av_EFG = compute_player_stats.loc[(compute_player_stats['Total_F2A']>Shoots) |(compute_player_stats['Total_F3A']>Shoots)][['Player','EFG']].sort_values('EFG',ascending=False).head(10).round(1).reset_index().rename(columns={'EFG': 'EFG(%)'})
-        av_EFG.drop("index", axis=1, inplace=True)
-        av_EFG = av_EFG.reset_index()
-        av_EFG['No.'] = av_EFG['index'] + 1
-        av_EFG_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_EFG[['No.', 'Player', 'EFG(%)']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_EFG['No.'], av_EFG.Player, av_EFG['EFG(%)']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Average Stats', 'Best by Season'])
+        with av:
+            st.write("##### Effective Field Goal per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Shoots slider)')
+            av_EFG = compute_player_stats.loc[(compute_player_stats['Total_F2A']>Shoots) |(compute_player_stats['Total_F3A']>Shoots)][['Player','EFG']].sort_values('EFG',ascending=False).head(10).round(1).reset_index().rename(columns={'EFG': 'EFG(%)'})
+            av_EFG.drop("index", axis=1, inplace=True)
+            av_EFG = av_EFG.reset_index()
+            av_EFG['No.'] = av_EFG['index'] + 1
+            av_EFG_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_EFG[['No.', 'Player', 'EFG(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_EFG['No.'], av_EFG.Player, av_EFG['EFG(%)']],
+                align='center', font_size=16, height=30)))
 
-        av_EFG_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_EFG_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_EFG_fig)
+            st.write(av_EFG_fig)
 
+        with bs:
+            st.write(
+                "##### Best by Season on effective field goal in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games & at least 100 2p or 3P Attempts in the season)")
+            bs_EFG = compute_player_mean_stats_season.loc[(compute_player_mean_stats_season['Total_F2A']>=100) | (compute_player_mean_stats_season['Total_F3A']>=100)][['Player_Season', 'EFG']].sort_values('EFG',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'EFG': 'EFG(%)', 'Player_Season': 'Player(Season)'})
+            bs_EFG.drop("index", axis=1, inplace=True)
+            bs_EFG = bs_EFG.reset_index()
+            bs_EFG['No.'] = bs_EFG['index'] + 1
+            bs_EFG_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_EFG[['No.', 'Player(Season)', 'EFG(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_EFG['No.'], bs_EFG['Player(Season)'], bs_EFG['EFG(%)']],
+                align='center', font_size=16, height=30)))
 
+            bs_EFG_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_EFG_fig)
     with ts:
-        st.write("##### True Shooting percentage per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Shoots slider)')
-        av_TS = compute_player_stats.loc[(compute_player_stats['Total_F2A']>Shoots) |(compute_player_stats['Total_F3A']>Shoots)][['Player','TS']].sort_values('TS',ascending=False).head(10).round(1).reset_index().rename(columns={'TS': 'TS(%)'})
-        av_TS.drop("index", axis=1, inplace=True)
-        av_TS = av_TS.reset_index()
-        av_TS['No.'] = av_TS['index'] + 1
-        av_TS_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_TS[['No.', 'Player', 'TS(%)']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_TS['No.'], av_TS.Player, av_TS['TS(%)']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Average Stats', 'Best by Season'])
+        with av:
+            st.write("##### True Shooting percentage per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Shoots slider)')
+            av_TS = compute_player_stats.loc[(compute_player_stats['Total_F2A']>Shoots) |(compute_player_stats['Total_F3A']>Shoots)][['Player','TS']].sort_values('TS',ascending=False).head(10).round(1).reset_index().rename(columns={'TS': 'TS(%)'})
+            av_TS.drop("index", axis=1, inplace=True)
+            av_TS = av_TS.reset_index()
+            av_TS['No.'] = av_TS['index'] + 1
+            av_TS_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_TS[['No.', 'Player', 'TS(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_TS['No.'], av_TS.Player, av_TS['TS(%)']],
+                align='center', font_size=16, height=30)))
 
-        av_TS_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_TS_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_TS_fig)
+            st.write(av_TS_fig)
+        with bs:
+            st.write(
+                "##### Best by Season on true shoting in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games & at least 100 2p or 3P Attempts in the season)")
+            bs_TS = compute_player_mean_stats_season.loc[(compute_player_mean_stats_season['Total_F2A']>=100) | (compute_player_mean_stats_season['Total_F3A']>=100)][['Player_Season', 'TS']].sort_values('TS',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'TS': 'TS(%)', 'Player_Season': 'Player(Season)'})
+            bs_TS.drop("index", axis=1, inplace=True)
+            bs_TS = bs_TS.reset_index()
+            bs_TS['No.'] = bs_TS['index'] + 1
+            bs_TS_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_TS[['No.', 'Player(Season)', 'TS(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_TS['No.'], bs_TS['Player(Season)'], bs_TS['TS(%)']],
+                align='center', font_size=16, height=30)))
 
+            bs_TS_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_TS_fig)
 
     with ftr:
-        st.write("##### Free Throw Ratio per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Shoots slider)')
-        av_FTR = compute_player_stats.loc[(compute_player_stats['Total_F2A']>Shoots) |(compute_player_stats['Total_F3A']>Shoots)][['Player','FTR']].sort_values('FTR',ascending=False).head(10).round(1).reset_index().rename(columns={'FTR': 'Free Throws Ratio'})
-        av_FTR.drop("index", axis=1, inplace=True)
-        av_FTR = av_FTR.reset_index()
-        av_FTR['No.'] = av_FTR['index'] + 1
-        av_FTR_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_FTR[['No.', 'Player', 'Free Throws Ratio']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_FTR['No.'], av_FTR.Player, av_FTR['Free Throws Ratio']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Average Stats', 'Best by Season'])
+        with av:
+            st.write("##### Free Throw Ratio per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Shoots slider)')
+            av_FTR = compute_player_stats.loc[(compute_player_stats['Total_FTA']>Shoots)][['Player','FTR']].sort_values('FTR',ascending=False).head(10).round(1).reset_index().rename(columns={'FTR': 'Free Throws Ratio'})
+            av_FTR.drop("index", axis=1, inplace=True)
+            av_FTR = av_FTR.reset_index()
+            av_FTR['No.'] = av_FTR['index'] + 1
+            av_FTR_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_FTR[['No.', 'Player', 'Free Throws Ratio']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_FTR['No.'], av_FTR.Player, av_FTR['Free Throws Ratio']],
+                align='center', font_size=16, height=30)))
 
-        av_FTR_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_FTR_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_FTR_fig)
+            st.write(av_FTR_fig)
+        with bs:
+            st.write(
+                "##### Best by Season on free throw ratio in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games & at least 100 Free throw Attempts in the season)")
+            bs_FTR = compute_player_mean_stats_season.loc[(compute_player_mean_stats_season['Total_FTA']>=100) ][['Player_Season', 'FTR']].sort_values('FTR',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'FTR': 'Free Throws Ratio', 'Player_Season': 'Player(Season)'})
+            bs_FTR.drop("index", axis=1, inplace=True)
+            bs_FTR = bs_FTR.reset_index()
+            bs_FTR['No.'] = bs_FTR['index'] + 1
+            bs_FTR_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_FTR[['No.', 'Player(Season)', 'Free Throws Ratio']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_FTR['No.'], bs_FTR['Player(Season)'], bs_FTR['Free Throws Ratio']],
+                align='center', font_size=16, height=30)))
+
+            bs_FTR_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_FTR_fig)
 
     with astor:
-        st.write("##### Assists-Turnovers Ratio per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Games slider)')
-        av_ASTOR = compute_player_stats.loc[compute_player_stats['Games']>games][['Player','ASTOR']].sort_values('ASTOR',ascending=False).head(10).round(1).reset_index().rename(columns={'ASTOR': 'Assists-Turnovers Ratio'})
-        av_ASTOR.drop("index", axis=1, inplace=True)
-        av_ASTOR = av_ASTOR.reset_index()
-        av_ASTOR['No.'] = av_ASTOR['index'] + 1
-        av_ASTOR_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_ASTOR[['No.', 'Player', 'Assists-Turnovers Ratio']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_ASTOR['No.'], av_ASTOR.Player, av_ASTOR['Assists-Turnovers Ratio']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Average Stats', 'Best by Season'])
+        with av:
+            st.write("##### Assists-Turnovers Ratio per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Games slider)')
+            av_ASTOR = compute_player_stats.loc[compute_player_stats['Games']>games][['Player','ASTOR']].sort_values('ASTOR',ascending=False).head(10).round(1).reset_index().rename(columns={'ASTOR': 'Assists-Turnovers Ratio'})
+            av_ASTOR.drop("index", axis=1, inplace=True)
+            av_ASTOR = av_ASTOR.reset_index()
+            av_ASTOR['No.'] = av_ASTOR['index'] + 1
+            av_ASTOR_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_ASTOR[['No.', 'Player', 'Assists-Turnovers Ratio']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_ASTOR['No.'], av_ASTOR.Player, av_ASTOR['Assists-Turnovers Ratio']],
+                align='center', font_size=16, height=30)))
 
-        av_ASTOR_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_ASTOR_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_ASTOR_fig)
+            st.write(av_ASTOR_fig)
+        with bs:
+            st.write(
+                "##### Best by Season on Assists-Turnover ratio in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_ASTOR = compute_player_mean_stats_season[['Player_Season', 'ASTOR']].sort_values('ASTOR',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'ASTOR': 'Assists-Turnover ratio', 'Player_Season': 'Player(Season)'})
+            bs_ASTOR.drop("index", axis=1, inplace=True)
+            bs_ASTOR = bs_ASTOR.reset_index()
+            bs_ASTOR['No.'] = bs_ASTOR['index'] + 1
+            bs_ASTOR_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_ASTOR[['No.', 'Player(Season)', 'Assists-Turnover ratio']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_ASTOR['No.'], bs_ASTOR['Player(Season)'], bs_ASTOR['Assists-Turnover ratio']],
+                align='center', font_size=16, height=30)))
 
+            bs_ASTOR_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_ASTOR_fig)
     with tor:
+        av, bs = st.tabs(['Average Stats', 'Best by Season'])
+        with av:
+            st.write("##### Turnovers Ratio per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Games slider)')
+            av_TOR = compute_player_stats.loc[compute_player_stats['Games']>games][['Player','TOR']].sort_values('TOR',ascending=False).head(10).round(1).reset_index().rename(
+                columns={'TOR': 'Turnovers Ratio'})
+            av_TOR.drop("index", axis=1, inplace=True)
+            av_TOR = av_TOR.reset_index()
+            av_TOR['No.'] = av_TOR['index'] + 1
+            av_TOR_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_TOR[['No.', 'Player', 'Turnovers Ratio']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_TOR['No.'], av_TOR.Player, av_TOR['Turnovers Ratio']],
+                align='center', font_size=16, height=30)))
 
-        st.write("##### Turnovers Ratio per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Games slider)')
-        av_TOR = compute_player_stats.loc[compute_player_stats['Games']>games][['Player','TOR']].sort_values('TOR',ascending=False).head(10).round(1).reset_index().rename(
-            columns={'TOR': 'Turnovers Ratio'})
-        av_TOR.drop("index", axis=1, inplace=True)
-        av_TOR = av_TOR.reset_index()
-        av_TOR['No.'] = av_TOR['index'] + 1
-        av_TOR_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_TOR[['No.', 'Player', 'Turnovers Ratio']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_TOR['No.'], av_TOR.Player, av_TOR['Turnovers Ratio']],
-            align='center', font_size=16, height=30)))
+            av_TOR_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        av_TOR_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            st.write(av_TOR_fig)
+        with bs:
+            st.write(
+                "##### Best by Season onTurnover ratio in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_TOR = compute_player_mean_stats_season[
+                ['Player_Season', 'TOR']].sort_values('TOR',
+                                                        ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'TOR': 'Turnover ratio', 'Player_Season': 'Player(Season)'})
+            bs_TOR.drop("index", axis=1, inplace=True)
+            bs_TOR = bs_TOR.reset_index()
+            bs_TOR['No.'] = bs_TOR['index'] + 1
+            bs_TOR_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_TOR[['No.', 'Player(Season)', 'Turnover ratio']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_TOR['No.'], bs_TOR['Player(Season)'], bs_TOR['Turnover ratio']],
+                align='center', font_size=16, height=30)))
 
-        st.write(av_TOR_fig)
+            bs_TOR_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_TOR_fig)
 
     with asr:
-        st.write("##### Assists Ratio per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Games slider)')
-        av_ASR = compute_player_stats.loc[compute_player_stats['Games']>games][['Player','ASR']].sort_values('ASR',ascending=False).head(10).round(1).reset_index().rename(
-            columns={'ASR': 'Assists Ratio'})
-        av_ASR.drop("index", axis=1, inplace=True)
-        av_ASR = av_ASR.reset_index()
-        av_ASR['No.'] = av_ASR['index'] + 1
-        av_ASR_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_ASR[['No.', 'Player', 'Assists Ratio']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_ASR['No.'], av_ASR.Player, av_ASR['Assists Ratio']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Average Stats', 'Best by Season'])
+        with av:
+            st.write("##### Assists Ratio per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Games slider)')
+            av_ASR = compute_player_stats.loc[compute_player_stats['Games']>games][['Player','ASR']].sort_values('ASR',ascending=False).head(10).round(1).reset_index().rename(
+                columns={'ASR': 'Assists Ratio'})
+            av_ASR.drop("index", axis=1, inplace=True)
+            av_ASR = av_ASR.reset_index()
+            av_ASR['No.'] = av_ASR['index'] + 1
+            av_ASR_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_ASR[['No.', 'Player', 'Assists Ratio']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_ASR['No.'], av_ASR.Player, av_ASR['Assists Ratio']],
+                align='center', font_size=16, height=30)))
 
-        av_ASR_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_ASR_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_ASR_fig)
+            st.write(av_ASR_fig)
+        with bs:
+            st.write(
+                "##### Best by Season on Assists ratio in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_ASR = compute_player_mean_stats_season[['Player_Season', 'ASR']].sort_values('ASR',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'ASR': 'Assists ratio', 'Player_Season': 'Player(Season)'})
+            bs_ASR.drop("index", axis=1, inplace=True)
+            bs_ASR = bs_ASR.reset_index()
+            bs_ASR['No.'] = bs_ASR['index'] + 1
+            bs_ASR_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_ASR[['No.', 'Player(Season)', 'Assists ratio']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_ASR['No.'], bs_ASR['Player(Season)'], bs_ASR['Assists ratio']],
+                align='center', font_size=16, height=30)))
+
+            bs_ASR_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_ASR_fig)
 
     with usg:
-        st.write("##### Usage(%) per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Games slider)')
-        av_USG = compute_player_stats.loc[compute_player_stats['Games']>games][['Player','USG']].sort_values('USG',ascending=False).head(10).round(1).reset_index().rename(
-            columns={'USG': 'Usage(%)'})
-        av_USG.drop("index", axis=1, inplace=True)
-        av_USG = av_USG.reset_index()
-        av_USG['No.'] = av_USG['index'] + 1
-        av_USG_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_USG[['No.', 'Player', 'Usage(%)']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_USG['No.'], av_USG.Player, av_USG['Usage(%)']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Average Stats', 'Best by Season'])
+        with av:
+            st.write("##### Usage(%) per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Games slider)')
+            av_USG = compute_player_stats.loc[compute_player_stats['Games']>games][['Player','USG']].sort_values('USG',ascending=False).head(10).round(1).reset_index().rename(
+                columns={'USG': 'Usage(%)'})
+            av_USG.drop("index", axis=1, inplace=True)
+            av_USG = av_USG.reset_index()
+            av_USG['No.'] = av_USG['index'] + 1
+            av_USG_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_USG[['No.', 'Player', 'Usage(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_USG['No.'], av_USG.Player, av_USG['Usage(%)']],
+                align='center', font_size=16, height=30)))
 
-        av_USG_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_USG_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_USG_fig)
+            st.write(av_USG_fig)
+        with bs:
+            st.write(
+                "##### Best by Season on Usage in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_USG = compute_player_mean_stats_season[['Player_Season', 'USG']].sort_values('USG',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'USG': 'Usage(%)', 'Player_Season': 'Player(Season)'})
+            bs_USG.drop("index", axis=1, inplace=True)
+            bs_USG = bs_USG.reset_index()
+            bs_USG['No.'] = bs_USG['index'] + 1
+            bs_USG_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_USG[['No.', 'Player(Season)', 'Usage(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_USG['No.'], bs_USG['Player(Season)'], bs_USG['Usage(%)']],
+                align='center', font_size=16, height=30)))
+
+            bs_USG_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_USG_fig)
     with orp:
-        st.write("##### Percentage of Offensive Rebounds per game in Euroleague from 2016-2017 Season (Top 10)")
-        st.write('(For better results move the Games slider)')
-        av_ORP = compute_player_stats.loc[compute_player_stats['Games']>games][['Player','ORP']].sort_values('ORP',ascending=False).head(10).round(1).reset_index().rename(
-            columns={'ORP': 'OR(%)'})
-        av_ORP.drop("index", axis=1, inplace=True)
-        av_ORP = av_ORP.reset_index()
-        av_ORP['No.'] = av_ORP['index'] + 1
-        av_ORP_fig = go.Figure(data=go.Table(header=dict(
-            values=list(av_ORP[['No.', 'Player', 'OR(%)']].columns),
-            align='center', font_size=18, height=30), cells=dict(
-            values=[av_ORP['No.'], av_ORP.Player, av_ORP['OR(%)']],
-            align='center', font_size=16, height=30)))
+        av, bs = st.tabs(['Average Stats', 'Best by Season'])
+        with av:
+            st.write("##### Percentage of Offensive Rebounds per game in Euroleague from 2016-2017 Season (Top 10)")
+            st.write('(For better results move the Games slider)')
+            av_ORP = compute_player_stats.loc[compute_player_stats['Games']>games][['Player','ORP']].sort_values('ORP',ascending=False).head(10).round(1).reset_index().rename(
+                columns={'ORP': 'OR(%)'})
+            av_ORP.drop("index", axis=1, inplace=True)
+            av_ORP = av_ORP.reset_index()
+            av_ORP['No.'] = av_ORP['index'] + 1
+            av_ORP_fig = go.Figure(data=go.Table(header=dict(
+                values=list(av_ORP[['No.', 'Player', 'OR(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[av_ORP['No.'], av_ORP.Player, av_ORP['OR(%)']],
+                align='center', font_size=16, height=30)))
 
-        av_ORP_fig.update_layout(
-            autosize=True,
-            width=600,
-            height=550,
-            margin=dict(
-                l=30,
-                r=50,
-                b=100,
-                t=80,
-                pad=10
-            ))
+            av_ORP_fig.update_layout(
+                autosize=True,
+                width=600,
+                height=550,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
 
-        st.write(av_ORP_fig)
+            st.write(av_ORP_fig)
 
+        with bs:
+            st.write(
+                "##### Best by Season on percentage of Offensive Rebounds in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
+            bs_ORP = compute_player_mean_stats_season[['Player_Season', 'ORP']].sort_values('ORP',
+                                                                                            ascending=False).head(
+                10).round(
+                1).reset_index().rename(columns={'ORP': 'OR(%)', 'Player_Season': 'Player(Season)'})
+            bs_ORP.drop("index", axis=1, inplace=True)
+            bs_ORP = bs_ORP.reset_index()
+            bs_ORP['No.'] = bs_ORP['index'] + 1
+            bs_ORP_fig = go.Figure(data=go.Table(header=dict(
+                values=list(
+                    bs_ORP[['No.', 'Player(Season)', 'OR(%)']].columns),
+                align='center', font_size=18, height=30), cells=dict(
+                values=[bs_ORP['No.'], bs_ORP['Player(Season)'], bs_ORP['OR(%)']],
+                align='center', font_size=16, height=30)))
+
+            bs_ORP_fig.update_layout(
+                autosize=True,
+                width=1000,
+                height=800,
+                margin=dict(
+                    l=1,
+                    r=1,
+                    b=100,
+                    t=80,
+                    pad=10
+                ))
+
+            st.write(bs_ORP_fig)

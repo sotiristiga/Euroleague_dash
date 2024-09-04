@@ -178,7 +178,7 @@ filters_playerstats = DynamicFilters(All_Seasons, filters=['Season','Round','Pha
 All_Seasons_filter = filters_playerstats .filter_df()
 
 filters_playerstats.display_filters(location='sidebar')
-All_Seasons_filter['Player_Team']=All_Seasons_filter['Player']+"("+All_Seasons_filter['Team']+","+All_Seasons_filter['Season']+" vs "+All_Seasons_filter['Against']+")"
+All_Seasons_filter['Player_Team']=All_Seasons_filter['Player']+" ("+All_Seasons_filter['Team']+","+All_Seasons_filter['Season']+" vs "+All_Seasons_filter['Against']+")"
 
 compute_player_mean_stats=All_Seasons_filter.groupby('Player')[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF' ]].mean().reset_index()
 compute_player_mean_stats['P2']=100*(compute_player_mean_stats['F2M']/compute_player_mean_stats['F2A'])
@@ -218,7 +218,7 @@ compute_player_mean_stats_season['TOR']=100*(compute_player_mean_stats_season['T
 compute_player_mean_stats_season['ASR']=100*(compute_player_mean_stats_season['AS']/compute_player_mean_stats_season['POS'])
 compute_player_mean_stats_season['USG'] = 100 * (((compute_player_mean_stats_season['F3A'] + compute_player_mean_stats_season['F2A']) + 0.44 * compute_player_mean_stats_season['FTA'] + compute_player_mean_stats_season['TO']) * (40)) / (compute_player_mean_stats_season['MIN'] * (compute_player_mean_stats_season['Team_F2A'] +compute_player_mean_stats_season['Team_F3A'] + 0.44 * compute_player_mean_stats_season['Team_FTA'] + compute_player_mean_stats_season['Team_TO']))
 compute_player_mean_stats_season['ORP'] = (100 * compute_player_mean_stats_season['OR']) / (compute_player_mean_stats_season['Team_OR'] + compute_player_mean_stats_season['Team_opp_OR'])
-compute_player_mean_stats_season['Player_Season']=compute_player_mean_stats_season['Player']+"("+compute_player_mean_stats_season['Season']+")"
+compute_player_mean_stats_season['Player_Season']=compute_player_mean_stats_season['Player']+" ("+compute_player_mean_stats_season['Season']+")"
 compute_player_games_season=All_Seasons_filter[['Player','Season']].value_counts().reset_index()
 compute_player_games_season=compute_player_games_season.rename(columns={'count':'Games'})
 compute_player_total_stats_season=All_Seasons_filter.groupby(['Player','Season'])[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR']].sum().reset_index()
@@ -248,7 +248,7 @@ with basic:
             av_pts.drop("index",axis=1,inplace=True)
             av_pts=av_pts.reset_index()
             av_pts['No.']=av_pts['index']+1
-            av_pts_fig = go.Figure(data=go.Table( header=dict(
+            av_pts_fig = go.Figure(data=go.Table( columnwidth=[1,5,3],header=dict(
                                                          values=list(
                                                              av_pts[['No.','Player','Points']].columns),
                                                          align='center', font_size=18, height=30), cells=dict(
@@ -268,7 +268,6 @@ with basic:
                 ))
 
             st.write(av_pts_fig)
-
         with sum:
             st.write("##### Total points in Euroleague from 2016-2017 Season (Top 10)")
             tot_pts =compute_player_stats[['Player', 'Total_PTS']].sort_values('Total_PTS', ascending=False).head(10).round(
@@ -276,7 +275,7 @@ with basic:
             tot_pts.drop("index", axis=1, inplace=True)
             tot_pts = tot_pts.reset_index()
             tot_pts['No.'] = tot_pts['index'] + 1
-            tot_pts_fig = go.Figure(data=go.Table(header=dict(
+            tot_pts_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     tot_pts[['No.', 'Player','Total Points']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -303,7 +302,7 @@ with basic:
             rec_pts.drop("index", axis=1, inplace=True)
             rec_pts = rec_pts.reset_index()
             rec_pts['No.'] = rec_pts['index'] + 1
-            rec_pts_fig = go.Figure(data=go.Table(header=dict(
+            rec_pts_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     rec_pts[['No.', 'Player(Team)','Record Points']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -330,7 +329,7 @@ with basic:
              bs_pts.drop("index", axis=1, inplace=True)
              bs_pts = bs_pts.reset_index()
              bs_pts['No.'] = bs_pts['index'] + 1
-             bs_pts_fig = go.Figure(data=go.Table(header=dict(
+             bs_pts_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                  values=list(
                      bs_pts[['No.', 'Player(Season)', 'Average Points']].columns),
                  align='center', font_size=18, height=30), cells=dict(
@@ -359,7 +358,7 @@ with basic:
             av_as.drop("index", axis=1, inplace=True)
             av_as = av_as.reset_index()
             av_as['No.'] = av_as['index'] + 1
-            av_as_fig = go.Figure(data=go.Table(header=dict(
+            av_as_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_as[['No.', 'Player', 'Assists']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_as['No.'], av_as.Player, av_as.Assists],
@@ -385,7 +384,7 @@ with basic:
             tot_as.drop("index", axis=1, inplace=True)
             tot_as = tot_as.reset_index()
             tot_as['No.'] = tot_as['index'] + 1
-            tot_as_fig = go.Figure(data=go.Table(header=dict(
+            tot_as_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     tot_as[['No.', 'Player','Total Assists']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -412,7 +411,7 @@ with basic:
             rec_as.drop("index", axis=1, inplace=True)
             rec_as = rec_as.reset_index()
             rec_as['No.'] = rec_as['index'] + 1
-            rec_as_fig = go.Figure(data=go.Table(header=dict(
+            rec_as_fig = go.Figure(data=go.Table(columnwidth=[1,4,3],header=dict(
                 values=list(
                     rec_as[['No.', 'Player(Team)','Record Assists']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -441,7 +440,7 @@ with basic:
             bs_as.drop("index", axis=1, inplace=True)
             bs_as = bs_as.reset_index()
             bs_as['No.'] = bs_as['index'] + 1
-            bs_as_fig = go.Figure(data=go.Table(header=dict(
+            bs_as_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     bs_as[['No.', 'Player(Season)', 'Average Assists']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -470,7 +469,7 @@ with basic:
             av_tr.drop("index", axis=1, inplace=True)
             av_tr = av_tr.reset_index()
             av_tr['No.'] = av_tr['index'] + 1
-            av_tr_fig = go.Figure(data=go.Table(header=dict(
+            av_tr_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_tr[['No.', 'Player', 'Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_tr['No.'], av_tr.Player, av_tr.Rebounds],
@@ -496,7 +495,7 @@ with basic:
             tot_tr.drop("index", axis=1, inplace=True)
             tot_tr = tot_tr.reset_index()
             tot_tr['No.'] = tot_tr['index'] + 1
-            tot_tr_fig = go.Figure(data=go.Table(header=dict(
+            tot_tr_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     tot_tr[['No.', 'Player','Total Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -523,7 +522,7 @@ with basic:
             rec_tr.drop("index", axis=1, inplace=True)
             rec_tr = rec_tr.reset_index()
             rec_tr['No.'] = rec_tr['index'] + 1
-            rec_tr_fig = go.Figure(data=go.Table(header=dict(
+            rec_tr_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     rec_tr[['No.', 'Player(Team)','Record Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -552,7 +551,7 @@ with basic:
             bs_tr.drop("index", axis=1, inplace=True)
             bs_tr = bs_tr.reset_index()
             bs_tr['No.'] = bs_tr['index'] + 1
-            bs_tr_fig = go.Figure(data=go.Table(header=dict(
+            bs_tr_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     bs_tr[['No.', 'Player(Season)', 'Average Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -581,7 +580,7 @@ with basic:
             av_or.drop("index", axis=1, inplace=True)
             av_or = av_or.reset_index()
             av_or['No.'] = av_or['index'] + 1
-            av_or_fig = go.Figure(data=go.Table(header=dict(
+            av_or_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_or[['No.', 'Player', 'Offensive Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_or['No.'], av_or.Player, av_or['Offensive Rebounds']],
@@ -607,7 +606,7 @@ with basic:
             tot_or.drop("index", axis=1, inplace=True)
             tot_or = tot_or.reset_index()
             tot_or['No.'] = tot_or['index'] + 1
-            tot_or_fig = go.Figure(data=go.Table(header=dict(
+            tot_or_fig = go.Figure(data=go.Table(columnwidth=[1,5,5],header=dict(
                 values=list(
                     tot_or[['No.', 'Player','Total Offensive Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -634,7 +633,7 @@ with basic:
             rec_or.drop("index", axis=1, inplace=True)
             rec_or = rec_or.reset_index()
             rec_or['No.'] = rec_or['index'] + 1
-            rec_or_fig = go.Figure(data=go.Table(header=dict(
+            rec_or_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     rec_or[['No.', 'Player(Team)','Record Offensive Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -663,7 +662,7 @@ with basic:
             bs_or.drop("index", axis=1, inplace=True)
             bs_or = bs_or.reset_index()
             bs_or['No.'] = bs_or['index'] + 1
-            bs_or_fig = go.Figure(data=go.Table(header=dict(
+            bs_or_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     bs_or[['No.', 'Player(Season)', 'Average Offensive Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -692,7 +691,7 @@ with basic:
             av_dr.drop("index", axis=1, inplace=True)
             av_dr = av_dr.reset_index()
             av_dr['No.'] = av_dr['index'] + 1
-            av_dr_fig = go.Figure(data=go.Table(header=dict(
+            av_dr_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_dr[['No.', 'Player', 'Defensive Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_or['No.'], av_dr.Player, av_dr['Defensive Rebounds']],
@@ -718,7 +717,7 @@ with basic:
             tot_dr.drop("index", axis=1, inplace=True)
             tot_dr = tot_dr.reset_index()
             tot_dr['No.'] = tot_dr['index'] + 1
-            tot_dr_fig = go.Figure(data=go.Table(header=dict(
+            tot_dr_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     tot_dr[['No.', 'Player','Total Defensive Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -745,7 +744,7 @@ with basic:
             rec_dr.drop("index", axis=1, inplace=True)
             rec_dr = rec_dr.reset_index()
             rec_dr['No.'] = rec_dr['index'] + 1
-            rec_dr_fig = go.Figure(data=go.Table(header=dict(
+            rec_dr_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     rec_dr[['No.', 'Player(Team)','Record Defensive Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -774,7 +773,7 @@ with basic:
             bs_dr.drop("index", axis=1, inplace=True)
             bs_dr = bs_dr.reset_index()
             bs_dr['No.'] = bs_dr['index'] + 1
-            bs_dr_fig = go.Figure(data=go.Table(header=dict(
+            bs_dr_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     bs_dr[['No.', 'Player(Season)', 'Average Defensive Rebounds']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -803,7 +802,7 @@ with basic:
             av_st.drop("index", axis=1, inplace=True)
             av_st = av_st.reset_index()
             av_st['No.'] = av_st['index'] + 1
-            av_st_fig = go.Figure(data=go.Table(header=dict(
+            av_st_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_st[['No.', 'Player', 'Steals']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_or['No.'], av_st.Player, av_st['Steals']],
@@ -829,7 +828,7 @@ with basic:
             tot_st.drop("index", axis=1, inplace=True)
             tot_st = tot_st.reset_index()
             tot_st['No.'] = tot_st['index'] + 1
-            tot_st_fig = go.Figure(data=go.Table(header=dict(
+            tot_st_fig = go.Figure(data=go.Table(columnwidth=[1,5,5],header=dict(
                 values=list(
                     tot_st[['No.', 'Player','Total Steals']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -856,7 +855,7 @@ with basic:
             rec_st.drop("index", axis=1, inplace=True)
             rec_st = rec_st.reset_index()
             rec_st['No.'] = rec_st['index'] + 1
-            rec_st_fig = go.Figure(data=go.Table(header=dict(
+            rec_st_fig = go.Figure(data=go.Table(columnwidth=[1,4,3],header=dict(
                 values=list(
                     rec_st[['No.', 'Player(Team)','Record Steals']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -885,7 +884,7 @@ with basic:
             bs_st.drop("index", axis=1, inplace=True)
             bs_st = bs_st.reset_index()
             bs_st['No.'] = bs_st['index'] + 1
-            bs_st_fig = go.Figure(data=go.Table(header=dict(
+            bs_st_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     bs_st[['No.', 'Player(Season)', 'Average Steals']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -914,7 +913,7 @@ with basic:
             av_to.drop("index", axis=1, inplace=True)
             av_to = av_to.reset_index()
             av_to['No.'] = av_to['index'] + 1
-            av_to_fig = go.Figure(data=go.Table(header=dict(
+            av_to_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(av_to[['No.', 'Player', 'Turnovers']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_to['No.'], av_to.Player, av_to['Turnovers']],
@@ -940,7 +939,7 @@ with basic:
             tot_to.drop("index", axis=1, inplace=True)
             tot_to = tot_to.reset_index()
             tot_to['No.'] = tot_to['index'] + 1
-            tot_to_fig = go.Figure(data=go.Table(header=dict(
+            tot_to_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     tot_to[['No.', 'Player','Total Turnovers']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -967,7 +966,7 @@ with basic:
             rec_to.drop("index", axis=1, inplace=True)
             rec_to = rec_to.reset_index()
             rec_to['No.'] = rec_to['index'] + 1
-            rec_to_fig = go.Figure(data=go.Table(header=dict(
+            rec_to_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     rec_to[['No.', 'Player(Team)','Record Turnovers']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -996,7 +995,7 @@ with basic:
             bs_to.drop("index", axis=1, inplace=True)
             bs_to = bs_to.reset_index()
             bs_to['No.'] = bs_to['index'] + 1
-            bs_to_fig = go.Figure(data=go.Table(header=dict(
+            bs_to_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     bs_to[['No.', 'Player(Season)', 'Average Turnovers']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1025,7 +1024,7 @@ with basic:
             av_blk.drop("index", axis=1, inplace=True)
             av_blk = av_blk.reset_index()
             av_blk['No.'] = av_blk['index'] + 1
-            av_blk_fig = go.Figure(data=go.Table(header=dict(
+            av_blk_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_blk[['No.', 'Player', 'Blocks']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_blk['No.'], av_blk.Player, av_blk['Blocks']],
@@ -1051,7 +1050,7 @@ with basic:
             tot_blk.drop("index", axis=1, inplace=True)
             tot_blk = tot_blk.reset_index()
             tot_blk['No.'] = tot_blk['index'] + 1
-            tot_blk_fig = go.Figure(data=go.Table(header=dict(
+            tot_blk_fig = go.Figure(data=go.Table(columnwidth=[1,6,4],header=dict(
                 values=list(
                     tot_blk[['No.', 'Player','Total Blocks']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1078,7 +1077,7 @@ with basic:
             rec_blk.drop("index", axis=1, inplace=True)
             rec_blk = rec_blk.reset_index()
             rec_blk['No.'] = rec_blk['index'] + 1
-            rec_blk_fig = go.Figure(data=go.Table(header=dict(
+            rec_blk_fig = go.Figure(data=go.Table(columnwidth=[1,6,4],header=dict(
                 values=list(
                     rec_blk[['No.', 'Player(Team)','Record Blocks']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1107,7 +1106,7 @@ with basic:
             bs_blk.drop("index", axis=1, inplace=True)
             bs_blk = bs_blk.reset_index()
             bs_blk['No.'] = bs_blk['index'] + 1
-            bs_blk_fig = go.Figure(data=go.Table(header=dict(
+            bs_blk_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     bs_blk[['No.', 'Player(Season)', 'Average Blocks']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1137,7 +1136,7 @@ with basic:
             av_blkr.drop("index", axis=1, inplace=True)
             av_blkr = av_blkr.reset_index()
             av_blkr['No.'] = av_blkr['index'] + 1
-            av_blkr_fig = go.Figure(data=go.Table(header=dict(
+            av_blkr_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_blkr[['No.', 'Player', 'Blocks Reversed']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_blkr['No.'], av_blkr.Player, av_blkr['Blocks Reversed']],
@@ -1164,7 +1163,7 @@ with basic:
             tot_blkr.drop("index", axis=1, inplace=True)
             tot_blkr = tot_blkr.reset_index()
             tot_blkr['No.'] = tot_blkr['index'] + 1
-            tot_blkr_fig = go.Figure(data=go.Table(header=dict(
+            tot_blkr_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     tot_blkr[['No.', 'Player', 'Total Blocks Reversed']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1184,7 +1183,6 @@ with basic:
                 ))
 
             st.write(tot_blkr_fig)
-
         with rec:
             st.write("##### Record blocks reversed on a game in Euroleague from 2016-2017 Season (Top 10)")
             rec_blkr =All_Seasons_filter[['Player_Team', 'BLKR']].sort_values('BLKR', ascending=False).head(10).round(
@@ -1192,7 +1190,7 @@ with basic:
             rec_blkr.drop("index", axis=1, inplace=True)
             rec_blkr = rec_blkr.reset_index()
             rec_blkr['No.'] = rec_blkr['index'] + 1
-            rec_blkr_fig = go.Figure(data=go.Table(header=dict(
+            rec_blkr_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     rec_blkr[['No.', 'Player(Team)','Record Blocks Reversed']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1221,7 +1219,7 @@ with basic:
             bs_blkr.drop("index", axis=1, inplace=True)
             bs_blkr = bs_blkr.reset_index()
             bs_blkr['No.'] = bs_blkr['index'] + 1
-            bs_blkr_fig = go.Figure(data=go.Table(header=dict(
+            bs_blkr_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     bs_blkr[['No.', 'Player(Season)', 'Average Blocks Reversed']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1251,7 +1249,7 @@ with basic:
             av_pf.drop("index", axis=1, inplace=True)
             av_pf = av_pf.reset_index()
             av_pf['No.'] = av_pf['index'] + 1
-            av_pf_fig = go.Figure(data=go.Table(header=dict(
+            av_pf_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_pf[['No.', 'Player', 'Personal Fouls']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_pf['No.'], av_pf.Player, av_pf['Personal Fouls']],
@@ -1278,7 +1276,7 @@ with basic:
             tot_pf.drop("index", axis=1, inplace=True)
             tot_pf = tot_pf.reset_index()
             tot_pf['No.'] = tot_pf['index'] + 1
-            tot_pf_fig = go.Figure(data=go.Table(header=dict(
+            tot_pf_fig = go.Figure(data=go.Table(columnwidth=[1,5,5],header=dict(
                 values=list(
                     tot_pf[['No.', 'Player', 'Total Personal Fouls']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1298,7 +1296,6 @@ with basic:
                 ))
 
             st.write(tot_pf_fig)
-
         with bs:
             st.write("##### Best by Season on personal fouls in Euroleague from 2016-2017 Season (Top 10 - played at least 15 games in the season)")
             bs_pf = compute_player_mean_stats_season[['Player_Season', 'PF']].sort_values('PF',
@@ -1308,7 +1305,7 @@ with basic:
             bs_pf.drop("index", axis=1, inplace=True)
             bs_pf = bs_pf.reset_index()
             bs_pf['No.'] = bs_pf['index'] + 1
-            bs_pf_fig = go.Figure(data=go.Table(header=dict(
+            bs_pf_fig = go.Figure(data=go.Table(columnwidth=[1,5,5],header=dict(
                 values=list(
                     bs_pf[['No.', 'Player(Season)', 'Average Personal Fouls']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1338,7 +1335,7 @@ with basic:
             av_rf.drop("index", axis=1, inplace=True)
             av_rf = av_rf.reset_index()
             av_rf['No.'] = av_rf['index'] + 1
-            av_rf_fig = go.Figure(data=go.Table(header=dict(
+            av_rf_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_rf[['No.', 'Player', 'Fouls Drawn']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_rf['No.'], av_rf.Player, av_rf['Fouls Drawn']],
@@ -1365,7 +1362,7 @@ with basic:
             tot_rf.drop("index", axis=1, inplace=True)
             tot_rf = tot_rf.reset_index()
             tot_rf['No.'] = tot_rf['index'] + 1
-            tot_rf_fig = go.Figure(data=go.Table(header=dict(
+            tot_rf_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     tot_rf[['No.', 'Player', 'Total Fouls Drawn']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1392,7 +1389,7 @@ with basic:
             rec_rf.drop("index", axis=1, inplace=True)
             rec_rf = rec_rf.reset_index()
             rec_rf['No.'] = rec_rf['index'] + 1
-            rec_rf_fig = go.Figure(data=go.Table(header=dict(
+            rec_rf_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     rec_rf[['No.', 'Player(Team)','Record Fouls Drawn']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1421,7 +1418,7 @@ with basic:
             bs_rf.drop("index", axis=1, inplace=True)
             bs_rf = bs_rf.reset_index()
             bs_rf['No.'] = bs_rf['index'] + 1
-            bs_rf_fig = go.Figure(data=go.Table(header=dict(
+            bs_rf_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     bs_rf[['No.', 'Player(Season)', 'Average Fouls Drawn']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1452,7 +1449,7 @@ with shooting:
             av_F2M.drop("index", axis=1, inplace=True)
             av_F2M = av_F2M.reset_index()
             av_F2M['No.'] = av_F2M['index'] + 1
-            av_F2M_fig = go.Figure(data=go.Table(header=dict(
+            av_F2M_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(av_F2M[['No.', 'Player', '2P Made']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_F2M['No.'], av_F2M.Player, av_F2M['2P Made']],
@@ -1471,7 +1468,6 @@ with shooting:
                 ))
 
             st.write(av_F2M_fig)
-
         with sum:
             st.write("##### Total 2p made in Euroleague from 2016-2017 Season (Top 10)")
             tot_f2m = compute_player_stats[['Player', 'Total_F2M']].sort_values('Total_F2M', ascending=False).head(
@@ -1480,7 +1476,7 @@ with shooting:
             tot_f2m.drop("index", axis=1, inplace=True)
             tot_f2m = tot_f2m.reset_index()
             tot_f2m['No.'] = tot_f2m['index'] + 1
-            tot_f2m_fig = go.Figure(data=go.Table(header=dict(
+            tot_f2m_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     tot_f2m[['No.', 'Player', 'Total 2P Made']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1507,7 +1503,7 @@ with shooting:
             rec_f2m.drop("index", axis=1, inplace=True)
             rec_f2m = rec_f2m.reset_index()
             rec_f2m['No.'] = rec_f2m['index'] + 1
-            rec_f2m_fig = go.Figure(data=go.Table(header=dict(
+            rec_f2m_fig = go.Figure(data=go.Table(columnwidth=[1,5,4],header=dict(
                 values=list(
                     rec_f2m[['No.', 'Player(Team)','Record 2P Made']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1536,7 +1532,7 @@ with shooting:
             bs_f2m.drop("index", axis=1, inplace=True)
             bs_f2m = bs_f2m.reset_index()
             bs_f2m['No.'] = bs_f2m['index'] + 1
-            bs_f2m_fig = go.Figure(data=go.Table(header=dict(
+            bs_f2m_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     bs_f2m[['No.', 'Player(Season)', 'Average 2P Made']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -1679,7 +1675,7 @@ with shooting:
             av_P2.drop("index", axis=1, inplace=True)
             av_P2 = av_P2.reset_index()
             av_P2['No.'] = av_P2['index'] + 1
-            av_P2_fig = go.Figure(data=go.Table(header=dict(
+            av_P2_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_P2[['No.', 'Player', '2P(%)']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_P2['No.'], av_P2.Player, av_P2['2P(%)']],
@@ -1709,7 +1705,7 @@ with shooting:
             bs_P2.drop("index", axis=1, inplace=True)
             bs_P2 = bs_P2.reset_index()
             bs_P2['No.'] = bs_P2['index'] + 1
-            bs_P2_fig = go.Figure(data=go.Table(header=dict(
+            bs_P2_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(
                     bs_P2[['No.', 'Player(Season)', '2P(%)']].columns),
                 align='center', font_size=18, height=30), cells=dict(
@@ -2143,7 +2139,7 @@ with shooting:
             av_FTA.drop("index", axis=1, inplace=True)
             av_FTA = av_FTA.reset_index()
             av_FTA['No.'] = av_FTA['index'] + 1
-            av_FTA_fig = go.Figure(data=go.Table(header=dict(
+            av_FTA_fig = go.Figure(data=go.Table(columnwidth=[1,5,3],header=dict(
                 values=list(av_FTA[['No.', 'Player', 'Free Throws Attempt']].columns),
                 align='center', font_size=18, height=30), cells=dict(
                 values=[av_FTA['No.'], av_FTA.Player, av_FTA['Free Throws Attempt']],

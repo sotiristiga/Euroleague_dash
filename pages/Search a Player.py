@@ -395,7 +395,7 @@ with basic:
     basic_stats_fig.update_layout(
     autosize=False,
     width=20000,
-    height=580,
+    height=650,
     margin=dict(
     l=1,
     r=1,
@@ -425,7 +425,7 @@ with shooting:
     shooting_stats_fig.update_layout(
     autosize=False,
     width=8000,
-    height=580,
+    height=605,
     margin=dict(
     l=10,
     r=40,
@@ -483,7 +483,8 @@ with rat_basic:
         marker_color='green',
         marker_line_color="black",
         marker_line_width=2,
-        opacity=0.8
+        opacity=0.8,
+        hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
     ))
 
     basic_ratings .update_layout(
@@ -517,12 +518,14 @@ with rat_shoot:
         marker_color='green',
         marker_line_color="black",
         marker_line_width=2,
-        opacity=0.8
+        opacity=0.8,
+        hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
     ))
 
     shoot_ratings.update_layout(
         title='Shooting Stats Ratings',
         template=None,
+        hovermode="x",
         polar=dict(
             radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
             angularaxis=dict(showticklabels=True, ticks='')
@@ -545,7 +548,8 @@ with rat_adv:
         marker_color='green',
         marker_line_color="black",
         marker_line_width=2,
-        opacity=0.8
+        opacity=0.8,
+        hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
     ))
 
     adv_ratings.update_layout(

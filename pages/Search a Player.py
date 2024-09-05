@@ -195,7 +195,7 @@ All_Seasons=All_Seasons.rename(columns={'HA':'Home or Away','results':'Result'})
 filters_search_player=DynamicFilters(All_Seasons, filters=['Season','Round','Phase','Home or Away','Result'])
 search_player_filter=filters_search_player.filter_df()
 
-search_player_player=st.sidebar.selectbox("Choose a player:",pd.Series(search_player_filter['Player'].sort_values('Player').unique()))
+search_player_player=st.sidebar.selectbox("Choose a player:",search_player_filter['Player'].reset_index().sort_values('Player')['Player'].unique())
 
 filters_search_player.display_filters(location='sidebar')
 

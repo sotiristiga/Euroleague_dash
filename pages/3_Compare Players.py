@@ -825,15 +825,62 @@ with stats:
                        font_size=15, height=30)))
         advanced_stats_fig.update_layout(
             autosize=False,
-            width=8000,
-            height=500,
+            width=700,
+            height=300,
             margin=dict(
-                l=1,
-                r=1,
-                b=100,
-                t=80,
-                pad=25
+                l=0,
+                r=10,
+                b=40,
+                t=0,
+                pad=40
             ))
         st.write(advanced_stats_fig)
+    adv_player_ratings1 = player1_stats.loc[player1_stats['Player'] == search_player_player1][
+        ['Player','Rating_ORA', 'Rating_ASTOR', 'Rating_TOR', 'Rating_ASR', 'Rating_USG', 'Rating_ORP']].rename(columns={
+        'Rating_ORA': 'Offensive<br>Rating',
+        'Rating_ASTOR': 'Assists/Turnovers<br>Ratio',
+        'Rating_TOR': 'Turnovers<br>Ratio',
+        'Rating_ASR': 'Assists<br>Ratio',
+        'Rating_USG': 'Usage(%)',
+        'Rating_ORP': 'OR(%)'}).melt(id_vars='Player')
+    adv_player_ratings2 = player2_stats.loc[player2_stats['Player'] == search_player_player2][
+        ['Player','Rating_ORA', 'Rating_ASTOR', 'Rating_TOR', 'Rating_ASR', 'Rating_USG', 'Rating_ORP']].rename(columns={
+        'Rating_ORA': 'Offensive<br>Rating',
+        'Rating_ASTOR': 'Assists/Turnovers<br>Ratio',
+        'Rating_TOR': 'Turnovers<br>Ratio',
+        'Rating_ASR': 'Assists<br>Ratio',
+        'Rating_USG': 'Usage(%)',
+        'Rating_ORP': 'OR(%)'}).melt(id_vars='Player')
 
-rat_basic, rat_shoot, rat_adv = st.columns(3)
+    adv_ratings = make_subplots(rows=2, cols=1, specs=[[{"type": "barpolar"}], [{"type": "barpolar"}]])
+    adv_ratings.add_trace(go.Barpolar(
+        r=adv_player_ratings1['value'],
+        theta=adv_player_ratings1['variable'],
+        marker_color='green',
+        marker_line_color="black",
+        marker_line_width=2,
+        name='Player 1',
+        opacity=0.8,
+        hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
+        ),row=1, col=1)
+    adv_ratings.add_trace(go.Barpolar(
+        r=adv_player_ratings2['value'],
+        theta=adv_player_ratings2['variable'],
+        marker_color='blue',
+        marker_line_color="black",
+        marker_line_width=2,
+        name='Player 2',
+        opacity=0.8,
+        hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
+        ),row=2, col=1)
+
+    adv_ratings.update_layout(
+        title='Advanced Stats Ratings',
+        template=None,
+        height=600,
+        polar=dict(
+            radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
+            angularaxis=dict(showticklabels=True, ticks='')
+        ))
+
+    st.write(adv_ratings)

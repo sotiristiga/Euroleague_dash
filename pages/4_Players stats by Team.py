@@ -198,7 +198,7 @@ euroleague_2023_2024_playerstats['Round']=euroleague_2023_2024_playerstats['Fixt
 
 All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats])
 All_Seasons["HA1"]=All_Seasons['HA'].apply(ha_against_format)
-All_Seasons["Result1"]=All_Seasons['Result'].apply(result_against_format)
+All_Seasons["Result1"]=All_Seasons['results'].apply(result_against_format)
 player_stats_by_team_team=st.sidebar.selectbox("Choose Team:",All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
 player_stats_by_team_ha = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
 player_stats_by_team_season = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)

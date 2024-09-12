@@ -19,7 +19,7 @@ from streamlit.components.v1 import html
 from plotly.subplots import make_subplots
 
 
-st.set_page_config(layout='wide',page_title="Player stats against each team")
+st.set_page_config(layout='wide',page_title="Players stats when played against team")
 def fixture_format1(Fixture):
     if Fixture<=15:
         return "First Round"

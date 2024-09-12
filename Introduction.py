@@ -14,7 +14,7 @@ from streamlit_dynamic_filters import DynamicFilters
 import urllib.request
 from PIL import Image
 import time
-st.set_page_config(layout='wide',page_title="Euroleague")
+st.set_page_config(layout='wide',page_title="Euroleague",page_icon="🏀")
 def fixture_format1(Fixture):
     if Fixture<=15:
         return "First Round"

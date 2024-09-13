@@ -312,7 +312,8 @@ finalstats['TO Ratio']=100*(finalstats['TO']/finalstats['Possesions'])
 finalstats['AS Ratio']=100*(finalstats['AS']/finalstats['Possesions'])
 finalstats=finalstats[['Team','PTS','F2M','F2A', '2P(%)','F3M', 'F3A','3P(%)', 'FTM', 'FTA','FT(%)', 'OR','DR', 'TR',
                        'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF','PIR','Possesions','Offensive Rating','EFG(%)',
-                       'TS(%)','FT Ratio','AS-TO Ratio','TO Ratio','AS Ratio']].round(1)
+                       'TS(%)','FT Ratio','AS-TO Ratio','TO Ratio','AS Ratio']].round(2)
+
 
 
 home,away=st.columns(2)

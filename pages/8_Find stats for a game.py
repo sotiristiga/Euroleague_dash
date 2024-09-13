@@ -291,6 +291,8 @@ finalperiodpoints=(period_points.loc[period_points['Fix_games']==search_game][['
 
 finalperiodpoints.drop('HA',axis=1,inplace=True)
 
+
+
 finalstats=All_Seasons1.groupby(['Team','HA'])[['PTS','F2M',
                               'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
                                          'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',

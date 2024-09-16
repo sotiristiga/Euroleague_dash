@@ -228,7 +228,7 @@ def player_rating_stat_higher(dataset,stat):
     return final_dataset
 
 def player_rating_stat_lower(dataset,stat):
-    dataset1=dataset[["Player",stat]].sort_values(stat,ascending=False).reset_index()
+    dataset1=dataset[["Player",stat]].sort_values(stat,ascending=True).reset_index()
     dataset1.drop("index",axis=1,inplace=True)
     final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Player.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
     final_dataset.rename(columns={'Rating1':'Rating_'+ stat},inplace=True)

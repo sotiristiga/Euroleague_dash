@@ -60,14 +60,14 @@ def fixture_format2(Fixture):
     elif Fixture == 37:
         return "Final"
 def fixture_format3(Fixture):
-    if Fixture <= 15:
+    if Fixture <= 17:
         return "First Round"
-    elif Fixture > 15 and Fixture <= 34:
+    elif Fixture > 17 and Fixture <= 34:
         return "Second Round"
 def fixture_format4(Fixture):
-    if Fixture <= 15:
+    if Fixture <= 17:
         return "First Round"
-    elif Fixture > 15 and Fixture <= 34:
+    elif Fixture > 17 and Fixture <= 34:
         return "Second Round"
     elif Fixture == 35:
         return "PO 1"
@@ -87,9 +87,9 @@ def fixture_format4(Fixture):
         return "Final"
 
 def fixture_format5(Fixture):
-        if Fixture <= 15:
+        if Fixture <= 17:
             return "First Round"
-        elif Fixture > 15 and Fixture <= 34:
+        elif Fixture > 17 and Fixture <= 34:
             return "Second Round"
         elif Fixture == 35:
             return "PI 1"
@@ -111,6 +111,7 @@ def fixture_format5(Fixture):
             return "Third Place"
         elif Fixture == 44:
             return "Final"
+
 
 euroleague_2016_2017_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2016_2017_playerstats.csv")
 euroleague_2016_2017_playerstats['idseason']=euroleague_2016_2017_playerstats['IDGAME'] + "_" + euroleague_2016_2017_playerstats['Season']

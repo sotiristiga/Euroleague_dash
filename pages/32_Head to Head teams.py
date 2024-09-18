@@ -287,7 +287,7 @@ period_points['EXC'].replace(0, np.nan, inplace=True)
 
 
 st.sidebar.write("## Select First team filters")
-compare_teams_team1=st.sidebar.selectbox("Choose First player:",All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
+compare_teams_team1=st.sidebar.selectbox("Choose First Team:",All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
 compare_teams_ha_team1 = st.sidebar.selectbox("Home or Away games(First Team):",['A', 'H', 'All'],index=2)
 compare_teams_season_team1 = st.sidebar.selectbox("Season(First Team):",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
 compare_teams_phase_team1 = st.sidebar.selectbox("Phase(First Team):",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
@@ -296,13 +296,14 @@ compare_teams_round_team1 = st.sidebar.selectbox("Round(First Team):",['First Ro
 
 st.sidebar.write("## ______________________________")
 st.sidebar.write("## Select Second team filters")
-compare_teams_team2=st.sidebar.selectbox("Choose Second player:",All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
+compare_teams_team2=st.sidebar.selectbox("Choose Second Team:",All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
 compare_teams_ha_team2 = st.sidebar.selectbox("Home or Away games(Second Team):",['A', 'H', 'All'],index=2)
 compare_teams_season_team2 = st.sidebar.selectbox("Season(Second Team):",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
        '2021-2022', '2022-2023', '2023-2024','All'],index=8)
 compare_teams_phase_team2 = st.sidebar.selectbox("Phase(Second Team):",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 compare_teams_wl_team2 = st.sidebar.selectbox("Result(Second Team):",['W', 'L','All'],index=2)
 compare_teams_round_team2 = st.sidebar.selectbox("Round(Second Team):",['First Round', 'Second Round', 'PI 1', 'PI 2','PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
+
 
 
 if "All" in compare_teams_ha_team1:
@@ -344,6 +345,7 @@ else:
     All_Seasons1 = All_Seasons1.loc[All_Seasons1['Phase'] == compare_teams_phase_team1]
     period_points1 = period_points1.loc[period_points1['Phase'] == compare_teams_phase_team1]
     select_phase_player1 = compare_teams_phase_team1
+
 
 if "All" in compare_teams_round_team1:
     compare_teams_round_team1 = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final']
@@ -419,7 +421,7 @@ def team_rating_stat_higher(dataset,stat):
     return final_dataset
 
 def team_rating_stat_lower(dataset,stat):
-    dataset1=dataset[["Team",stat]].sort_values(stat,ascending=True).reset_index()
+    dataset1=dataset[["Team",stat]].sort_values(stat,ascending=False).reset_index()
     dataset1.drop("index",axis=1,inplace=True)
     final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Team.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
     final_dataset.rename(columns={'Rating1':'Rating '+ stat},inplace=True)
@@ -538,221 +540,663 @@ t1, t2,stats=st.columns([1,1,2])
 
 
 with t1:
-    st.write('### Team 1')
-    st.markdown("#### " + compare_teams_team1)
-    st.write('Season: '+select_season_player1)
-    st.write('Phase: '+select_phase_player1)
-    st.write('Round: '+select_round_player1)
-    st.write('Home or away: '+select_ha_player1)
-    st.write('Result: '+select_wl_player1)
+    try:
+        st.write('### Team 1')
+        st.markdown("#### " + compare_teams_team1)
+        st.write('Season: '+select_season_player1)
+        st.write('Phase: '+select_phase_player1)
+        st.write('Round: '+select_round_player1)
+        st.write('Home or away: '+select_ha_player1)
+        st.write('Result: '+select_wl_player1)
 
-    offense_rating_data1=teamstats1[
-        ['Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M', 'Rating F2A',
-         'Rating 2P(%)', 'Rating F3M', 'Rating F3A', 'Rating 3P(%)','Rating FTM', 'Rating FTA', 'Rating FT(%)', 'Rating FT Ratio',
-         'Rating EFG(%)', 'Rating TS(%)', "Rating Offensive Rating",'Rating AS-TO Ratio', "Rating AS Ratio", 'Rating opp DR', 'Rating opp ST',
-         'Rating TO Ratio','Rating opp TO Ratio']].melt()
-    offense_ratings1 = offense_rating_data1['value'].mean()
+        offense_rating_data1=teamstats1[
+            ['Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M', 'Rating F2A',
+             'Rating 2P(%)', 'Rating F3M', 'Rating F3A', 'Rating 3P(%)','Rating FTM', 'Rating FTA', 'Rating FT(%)', 'Rating FT Ratio',
+             'Rating EFG(%)', 'Rating TS(%)', "Rating Offensive Rating",'Rating AS-TO Ratio', "Rating AS Ratio", 'Rating opp DR', 'Rating opp ST',
+             'Rating TO Ratio','Rating opp TO Ratio']].melt()
+        offense_ratings1 = offense_rating_data1['value'].mean()
 
-    off1 = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=offense_ratings1.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Offense"}))
+        off1 = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=offense_ratings1.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Offense"}))
 
-    off1.update_layout(
-        autosize=False,
-        width=250,
-        height=150,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=40,
-            pad=0
-        ))
+        off1.update_layout(
+            autosize=False,
+            width=250,
+            height=150,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=40,
+                pad=0
+            ))
 
-    st.write(off1)
+        st.write(off1)
 
 
-    defense_ratings1 = teamstats1[
-        ['Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK','Rating opp PTS', 'Rating opp AS',
-         'Rating opp F2M', 'Rating opp F2A', 'Rating opp 2P(%)', 'Rating opp F3M', 'Rating opp F3A', 'Rating opp 3P(%)',
-             'Rating opp FTM', 'Rating opp FTA', 'Rating opp FT(%)', 'Rating opp OR','Rating Defensive Rating','Rating opp EFG(%)', 'Rating opp TS(%)',
-             'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt()['value'].mean()
 
-    defe1 = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=defense_ratings1.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Defense"}))
+        defense_ratings1 = teamstats1[
+            ['Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK','Rating opp PTS', 'Rating opp AS',
+             'Rating opp F2M', 'Rating opp F2A', 'Rating opp 2P(%)', 'Rating opp F3M', 'Rating opp F3A', 'Rating opp 3P(%)',
+                 'Rating opp FTM', 'Rating opp FTA', 'Rating opp FT(%)', 'Rating opp OR','Rating Defensive Rating','Rating opp EFG(%)', 'Rating opp TS(%)',
+                 'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt()['value'].mean()
 
-    defe1.update_layout(
-        autosize=True,
-        width=250,
-        height=150,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=40,
-            pad=0
+        defe1 = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=defense_ratings1.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Defense"}))
+
+        defe1.update_layout(
+            autosize=True,
+            width=250,
+            height=150,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=40,
+                pad=0
+            )
         )
-    )
+
+        st.write(defe1)
 
 
-    st.write(defe1)
+        total_ratings1 = teamstats1.filter(regex='Rating').melt()['value'].mean()
 
-    total_ratings1 = teamstats1.filter(regex='Rating').melt()['value'].mean()
+        tot = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=total_ratings1.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Overall"}))
 
-    tot = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=total_ratings1.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Overall"}))
-
-    tot.update_layout(
-        autosize=True,
-        width=300,
-        height=250,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=10,
-            pad=0
+        tot.update_layout(
+            autosize=True,
+            width=250,
+            height=250,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=10,
+                pad=0
+            )
         )
-    )
 
-    st.write(tot)
+        st.write(tot)
 
+    except:
+        st.error("One of filters of first team does not match")
 
 
 with t2:
-    st.write('### Team 2')
-    st.markdown("#### " + compare_teams_team2)
-    st.write('Season: '+select_season_player2)
-    st.write('Phase: '+select_phase_player2)
-    st.write('Round: '+select_round_player2)
-    st.write('Home or away: '+select_ha_player2)
-    st.write('Result: '+select_wl_player2)
+    try:
+        st.write('### Team 2')
+        st.markdown("#### " + compare_teams_team2)
+        st.write('Season: '+select_season_player2)
+        st.write('Phase: '+select_phase_player2)
+        st.write('Round: '+select_round_player2)
+        st.write('Home or away: '+select_ha_player2)
+        st.write('Result: '+select_wl_player2)
 
-    offense_rating_data2=teamstats2[
-        ['Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M', 'Rating F2A',
-         'Rating 2P(%)', 'Rating F3M', 'Rating F3A', 'Rating 3P(%)','Rating FTM', 'Rating FTA', 'Rating FT(%)', 'Rating FT Ratio',
-         'Rating EFG(%)', 'Rating TS(%)', "Rating Offensive Rating",'Rating AS-TO Ratio', "Rating AS Ratio", 'Rating opp DR', 'Rating opp ST',
-         'Rating TO Ratio','Rating opp TO Ratio']].melt()
-    offense_ratings2 = offense_rating_data2['value'].mean()
+        offense_rating_data2=teamstats2[
+            ['Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M', 'Rating F2A',
+             'Rating 2P(%)', 'Rating F3M', 'Rating F3A', 'Rating 3P(%)','Rating FTM', 'Rating FTA', 'Rating FT(%)', 'Rating FT Ratio',
+             'Rating EFG(%)', 'Rating TS(%)', "Rating Offensive Rating",'Rating AS-TO Ratio', "Rating AS Ratio", 'Rating opp DR', 'Rating opp ST',
+             'Rating TO Ratio','Rating opp TO Ratio']].melt()
+        offense_ratings2 = offense_rating_data2['value'].mean()
 
-    off2 = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=offense_ratings2.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Offense"}))
+        off2 = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=offense_ratings2.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Offense"}))
 
-    off2.update_layout(
-        autosize=False,
-        width=250,
-        height=150,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=40,
-            pad=0
-        ))
+        off2.update_layout(
+            autosize=False,
+            width=250,
+            height=150,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=40,
+                pad=0
+            ))
 
-    st.write(off2)
+        st.write(off2)
 
 
-    defense_ratings2 = teamstats2[
-        ['Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK','Rating opp PTS', 'Rating opp AS',
-         'Rating opp F2M', 'Rating opp F2A', 'Rating opp 2P(%)', 'Rating opp F3M', 'Rating opp F3A', 'Rating opp 3P(%)',
-             'Rating opp FTM', 'Rating opp FTA', 'Rating opp FT(%)', 'Rating opp OR','Rating Defensive Rating','Rating opp EFG(%)', 'Rating opp TS(%)',
-             'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt()['value'].mean()
+        defense_ratings2 = teamstats2[
+            ['Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK','Rating opp PTS', 'Rating opp AS',
+             'Rating opp F2M', 'Rating opp F2A', 'Rating opp 2P(%)', 'Rating opp F3M', 'Rating opp F3A', 'Rating opp 3P(%)',
+                 'Rating opp FTM', 'Rating opp FTA', 'Rating opp FT(%)', 'Rating opp OR','Rating Defensive Rating','Rating opp EFG(%)', 'Rating opp TS(%)',
+                 'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt()['value'].mean()
 
-    defe2 = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=defense_ratings2.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Defense"}))
+        defe2 = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=defense_ratings2.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Defense"}))
 
-    defe2.update_layout(
-        autosize=True,
-        width=250,
-        height=150,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=40,
-            pad=0
+        defe2.update_layout(
+            autosize=True,
+            width=250,
+            height=150,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=40,
+                pad=0
+            )
         )
-    )
 
 
-    st.write(defe2)
+        st.write(defe2)
 
-    total_ratings2 = teamstats2.filter(regex='Rating').melt()['value'].mean()
+        total_ratings2 = teamstats2.filter(regex='Rating').melt()['value'].mean()
 
-    tot = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=total_ratings1.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Overall"}))
+        tot = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=total_ratings2.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Overall"}))
 
-    tot.update_layout(
-        autosize=True,
-        width=300,
-        height=250,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=10,
-            pad=0
+        tot.update_layout(
+            autosize=True,
+            width=250,
+            height=250,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=10,
+                pad=0
+            )
         )
-    )
 
-    st.write(tot)
-
+        st.write(tot)
+    except:
+        st.error("One of filters of second team does not match")
 
 with stats:
-    periods,basic,shooting,advanced=st.tabs(['Period Points','Basic Stats','Shooting Stats','Advanced Stats'])
-    with periods:
-        periodteam1=(teamstats1[['Q1S','Q1C','Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S','Q3C',  'Q4S', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC']]
-                     .rename(columns={'Q1S':'Q1 Scored','Q2S':'Q2 Scored','Q3S':'Q3 Scored','Q4S':'Q4 Scored',
-                                      'EXS':'Extra time Scored','FHS':'First Half Scored','SHS':'Second Half Scored',
-                                      'Q1C': 'Q1 Conceed', 'Q2C': 'Q2 Conceed', 'Q3C': 'Q3 Conceed', 'Q4C': 'Q4 Conceed',
-                                      'EXC': 'Extra time Conceed', 'FHC': 'First Half Conceed', 'SHC': 'Second Half Conceed'
-                                      })
-                         .melt()).rename(columns={'variable':'Period','value':'Team 1'})
-        periodteam2 = (
-            teamstats2[['Q1S', 'Q1C', 'Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q3C', 'Q4S', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC']]
-            .rename(columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
-                             'EXS': 'Extra time Scored', 'FHS': 'First Half Scored', 'SHS': 'Second Half Scored',
-                             'Q1C': 'Q1 Conceed', 'Q2C': 'Q2 Conceed', 'Q3C': 'Q3 Conceed', 'Q4C': 'Q4 Conceed',
-                             'EXC': 'Extra time Conceed', 'FHC': 'First Half Conceed', 'SHC': 'Second Half Conceed'
-                             })
-            .melt()).rename(columns={'variable':'Period','value':'Team 2'})
 
-        periodteams=pd.merge(periodteam1,periodteam2)
+        st.write("### Euroleague Stats")
+        try:
+            periods,basic,shooting,advanced=st.tabs(['Period Points','Basic Stats','Shooting Stats','Advanced Stats'])
+            with periods:
+                periodteam1=(teamstats1[['Q1S','Q1C','Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S','Q3C',  'Q4S', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC']]
+                             .rename(columns={'Q1S':'Q1.Scored','Q2S':'Q2.Scored','Q3S':'Q3.Scored','Q4S':'Q4.Scored',
+                                              'EXS':'Extra.time.Scored','FHS':'First.Half.Scored','SHS':'Second.Half.Scored',
+                                              'Q1C': 'Q1.Conceed', 'Q2C': 'Q2.Conceed', 'Q3C': 'Q3.Conceed', 'Q4C': 'Q4.Conceed',
+                                              'EXC': 'Extra.time.Conceed', 'FHC': 'First.Half.Conceed', 'SHC': 'Second.Half.Conceed'
+                                              })
+                                 .melt()).rename(columns={'variable':'Period','value':'Team1'})
+                periodteam2 = (
+                    teamstats2[['Q1S', 'Q1C', 'Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q3C', 'Q4S', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC']]
+                    .rename(columns={'Q1S':'Q1.Scored','Q2S':'Q2.Scored','Q3S':'Q3.Scored','Q4S':'Q4.Scored',
+                                              'EXS':'Extra.time.Scored','FHS':'First.Half.Scored','SHS':'Second.Half.Scored',
+                                              'Q1C': 'Q1.Conceed', 'Q2C': 'Q2.Conceed', 'Q3C': 'Q3.Conceed', 'Q4C': 'Q4.Conceed',
+                                              'EXC': 'Extra.time.Conceed', 'FHC': 'First.Half.Conceed', 'SHC': 'Second.Half.Conceed'
+                                     })
+                    .melt()).rename(columns={'variable':'Period','value':'Team2'})
+
+                periodteams=pd.merge(periodteam1,periodteam2)
+                period_fig = go.Figure(
+                    data=go.Table(columnwidth=[3,1,1],header=dict(values=list(periodteams.columns), align='center', font_size=18, height=30),
+                                  cells=dict(values=[periodteams['Period'],periodteams['Team1'],
+                                                     periodteams['Team2']], align='center', font_size=15.5, height=30)))
+                period_fig.update_layout(
+                    autosize=False,
+                    width=600,
+                    height=490,
+                    margin=dict(
+                        l=0,
+                        r=10,
+                        b=40,
+                        t=0,
+                        pad=40
+                    ))
+                st.write(period_fig)
+
+            with basic:
+
+                basic_stats1 = teamstats1[
+                    ['PTS','opp PTS', 'AS', 'opp AS', 'TO', 'opp TO', 'TR', 'DR', 'OR',  'opp TR', 'opp DR', 'opp OR','BLK', 'BLKR', 'ST','opp ST',  'PF', 'RF', 'PIR','opp PIR']].rename(
+                    columns={'PTS': 'Points.Scored',
+                             'AS': 'Assists.made',
+                             'TO': 'Turnovers.made',
+                             'TR': 'TotalRebounds.taken',
+                             'OR': 'OffensiveRebounds.taken',
+                             'DR': 'DefensiveRebounds.taken',
+                             'opp PTS': 'Points.Conceed',
+                             'opp AS': 'opp.Assists',
+                             'opp TO': 'opp.Turnovers',
+                             'opp TR': 'Total.Rebounds.opp.taken',
+                             'opp OR': 'Offensive.Rebounds.opp.taken',
+                             'opp DR': 'Defensive.Rebounds.opp.taken',
+                             'BLK': 'Blocks',
+                             'BLKR': 'Blocks.Reversed',
+                             'ST': 'Steals.made',
+                             'opp ST': 'opp.Steals',
+                             'PF': 'Personal.Fouls',
+                             'RF': 'Fouls.Drawn'}).round(1)
+                basic_stats1 = basic_stats1.melt().rename(columns={"variable": "Basic.Stats", "value": "Team1"})
+                basic_stats2 = teamstats2[['PTS','opp PTS', 'AS', 'opp AS', 'TO', 'opp TO', 'TR', 'DR', 'OR',  'opp TR', 'opp DR', 'opp OR','BLK', 'BLKR', 'ST','opp ST',  'PF', 'RF', 'PIR','opp PIR']].rename(
+                    columns={'PTS': 'Points.Scored',
+                             'AS': 'Assists.made',
+                             'TO': 'Turnovers.made',
+                             'TR': 'TotalRebounds.taken',
+                             'OR': 'OffensiveRebounds.taken',
+                             'DR': 'DefensiveRebounds.taken',
+                             'opp PTS': 'Points.Conceed',
+                             'opp AS': 'opp.Assists',
+                             'opp TO': 'opp.Turnovers',
+                             'opp TR': 'Total.Rebounds.opp.taken',
+                             'opp OR': 'Offensive.Rebounds.opp.taken',
+                             'opp DR': 'Defensive.Rebounds.opp.taken',
+                             'BLK': 'Blocks',
+                             'BLKR': 'Blocks.Reversed',
+                             'ST': 'Steals.made',
+                             'opp ST': 'opp.Steals',
+                             'PF': 'Personal.Fouls',
+                             'RF': 'Fouls.Drawn'}).round(1)
+                basic_stats2 = basic_stats2.melt().rename(columns={"variable": "Basic.Stats", "value": "Team2"})
+                basic_stats_data = pd.merge(basic_stats1, basic_stats2)
+                basic_stats_fig = go.Figure(
+                    data=go.Table(columnwidth=[3,1,1],header=dict(values=list(basic_stats_data.columns), align='center', font_size=18, height=30),
+                                  cells=dict(values=[basic_stats_data['Basic.Stats'], basic_stats_data['Team1'],
+                                                     basic_stats_data['Team2']], align='center', font_size=15.5, height=30)))
+                basic_stats_fig.update_layout(
+                    autosize=False,
+                    width=600,
+                    height=800,
+                    margin=dict(
+                        l=0,
+                        r=10,
+                        b=40,
+                        t=0,
+                        pad=40
+                    ))
+                st.write(basic_stats_fig)
+            with shooting:
+                shooting_stats1 = teamstats1[['F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)','F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)','FTM', 'FTA', 'FT(%)',
+                                              'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)','TS(%)','opp TS(%)']].rename(
+                    columns={'F2M': '2P.Made',
+                             'F2A': '2P.Attempt',
+                             'P2': '2P(%)',
+                             'F3M': '3P.Made',
+                             'F3A': '3P.Attempt',
+                             'P3': '3P(%)',
+                             'FTM': 'FT.Made',
+                             'FTA': 'FT.Attempt',
+                             'PFT': 'FT(%)',
+                             'FTR': 'FT.Ratio',
+                             'EFG': 'EFG(%)',
+                             'TS': 'TS(%)',
+                             'opp F2M': 'opp.2P.Made',
+                             'opp F2A': 'opp.2P.Attempt',
+                             'opp 2P(%)': 'opp.2P(%)',
+                             'opp F3M': 'opp.3P.Made',
+                             'opp F3A': 'opp.3P.Attempt',
+                             'opp 3P(%)': 'opp.3P(%)',
+                             'opp FTM': 'opp.FT.Made',
+                             'opp FTA': 'opp.FT.Attempt',
+                             'opp PFT': 'opp.FT(%)',
+                             'opp FTR': 'opp.FT.Ratio',
+                             'opp EFG': 'opp.EFG(%)',
+                             'opp TS': 'opp.TS(%)'
+                             })
+                shooting_stats1 = shooting_stats1.round(1).melt().rename(
+                    columns={"variable": "Shooting.Stats", "value": "Team1"})
+                shooting_stats2 = teamstats2[['F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)','F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)','FTM', 'FTA', 'FT(%)',
+                                              'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)','TS(%)','opp TS(%)']].rename(
+                    columns={'F2M': '2P.Made',
+                             'F2A': '2P.Attempt',
+                             'P2': '2P(%)',
+                             'F3M': '3P.Made',
+                             'F3A': '3P.Attempt',
+                             'P3': '3P(%)',
+                             'FTM': 'FT.Made',
+                             'FTA': 'FT.Attempt',
+                             'PFT': 'FT(%)',
+                             'FTR': 'FT.Ratio',
+                             'EFG': 'EFG(%)',
+                             'TS': 'TS(%)',
+                             'opp F2M': 'opp.2P.Made',
+                             'opp F2A': 'opp.2P.Attempt',
+                             'opp 2P(%)': 'opp.2P(%)',
+                             'opp F3M': 'opp.3P.Made',
+                             'opp F3A': 'opp.3P.Attempt',
+                             'opp 3P(%)': 'opp.3P(%)',
+                             'opp FTM': 'opp.FT.Made',
+                             'opp FTA': 'opp.FT.Attempt',
+                             'opp PFT': 'opp.FT(%)',
+                             'opp FTR': 'opp.FT.Ratio',
+                             'opp EFG': 'opp.EFG(%)',
+                             'opp TS': 'opp.TS(%)'
+                             })
+                shooting_stats2 = shooting_stats2.round(1).melt().rename(
+                    columns={"variable": "Shooting.Stats", "value": "Team2"})
+                shooting_stats_data = pd.merge(shooting_stats1, shooting_stats2)
+                shooting_stats_fig = go.Figure(data=go.Table(columnwidth=[3,1,1],
+                    header=dict(values=list(shooting_stats_data.columns), align='center', font_size=18, height=30),
+                    cells=dict(values=[shooting_stats_data['Shooting.Stats'], shooting_stats_data['Team1'],
+                                       shooting_stats_data['Team2']], align='center', font_size=16, height=30)))
+                shooting_stats_fig.update_layout(
+                    autosize=False,
+                    width=8000,
+                    height=700,
+                    margin=dict(
+                        l=0,
+                        r=10,
+                        b=40,
+                        t=0,
+                        pad=40
+                    ))
+                st.write(shooting_stats_fig)
+
+            with advanced:
+                advanced_stats1 = (teamstats1[['Possesions','opp Possesions', 'Offensive Rating', 'Defensive Rating',
+                                                 'AS-TO Ratio','opp AS-TO Ratio', 'TO Ratio', 'opp TO Ratio', 'AS Ratio','opp AS Ratio']]
+                                   .rename(columns={'opp Possesions':'opp.Possesions', 'Offensive Rating':'Offensive.Rating', 'Defensive Rating':'Defensive.Rating',
+                                                 'AS-TO Ratio':'AS-TO.Ratio','opp AS-TO Ratio':'opp.AS-TO.Ratio', 'TO Ratio':'TO.Ratio', 'opp TO Ratio':'opp.TO.Ratio',
+                                                'AS Ratio':'AS.Ratio','opp AS Ratio':'opp.AS.Ratio'}))
+                advanced_stats1 = advanced_stats1.round(1).melt().rename(
+                    columns={"variable": "Advanced-Stats", "value": "Team1"})
+                advanced_stats2 = teamstats2[['Possesions','opp Possesions', 'Offensive Rating', 'Defensive Rating',
+                                                 'AS-TO Ratio','opp AS-TO Ratio', 'TO Ratio', 'opp TO Ratio', 'AS Ratio','opp AS Ratio']].rename(columns={'opp Possesions':'opp.Possesions', 'Offensive Rating':'Offensive.Rating', 'Defensive Rating':'Defensive.Rating',
+                                                 'AS-TO Ratio':'AS-TO.Ratio','opp AS-TO Ratio':'opp.AS-TO.Ratio', 'TO Ratio':'TO.Ratio', 'opp TO Ratio':'opp.TO.Ratio',
+                                                'AS Ratio':'AS.Ratio','opp AS Ratio':'opp.AS.Ratio'})
+                advanced_stats2 = advanced_stats2.round(1).melt().rename(
+                    columns={"variable": "Advanced-Stats", "value": "Team2"})
+                advanced_stats_data = pd.merge(advanced_stats1, advanced_stats2)
+                advanced_stats_fig = go.Figure(data=go.Table(
+                    header=dict(values=list(advanced_stats_data.columns), align='center', font_size=18, height=30),
+                    cells=dict(values=[advanced_stats_data['Advanced-Stats'], advanced_stats_data['Team1'],
+                                       advanced_stats_data['Team2']], align='center',
+                               font_size=15, height=30)))
+                advanced_stats_fig.update_layout(
+                    autosize=False,
+                    width=700,
+                    height=500,
+                    margin=dict(
+                        l=10,
+                        r=10,
+                        b=40,
+                        t=0,
+                        pad=40
+                    ))
+                st.write(advanced_stats_fig)
+        except:
+            st.error("One of filters does not match")
+
+try:
+    st.write("### Between teams games stats")
+    def teams_format(Team):
+        if Team == compare_teams_team1:
+            return "Team 1"
+        elif Team == compare_teams_team2:
+            return "Team 2"
+    lnk = '<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">'
+
+    def metrics_customize(red,green,blue,iconname,sline,i):
+
+        htmlstr = f"""<p style='background-color: rgb({red},{green},{blue}, 0.75); 
+                            color: rgb(0,0,0, 0.75); 
+                            font-size: 25px; 
+                            border-radius: 7px; 
+                            padding-left: 12px; 
+                            padding-top: 18px; 
+                            padding-bottom: 18px; 
+                            line-height:25px;'>
+                            <i class='{iconname} fa-xs'></i> {i}
+                            </style><BR><span style='font-size: 22px; 
+                            margin-top: 0;'>{sline}</style></span></p>"""
+        return htmlstr
+    filters1,filters2=st.columns(2)
+    with filters1:
+        between_teams_ha_team = st.selectbox("Home team:",[compare_teams_team1, compare_teams_team2, 'All'],index=2)
+        between_teams_season_team = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
+    with filters2:
+        between_teams_phase_team = st.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
+        between_teams_round_team = st.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
+
+    teams = [compare_teams_team1, compare_teams_team2]
+    between_stats=All_Seasons.loc[(All_Seasons.Team.isin(teams)) & (All_Seasons.Against.isin(teams))]
+    between_stats['Team_select']=between_stats['Team'].apply(teams_format)
+    between_periods= period_points.loc[(period_points.Team.isin(teams)) & (period_points.Against.isin(teams))]
+    between_periods['Team_select']=between_periods['Team'].apply(teams_format)
+    if "All" in between_teams_ha_team:
+        between_stats1 = between_stats
+        between_periods1 = between_periods
+    elif compare_teams_team1 in between_teams_ha_team:
+        between_stats1 = between_stats.loc[((between_stats.HA == "H") & (between_stats.Team == compare_teams_team1)) | ((between_stats.HA == "A") & (between_stats.Team == compare_teams_team2))]
+        between_periods1 = between_periods.loc[((between_periods.HA == "H") & (between_periods.Team == compare_teams_team1)) | ((between_periods.HA == "A") & (between_periods.Team == compare_teams_team2))]
+    elif compare_teams_team2 in between_teams_ha_team:
+        between_stats1 = between_stats.loc[((between_stats.HA == "H") & (between_stats.Team == compare_teams_team2)) | ((between_stats.HA == "A") & (between_stats.Team == compare_teams_team1))]
+        between_periods1 = between_periods.loc[((between_periods.HA == "H") & (between_periods.Team == compare_teams_team2)) | ((between_periods.HA == "A") & (between_periods.Team == compare_teams_team1))]
+
+    if "All" in between_teams_season_team:
+        between_teams_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
+                                      '2022-2023', '2023-2024']
+        between_stats1 = between_stats1.loc[between_stats1['Season'].isin(between_teams_season_team1)]
+        between_periods1 = between_periods1.loc[between_periods1['Season'].isin(between_teams_season_team1)]
+    else:
+        between_stats1 = between_stats1.loc[between_stats1['Season'] == between_teams_season_team]
+        between_periods1 = between_periods1.loc[between_periods1['Season'] == between_teams_season_team]
+
+    if "All" in between_teams_phase_team:
+        between_teams_phase_team1 = ['Regular Season', 'Play In', 'Play offs', 'Final Four']
+        between_stats1 = between_stats1.loc[between_stats1['Phase'].isin(between_teams_phase_team1)]
+        between_periods1 = between_periods1.loc[between_periods1['Phase'].isin(between_teams_phase_team1)]
+    else:
+        between_stats1 =between_stats1.loc[between_stats1['Phase'] == between_teams_phase_team]
+        between_periods1 = between_periods1.loc[between_periods1['Phase'] == between_teams_phase_team]
+
+    if "All" in between_teams_round_team:
+        between_teams_round_team1 = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4',
+                                     'PO 5', 'Semi Final', 'Third Place', 'Final']
+        between_stats1 = between_stats1.loc[between_stats1['Round'].isin(between_teams_round_team1)]
+        between_periods1 = between_periods1.loc[between_periods1['Round'].isin(between_teams_round_team1)]
+
+    else:
+        between_stats1 = between_stats1.loc[between_stats1['Round'] == between_teams_round_team]
+        between_periods1 = between_periods1.loc[between_periods1['Round'].isin(between_teams_round_team)]
+
+    wins=(between_stats1[['idseason','Team_select','results']]
+              .value_counts().reset_index()[['idseason','Team_select','results']]
+              .value_counts().reset_index().groupby(["Team_select",'results'])['count']
+              .sum().reset_index())
+
+    try:
+        winsteam1=wins.loc[(wins.results=="W") & (wins.Team_select=='Team 1')]['count'].unique()[0]
+    except:
+        winsteam1=0
+    try:
+        winsteam2=wins.loc[(wins.results=="W") & (wins.Team_select=='Team 2')]['count'].unique()[0]
+    except:
+        winsteam2=0
+    kpi1, kpi2, kpi3 = st.columns(3)
+    with kpi1:
+        st.markdown(lnk + metrics_customize(204,153,0,"",between_stats1['idseason'].nunique(),"Total Games"), unsafe_allow_html=True)
+    with kpi2:
+        st.markdown(lnk + metrics_customize(204, 153, 0, "", winsteam1,compare_teams_team1 + " Wins"), unsafe_allow_html=True)
+    with kpi3:
+        st.markdown(lnk + metrics_customize(204, 153, 0, "", winsteam2, compare_teams_team2 +" Wins"), unsafe_allow_html=True)
+
+
+
+    finalstats=between_stats1.groupby(['idseason','Team'])[['PTS','F2M',
+                                          'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
+                                          'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',
+                                          'PIR','Possesions']].sum().reset_index().groupby('Team')[['PTS','F2M',
+                                          'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
+                                          'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',
+                                          'PIR','Possesions']].mean().reset_index()
+
+
+
+    finalstats['2P(%)']=100*(finalstats['F2M']/finalstats['F2A'])
+    finalstats['3P(%)']=100*(finalstats['F3M']/finalstats['F3A'])
+    finalstats['FT(%)']=100*(finalstats['FTM']/finalstats['FTA'])
+    finalstats['Offensive Rating']=100*(finalstats['PTS']/finalstats['Possesions'])
+    finalstats['EFG(%)']=100*(finalstats['F2M']+1.5*finalstats['F3M'])/(finalstats['F2A']+finalstats['F3A'])
+    finalstats['TS(%)']=100*(finalstats['PTS'])/(2*(finalstats['F2A']+finalstats['F3A']+0.44*finalstats['FTA']))
+    finalstats['FT Ratio']=finalstats['FTA']/(finalstats['F3A']+finalstats['F2A'])
+    finalstats['AS-TO Ratio']=finalstats['AS']/finalstats['TO']
+    finalstats['TO Ratio']=100*(finalstats['TO']/finalstats['Possesions'])
+    finalstats['AS Ratio']=100*(finalstats['AS']/finalstats['Possesions'])
+    finalstats=finalstats[['Team','PTS','F2M','F2A', '2P(%)','F3M', 'F3A','3P(%)', 'FTM', 'FTA','FT(%)', 'OR','DR', 'TR',
+                           'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF','PIR','Possesions','Offensive Rating','EFG(%)',
+                           'TS(%)','FT Ratio','AS-TO Ratio','TO Ratio','AS Ratio']].round(1)
+
+    finalperiods=between_periods1.groupby('Team')[
+        ['Q1S', 'Q2S', 'Q1C', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q4S', 'Q3C', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC']].mean().reset_index().round(2)
+    final=pd.merge(finalperiods,finalstats)
+
+
+
+
+
+
+    periodsbet,basicbet,shootbet,advbet=st.columns(4)
+
+    with periodsbet:
+        periodbetdata1=final.loc[final.Team==compare_teams_team1][['Q1S', 'Q2S',  'FHS',
+              'Q3S', 'Q4S',
+             'SHS', 'EXS',]].rename(columns={'Q1S': 'Q1.Scored', 'Q2S': 'Q2.Scored', 'Q3S': 'Q3.Scored', 'Q4S': 'Q4.Scored',
+                         'EXS': 'Extra.time.Scored', 'FHS': 'First.Half.Scored', 'SHS': 'Second.Half.Scored'}).melt().rename(
+                columns={"variable": "Period", "value": "Team1"})
+
+        periodbetdata2 = final.loc[final.Team==compare_teams_team2][
+            ['Q1S', 'Q2S',  'FHS',
+              'Q3S', 'Q4S',
+             'SHS', 'EXS',]].rename(columns={'Q1S': 'Q1.Scored', 'Q2S': 'Q2.Scored', 'Q3S': 'Q3.Scored', 'Q4S': 'Q4.Scored',
+                         'EXS': 'Extra.time.Scored', 'FHS': 'First.Half.Scored', 'SHS': 'Second.Half.Scored'}).melt().rename(
+            columns={"variable": "Period", "value": "Team2"})
+        periodbetdata=pd.merge(periodbetdata1,periodbetdata2)
+
         period_fig = go.Figure(
-            data=go.Table(columnwidth=[3,1,1],header=dict(values=list(periodteams.columns), align='center', font_size=18, height=30),
-                          cells=dict(values=[periodteams['Period'],periodteams['Team 1'],
-                                             periodteams['Team 2']], align='center', font_size=15.5, height=30)))
+        data = go.Table(columnwidth=[3, 1, 1],
+                        header=dict(values=list(periodbetdata.columns), align='center', font_size=18, height=30),
+                        cells=dict(values=[periodbetdata['Period'], periodbetdata['Team1'],
+                                           periodbetdata['Team2']], align='center', font_size=15.5, height=30)))
         period_fig.update_layout(
+        autosize = False,
+        width = 600,
+        height = 490,
+        margin = dict(
+            l=0,
+            r=10,
+            b=40,
+            t=0,
+            pad=40
+        ))
+        st.write(period_fig)
+
+
+
+    with basicbet:
+        basicbetdata1=final.loc[final.Team==compare_teams_team1][['PTS', 'AS','TO','TR', 'DR','OR','BLK','ST','PF', 'PIR']].rename(
+                columns={'PTS': 'Points.Scored',
+                         'AS': 'Assists.made',
+                         'TO': 'Turnovers.made',
+                         'TR': 'TotalRebounds.taken',
+                         'OR': 'OffensiveRebounds.taken',
+                         'DR': 'DefensiveRebounds.taken',
+                         'BLK': 'Blocks',
+                         'ST': 'Steals.made',
+                         'PF': 'Personal.Fouls'}).round(1).melt().rename(
+                columns={"variable": "Basic.Stats", "value": "Team1"})
+
+        basicbetdata2 = final.loc[final.Team==compare_teams_team2][
+            ['PTS', 'AS','TO','TR', 'DR','OR','BLK','ST','PF', 'PIR']].rename(
+                columns={'PTS': 'Points.Scored',
+                         'AS': 'Assists.made',
+                         'TO': 'Turnovers.made',
+                         'TR': 'TotalRebounds.taken',
+                         'OR': 'OffensiveRebounds.taken',
+                         'DR': 'DefensiveRebounds.taken',
+                         'BLK': 'Blocks',
+                         'ST': 'Steals.made',
+                         'PF': 'Personal.Fouls'}).round(1).melt().rename(
+            columns={"variable": "Basic.Stats", "value": "Team2"})
+        basicbetdata=pd.merge(basicbetdata1,basicbetdata2)
+
+        basic_fig = go.Figure(
+        data = go.Table(columnwidth=[3, 1, 1],
+                        header=dict(values=list(basicbetdata.columns), align='center', font_size=18, height=30),
+                        cells=dict(values=[basicbetdata['Basic.Stats'], basicbetdata['Team1'],
+                                           basicbetdata['Team2']], align='center', font_size=15.5, height=30)))
+        basic_fig.update_layout(
+        autosize = False,
+        width = 600,
+        height = 490,
+        margin = dict(
+            l=0,
+            r=10,
+            b=40,
+            t=0,
+            pad=40
+        ))
+        st.write(basic_fig)
+
+    with shootbet:
+        shootbetdata1 = final.loc[final.Team==compare_teams_team1][['F2M', 'F2A', '2P(%)','F3M', 'F3A', '3P(%)','FTM', 'FTA', 'FT(%)', 'FT Ratio',  'EFG(%)', 'TS(%)']].rename(
+                columns={'F2M': '2P.Made',
+                         'F2A': '2P.Attempt',
+                         'P2': '2P(%)',
+                         'F3M': '3P.Made',
+                         'F3A': '3P.Attempt',
+                         'P3': '3P(%)',
+                         'FTM': 'FT.Made',
+                         'FTA': 'FT.Attempt',
+                         'PFT': 'FT(%)',
+                         'FTR': 'FT.Ratio',
+                         'EFG': 'EFG(%)',
+                         'TS': 'TS(%)'}).round(1).melt().rename(
+            columns={"variable": "Shooting.Stats", "value": "Team1"})
+
+        shootbetdata2 = final.loc[final.Team==compare_teams_team2][['F2M', 'F2A', '2P(%)','F3M', 'F3A', '3P(%)','FTM', 'FTA', 'FT(%)', 'FT Ratio',  'EFG(%)', 'TS(%)']].rename(
+                columns={'F2M': '2P.Made',
+                         'F2A': '2P.Attempt',
+                         'P2': '2P(%)',
+                         'F3M': '3P.Made',
+                         'F3A': '3P.Attempt',
+                         'P3': '3P(%)',
+                         'FTM': 'FT.Made',
+                         'FTA': 'FT.Attempt',
+                         'PFT': 'FT(%)',
+                         'FTR': 'FT.Ratio',
+                         'EFG': 'EFG(%)',
+                         'TS': 'TS(%)'}).round(1).melt().rename(
+            columns={"variable": "Shooting.Stats", "value": "Team2"})
+        shootbetdata = pd.merge(shootbetdata1, shootbetdata2)
+
+        shoot_fig = go.Figure(
+            data=go.Table(columnwidth=[3, 1, 1],
+                          header=dict(values=list(shootbetdata.columns), align='center', font_size=18, height=30),
+                          cells=dict(values=[shootbetdata['Shooting.Stats'], shootbetdata['Team1'],
+                                             shootbetdata['Team2']], align='center', font_size=15.5, height=30)))
+        shoot_fig.update_layout(
             autosize=False,
             width=600,
             height=490,
@@ -763,59 +1207,27 @@ with stats:
                 t=0,
                 pad=40
             ))
-        st.write(period_fig)
+        st.write(shoot_fig)
 
-    with basic:
-        basic_stats1 = teamstats1[
-            ['PTS','opp PTS', 'AS', 'opp AS', 'TO', 'opp TO', 'TR', 'DR', 'OR',  'opp TR', 'opp DR', 'opp OR','BLK', 'BLKR', 'ST','opp ST',  'PF', 'RF', 'PIR']].rename(
-            columns={'PTS': 'Points Scored',
-                     'AS': 'Assists made',
-                     'TO': 'Turnovers made',
-                     'TR': 'Total Rebounds taken',
-                     'OR': 'Offensive Rebounds taken',
-                     'DR': 'Defensive Rebounds taken',
-                     'opp PTS': 'Points Conceed',
-                     'opp AS': 'opp Assists',
-                     'opp TO': 'opp Turnovers',
-                     'opp TR': 'Total Rebounds opp taken',
-                     'opp OR': 'Offensive Rebounds opp taken',
-                     'opp DR': 'Defensive Rebounds opp taken',
-                     'BLK': 'Blocks',
-                     'BLKR': 'Blocks Reversed',
-                     'ST': 'Steals made',
-                     'opp ST': 'opp Steals',
-                     'PF': 'Personal Fouls',
-                     'RF': 'Fouls Drawn'}).round(1)
-        basic_stats1 = basic_stats1.melt().rename(columns={"variable": "Basic Stats", "value": "Team 1"})
-        basic_stats2 = teamstats2[['PTS','opp PTS', 'AS', 'opp AS', 'TO', 'opp TO', 'TR', 'DR', 'OR',  'opp TR', 'opp DR', 'opp OR','BLK', 'BLKR', 'ST','opp ST',  'PF', 'RF', 'PIR']].rename(
-            columns={'PTS': 'Points Scored',
-                     'AS': 'Assists made',
-                     'TO': 'Turnovers made',
-                     'TR': 'Total Rebounds taken',
-                     'OR': 'Offensive Rebounds taken',
-                     'DR': 'Defensive Rebounds taken',
-                     'opp PTS': 'Points Conceed',
-                     'opp AS': 'opp Assists',
-                     'opp TO': 'opp Turnovers',
-                     'opp TR': 'Total Rebounds opp taken',
-                     'opp OR': 'Offensive Rebounds opp taken',
-                     'opp DR': 'Defensive Rebounds opp taken',
-                     'BLK': 'Blocks',
-                     'BLKR': 'Blocks Reversed',
-                     'ST': 'Steals made',
-                     'opp ST': 'opp Steals',
-                     'PF': 'Personal Fouls',
-                     'RF': 'Fouls Drawn'}).round(1)
-        basic_stats2 = basic_stats2.melt().rename(columns={"variable": "Basic Stats", "value": "Team 2"})
-        basic_stats_data = pd.merge(basic_stats1, basic_stats2)
-        basic_stats_fig = go.Figure(
-            data=go.Table(columnwidth=[3,1,1],header=dict(values=list(basic_stats_data.columns), align='center', font_size=18, height=30),
-                          cells=dict(values=[basic_stats_data['Basic Stats'], basic_stats_data['Team 1'],
-                                             basic_stats_data['Team 2']], align='center', font_size=15.5, height=30)))
-        basic_stats_fig.update_layout(
+    with advbet:
+        advbetdata1 = final.loc[final.Team==compare_teams_team1][['Possesions', 'Offensive Rating',
+                                             'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(1).melt().rename(
+            columns={"variable": "Advanced.Stats", "value": "Team1"})
+
+        advbetdata2 = final.loc[final.Team==compare_teams_team2][['Possesions', 'Offensive Rating',
+                                             'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(1).melt().rename(
+            columns={"variable": "Advanced.Stats", "value": "Team2"})
+        advbetdata = pd.merge(advbetdata1, advbetdata2)
+
+        adv_fig = go.Figure(
+            data=go.Table(columnwidth=[3, 1, 1],
+                          header=dict(values=list(advbetdata.columns), align='center', font_size=18, height=30),
+                          cells=dict(values=[advbetdata['Advanced.Stats'], advbetdata['Team1'],
+                                             advbetdata['Team2']], align='center', font_size=15.5, height=30)))
+        adv_fig.update_layout(
             autosize=False,
             width=600,
-            height=800,
+            height=490,
             margin=dict(
                 l=0,
                 r=10,
@@ -823,108 +1235,11 @@ with stats:
                 t=0,
                 pad=40
             ))
-        st.write(basic_stats_fig)
-    with shooting:
-        shooting_stats1 = teamstats1[['F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)','F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)','FTM', 'FTA', 'FT(%)',
-                                      'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)','TS(%)','opp TS(%)']].rename(
-            columns={'F2M': '2P Made',
-                     'F2A': '2P Attempt',
-                     'P2': '2P(%)',
-                     'F3M': '3P Made',
-                     'F3A': '3P Attempt',
-                     'P3': '3P(%)',
-                     'FTM': 'FT Made',
-                     'FTA': 'FT Attempt',
-                     'PFT': 'FT(%)',
-                     'FTR': 'FT Ratio',
-                     'EFG': 'EFG(%)',
-                     'TS': 'TS(%)',
-                     'opp F2M': 'opp 2P Made',
-                     'opp F2A': 'opp 2P Attempt',
-                     'opp 2P(%)': 'opp 2P(%)',
-                     'opp F3M': 'opp 3P Made',
-                     'opp F3A': 'opp 3P Attempt',
-                     'opp 3P(%)': 'opp 3P(%)',
-                     'opp FTM': 'opp FT Made',
-                     'opp FTA': 'opp FT Attempt',
-                     'opp PFT': 'opp FT(%)',
-                     'opp FTR': 'opp FT Ratio',
-                     'opp EFG': 'opp EFG(%)',
-                     'opp TS': 'opp TS(%)'
-                     })
-        shooting_stats1 = shooting_stats1.round(1).melt().rename(
-            columns={"variable": "Shooting Stats", "value": "Team 1"})
-        shooting_stats2 = teamstats2[['F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)','F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)','FTM', 'FTA', 'FT(%)',
-                                      'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)','TS(%)','opp TS(%)']].rename(
-            columns={'F2M': '2P Made',
-                     'F2A': '2P Attempt',
-                     'P2': '2P(%)',
-                     'F3M': '3P Made',
-                     'F3A': '3P Attempt',
-                     'P3': '3P(%)',
-                     'FTM': 'FT Made',
-                     'FTA': 'FT Attempt',
-                     'PFT': 'FT(%)',
-                     'FTR': 'FT Ratio',
-                     'EFG': 'EFG(%)',
-                     'TS': 'TS(%)',
-                     'opp F2M': 'opp 2P Made',
-                     'opp F2A': 'opp 2P Attempt',
-                     'opp 2P(%)': 'opp 2P(%)',
-                     'opp F3M': 'opp 3P Made',
-                     'opp F3A': 'opp 3P Attempt',
-                     'opp 3P(%)': 'opp 3P(%)',
-                     'opp FTM': 'opp FT Made',
-                     'opp FTA': 'opp FT Attempt',
-                     'opp PFT': 'opp FT(%)',
-                     'opp FTR': 'opp FT Ratio',
-                     'opp EFG': 'opp EFG(%)',
-                     'opp TS': 'opp TS(%)'
-                     })
-        shooting_stats2 = shooting_stats2.round(1).melt().rename(
-            columns={"variable": "Shooting Stats", "value": "Team 2"})
-        shooting_stats_data = pd.merge(shooting_stats1, shooting_stats2)
-        shooting_stats_fig = go.Figure(data=go.Table(columnwidth=[3,1,1],
-            header=dict(values=list(shooting_stats_data.columns), align='center', font_size=18, height=30),
-            cells=dict(values=[shooting_stats_data['Shooting Stats'], shooting_stats_data['Team 1'],
-                               shooting_stats_data['Team 2']], align='center', font_size=16, height=30)))
-        shooting_stats_fig.update_layout(
-            autosize=False,
-            width=8000,
-            height=700,
-            margin=dict(
-                l=0,
-                r=10,
-                b=40,
-                t=0,
-                pad=40
-            ))
-        st.write(shooting_stats_fig)
+        st.write(adv_fig)
 
-    with advanced:
-        advanced_stats1 = teamstats1[['Possesions','opp Possesions', 'Offensive Rating', 'Defensive Rating',
-                                         'AS-TO Ratio','opp AS-TO Ratio', 'TO Ratio', 'opp TO Ratio', 'AS Ratio','opp AS Ratio']]
-        advanced_stats1 = advanced_stats1.round(1).melt().rename(
-            columns={"variable": "Advanced Stats", "value": "Team 1"})
-        advanced_stats2 = teamstats2[['Possesions','opp Possesions', 'Offensive Rating', 'Defensive Rating',
-                                         'AS-TO Ratio','opp AS-TO Ratio', 'TO Ratio', 'opp TO Ratio', 'AS Ratio','opp AS Ratio']]
-        advanced_stats2 = advanced_stats2.round(1).melt().rename(
-            columns={"variable": "Advanced Stats", "value": "Team 2"})
-        advanced_stats_data = pd.merge(advanced_stats1, advanced_stats2)
-        advanced_stats_fig = go.Figure(data=go.Table(
-            header=dict(values=list(advanced_stats_data.columns), align='center', font_size=18, height=30),
-            cells=dict(values=[advanced_stats_data['Advanced Stats'], advanced_stats_data['Player 1'],
-                               advanced_stats_data['Player 2']], align='center',
-                       font_size=15, height=30)))
-        advanced_stats_fig.update_layout(
-            autosize=False,
-            width=700,
-            height=300,
-            margin=dict(
-                l=0,
-                r=10,
-                b=40,
-                t=0,
-                pad=40
-            ))
-        st.write(advanced_stats_fig)
+except:
+    st.error("One of filters does not match")
+
+
+
+

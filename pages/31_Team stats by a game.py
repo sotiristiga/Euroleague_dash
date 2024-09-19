@@ -263,13 +263,13 @@ home_team=(All_Seasons_results[['Fixture',"Phase","Home","Away","Home_Points","A
                                 "Q1H":'Q1S',"Q2H":'Q2S',"Q3H":'Q3S',"Q4H":'Q4S','EXH':'EXS',"Q1A":'Q1C',
                             "Q2A":'Q2C',"Q3A":'Q3C',"Q4A":'Q4C','EXA':'EXC','Home_win':'Win'}))
 
-home_team['HA']="H"
+home_team['HA']="Home"
 away_team=(All_Seasons_results[['Fixture',"Phase","Home","Away","Home_Points","Away_Points",
                                 "Q1H","Q2H","Q3H","Q4H",'EXH',"Q1A","Q2A","Q3A","Q4A",'EXA','Season','Round','Away_win','idseason']]
            .rename(columns={"Home":'Against',"Away":'Team',"Home_Points":'Conceed',"Away_Points":"Scored",
                                 "Q1H":'Q1C',"Q2H":'Q2C',"Q3H":'Q3C',"Q4H":'Q4C','EXH':'EXC',"Q1A":'Q1S',
                             "Q2A":'Q2S',"Q3A":'Q3S',"Q4A":'Q4S','EXA':'EXS','Away_win':'Win'}))
-away_team['HA']="A"
+away_team['HA']="Away"
 
 period_points=pd.concat([home_team,away_team])
 
@@ -277,7 +277,7 @@ period_points["FHS"]=period_points["Q1S"]+period_points["Q2S"]
 period_points["FHC"]=period_points["Q1C"]+period_points["Q2C"]
 period_points["SHS"]=period_points["Q3S"]+period_points["Q4S"]
 period_points["SHC"]=period_points["Q3C"]+period_points["Q4C"]
-period_points["results"]=period_points["Win"].apply(result_format)
+period_points["Result"]=period_points["Win"].apply(result_format)
 period_points['EXS'].replace(0, np.nan, inplace=True)
 period_points['EXC'].replace(0, np.nan, inplace=True)
 period_points['Q1W']=period_points.apply(lambda x: period_win_format(x['Q1S'],x['Q1C']),axis=1)
@@ -287,76 +287,28 @@ period_points['Q3W']=period_points.apply(lambda x: period_win_format(x['Q3S'],x[
 period_points['Q4W']=period_points.apply(lambda x: period_win_format(x['Q4S'],x['Q4C']),axis=1)
 period_points['SHW']=period_points.apply(lambda x: period_win_format(x['SHS'],x['SHC']),axis=1)
 period_points['EXW']=period_points.apply(lambda x: period_win_format(x['EXS'],x['EXC']),axis=1)
-period_points['Q1W_W']=period_points.apply(lambda x: period_win_res_win_format(x['Q1S'],x['Q1C'],x['results']),axis=1)
-period_points['Q2W_W']=period_points.apply(lambda x: period_win_res_win_format(x['Q2S'],x['Q2C'],x['results']),axis=1)
-period_points['FHW_W']=period_points.apply(lambda x: period_win_res_win_format(x['FHS'],x['FHC'],x['results']),axis=1)
-period_points['Q3W_W']=period_points.apply(lambda x: period_win_res_win_format(x['Q3S'],x['Q3C'],x['results']),axis=1)
-period_points['Q4W_W']=period_points.apply(lambda x: period_win_res_win_format(x['Q4S'],x['Q4C'],x['results']),axis=1)
-period_points['SHW_W']=period_points.apply(lambda x: period_win_res_win_format(x['SHS'],x['SHC'],x['results']),axis=1)
-period_points['EXW_W']=period_points.apply(lambda x: period_win_res_win_format(x['EXS'],x['EXC'],x['results']),axis=1)
+period_points['Q1W_W']=period_points.apply(lambda x: period_win_res_win_format(x['Q1S'],x['Q1C'],x['Result']),axis=1)
+period_points['Q2W_W']=period_points.apply(lambda x: period_win_res_win_format(x['Q2S'],x['Q2C'],x['Result']),axis=1)
+period_points['FHW_W']=period_points.apply(lambda x: period_win_res_win_format(x['FHS'],x['FHC'],x['Result']),axis=1)
+period_points['Q3W_W']=period_points.apply(lambda x: period_win_res_win_format(x['Q3S'],x['Q3C'],x['Result']),axis=1)
+period_points['Q4W_W']=period_points.apply(lambda x: period_win_res_win_format(x['Q4S'],x['Q4C'],x['Result']),axis=1)
+period_points['SHW_W']=period_points.apply(lambda x: period_win_res_win_format(x['SHS'],x['SHC'],x['Result']),axis=1)
+period_points['EXW_W']=period_points.apply(lambda x: period_win_res_win_format(x['EXS'],x['EXC'],x['Result']),axis=1)
 
 team_ranking_team=st.sidebar.selectbox("Choose Team:",All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
 team_ranking_season = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
 team_ranking_phase = st.sidebar.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 team_ranking_round = st.sidebar.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
-team_ranking_ha = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
+team_ranking_ha = st.sidebar.selectbox("Home or Away games:",['Away','Home','All'],index=2)
 team_ranking_wl = st.sidebar.selectbox("Result:",['W', 'L','All'],index=2)
 
 
 
 
-if "All" in team_ranking_ha:
-    team_ranking_ha = ['A', 'H']
-    All_Seasons1=All_Seasons.loc[All_Seasons['HA'].isin(team_ranking_ha)]
-    period_points1=period_points.loc[period_points['HA'].isin(team_ranking_ha)]
-    select_ha_player1=''
-else:
-    All_Seasons1=All_Seasons.loc[All_Seasons['HA']==team_ranking_ha]
-    period_points1 = period_points.loc[period_points['HA'] == team_ranking_ha]
-    select_ha_player1 = team_ranking_ha
-
-if "All" in team_ranking_season:
-    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
-    All_Seasons1=All_Seasons1.loc[All_Seasons1['Season'].isin(team_ranking_season)]
-    period_points1 = period_points1.loc[period_points1['Season'].isin(team_ranking_season)]
-    select_season_player1 = ''
-else:
-    All_Seasons1=All_Seasons1.loc[All_Seasons1['Season']==team_ranking_season]
-    period_points1 = period_points1.loc[period_points1['Season'] == team_ranking_season]
-    select_season_player1 = team_ranking_season
-
-if "All" in team_ranking_wl:
-    team_ranking_wl = ['W', 'L']
-    All_Seasons1 = All_Seasons1.loc[All_Seasons1['results'].isin(team_ranking_wl)]
-    period_points1 = period_points1.loc[period_points1['results'].isin(team_ranking_wl)]
-    select_wl_player1 = ''
-else:
-    All_Seasons1= All_Seasons1.loc[All_Seasons1['results'] == team_ranking_wl]
-    period_points1 = period_points1.loc[period_points1['results'] == team_ranking_wl]
-    select_wl_player1 = team_ranking_wl
-
-if "All" in team_ranking_phase:
-    team_ranking_phase = ['Regular Season', 'Play In','Play offs', 'Final Four']
-    All_Seasons1 = All_Seasons1.loc[All_Seasons1['Phase'].isin(team_ranking_phase)]
-    period_points1 = period_points1.loc[period_points1['Phase'].isin(team_ranking_phase)]
-    select_phase_player1 = ''
-else:
-    All_Seasons1 = All_Seasons1.loc[All_Seasons1['Phase'] == team_ranking_phase]
-    period_points1 = period_points1.loc[period_points1['Phase'] == team_ranking_phase]
-    select_phase_player1 = team_ranking_phase
-
-if "All" in team_ranking_round:
-    team_ranking_round = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final']
-    All_Seasons1 = All_Seasons1.loc[All_Seasons1['Round'].isin(team_ranking_round)]
-    period_points1 = period_points1.loc[ period_points1['Round'].isin(team_ranking_round)]
-    select_round_player1 = ''
-else:
-    All_Seasons1 = All_Seasons1.loc[All_Seasons1['Round'] == team_ranking_round]
-    period_points1 = period_points1.loc[period_points1['Round'].isin(team_ranking_round)]
-    select_round_player1 = team_ranking_round
 
 
-finalstats=All_Seasons1.groupby(['idseason','Team'])[['PTS','F2M',
+
+finalstats=All_Seasons.groupby(['idseason','Team'])[['PTS','F2M',
                               'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
                               'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',
                               'PIR','Possesions']].sum().reset_index()
@@ -374,7 +326,7 @@ finalstats=finalstats[['idseason','Team','PTS','F2M','F2A', '2P(%)','F3M', 'F3A'
                        'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF','PIR','Possesions','Offensive Rating','EFG(%)',
                        'TS(%)','FT Ratio','AS-TO Ratio','TO Ratio','AS Ratio']].round(1)
 
-finalstats_opp=All_Seasons1.groupby(['idseason','Against'])[['PTS','F2M',
+finalstats_opp=All_Seasons.groupby(['idseason','Against'])[['PTS','F2M',
                               'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
                               'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',
                               'PIR','Possesions']].sum().reset_index()
@@ -396,9 +348,8 @@ finalstats_opp=finalstats_opp[['idseason','Against','PTS','F2M','F2A', '2P(%)','
 finalstats_opp=finalstats_opp.add_prefix('opp ').rename(columns={'opp Against':'Team','opp idseason':'idseason'})
 
 gamesstats=pd.merge(finalstats,finalstats_opp)
-allstats_in_a_game=pd.merge(period_points1,gamesstats,on=['idseason','Team'])
-select_allstats_in_a_game = (allstats_in_a_game.loc[allstats_in_a_game.Team == team_ranking_team][
-    ['Against', 'Season', 'Phase', 'Round', 'Fixture', 'HA', 'results', 'Q1S',
+allstats_in_a_game=pd.merge(period_points,gamesstats,on=['idseason','Team'])
+select_allstats_in_a_game = (allstats_in_a_game.loc[allstats_in_a_game.Team == team_ranking_team][['Against', 'Season', 'Phase', 'Round', 'Fixture', 'HA', 'Result', 'Q1S',
      'Q2S', 'Q1C', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q4S', 'Q3C', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC',
      'PTS', 'opp PTS', 'AS', 'opp AS', 'F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)',
      'F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)', 'FTM', 'FTA', 'FT(%)', 'opp FTM', 'opp FTA', 'opp FT(%)',
@@ -424,12 +375,48 @@ select_allstats_in_a_game['Total DR']=select_allstats_in_a_game['DR']+select_all
 select_allstats_in_a_game['Total TR']=select_allstats_in_a_game['TR']+select_allstats_in_a_game['opp TR']
 select_allstats_in_a_game['Total PF']=select_allstats_in_a_game['PF']+select_allstats_in_a_game['opp PF']
 select_allstats_in_a_game['Total BLK']=select_allstats_in_a_game['BLKR']+select_allstats_in_a_game['BLK']
+if "All" in team_ranking_season:
+    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
+    select_allstats_in_a_game1=select_allstats_in_a_game.loc[select_allstats_in_a_game['Season'].isin(team_ranking_season)]
+
+else:
+    select_allstats_in_a_game1=select_allstats_in_a_game.loc[select_allstats_in_a_game['Season']==team_ranking_season]
+
+
+
+if "All" in team_ranking_phase:
+    team_ranking_phase = ['Regular Season', 'Play In','Play offs', 'Final Four']
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['Phase'].isin(team_ranking_phase)]
+else:
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['Phase'] == team_ranking_phase]
+
+if "All" in team_ranking_round:
+    team_ranking_round = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final']
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['Round'].isin(team_ranking_round)]
+else:
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['Round'] == team_ranking_round]
+
+if "All" in team_ranking_ha:
+    team_ranking_ha2 = ['Away', 'Home']
+    select_allstats_in_a_game1=select_allstats_in_a_game1.loc[select_allstats_in_a_game1['HA'].isin(team_ranking_ha2)]
+elif "Home" in team_ranking_ha:
+    select_allstats_in_a_game1=select_allstats_in_a_game1.loc[select_allstats_in_a_game1.HA=="Home" ]
+elif "Away" in team_ranking_ha:
+    select_allstats_in_a_game1=select_allstats_in_a_game1.loc[select_allstats_in_a_game1.HA=="Away" ]
+
+
+if "All" in team_ranking_wl:
+    team_ranking_wl = ['W', 'L']
+    select_allstats_in_a_game = select_allstats_in_a_game.loc[select_allstats_in_a_game['Result'].isin(team_ranking_wl)]
+
+else:
+    select_allstats_in_a_game= select_allstats_in_a_game.loc[select_allstats_in_a_game['Result'] == team_ranking_wl]
 
 all,select=st.tabs(['All Stats','Select Stat'])
 with all:
 
 
-    interactive_table(select_allstats_in_a_game.set_index('Against'),
+    interactive_table(select_allstats_in_a_game1.set_index('Against'),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
@@ -440,7 +427,7 @@ with select:
     team_ranking_stat = st.sidebar.selectbox("Stat:", ['PTS', '2P', '3P', 'FT', 'OR', 'DR',
                                                             'TR', 'AS', 'STL', 'TO', 'BLK', 'PF', 'RF', 'PIR'], index=8)
     regex1="Against|Season|Phase|Round|Fixture|HA|results" +"|"+ team_ranking_stat
-    interactive_table(select_allstats_in_a_game.filter(regex=regex1).set_index('Against'),
+    interactive_table(select_allstats_in_a_game1.filter(regex=regex1).set_index('Against'),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,

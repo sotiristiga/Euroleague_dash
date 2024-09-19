@@ -407,10 +407,10 @@ elif "Away" in team_ranking_ha:
 
 if "All" in team_ranking_wl:
     team_ranking_wl = ['W', 'L']
-    select_allstats_in_a_game = select_allstats_in_a_game.loc[select_allstats_in_a_game['Result'].isin(team_ranking_wl)]
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['Result'].isin(team_ranking_wl)]
 
 else:
-    select_allstats_in_a_game= select_allstats_in_a_game.loc[select_allstats_in_a_game['Result'] == team_ranking_wl]
+    select_allstats_in_a_game1= select_allstats_in_a_game1.loc[select_allstats_in_a_game1['Result'] == team_ranking_wl]
 
 all,select=st.tabs(['All Stats','Select Stat'])
 with all:

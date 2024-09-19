@@ -173,12 +173,56 @@ euroleague_2023_2024_playerstats['Round']=euroleague_2023_2024_playerstats['Fixt
 
 All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats])
 
-All_Seasons=All_Seasons.rename(columns={'HA':'Home or Away','results':'Result'})
+selected_ha_player1 = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
+selected_season_player1 = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
+selected_phase_player1 = st.sidebar.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
+selected_wl_player1 = st.sidebar.selectbox("Result:",['W', 'L','All'],index=2)
+selected_round_player1 = st.sidebar.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
 
-filters_playerstats = DynamicFilters(All_Seasons, filters=['Season','Round','Phase','Home or Away','Result'])
-All_Seasons_filter = filters_playerstats .filter_df()
 
-filters_playerstats.display_filters(location='sidebar')
+if "All" in selected_ha_player1:
+    selected_ha_player1 = ['A', 'H']
+    All_Seasons_filter=All_Seasons.loc[All_Seasons['HA'].isin(selected_ha_player1)]
+    select_ha_player1=''
+else:
+    All_Seasons_filter=All_Seasons.loc[All_Seasons['HA']==selected_ha_player1]
+    select_ha_player1 = selected_ha_player1
+
+if "All" in selected_season_player1:
+    selected_season_player1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
+    All_Seasons_filter=All_Seasons_filter.loc[All_Seasons_filter['Season'].isin(selected_season_player1)]
+    select_season_player1 = ''
+else:
+    All_Seasons_filter=All_Seasons_filter.loc[All_Seasons_filter['Season']==selected_season_player1]
+    select_season_player1 = selected_season_player1
+
+if "All" in selected_wl_player1:
+    selected_wl_player1 = ['W', 'L']
+    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['results'].isin(selected_wl_player1)]
+    select_wl_player1 = ''
+else:
+    All_Seasons_filter= All_Seasons_filter.loc[All_Seasons_filter['results'] == selected_wl_player1]
+    select_wl_player1 = selected_wl_player1
+
+if "All" in selected_phase_player1:
+    selected_phase_player1 = ['Regular Season', 'Play In','Play offs', 'Final Four']
+    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Phase'].isin(selected_phase_player1)]
+    select_phase_player1 = ''
+else:
+    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Phase'] == selected_phase_player1]
+    select_phase_player1 = selected_phase_player1
+
+if "All" in selected_round_player1:
+    selected_round_player1 = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final']
+    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Round'].isin(selected_round_player1)]
+    select_round_player1 = ''
+else:
+    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Round'] == selected_round_player1]
+    select_round_player1 = selected_round_player1
+
+
+
+
 All_Seasons_filter['Player']=All_Seasons_filter['Player'].str.replace("   ","  ")
 All_Seasons_filter['Player']=All_Seasons_filter['Player'].str.replace("  ","-")
 All_Seasons_filter['Player']=All_Seasons_filter['Player'].str.replace(" ","-")

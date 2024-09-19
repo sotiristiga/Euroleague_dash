@@ -115,22 +115,7 @@ def fixture_format5(Fixture):
 
 
 
-lnk = '<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">'
 
-def metrics_customize(red,green,blue,iconname,sline,i):
-
-    htmlstr = f"""<p style='background-color: rgb({red},{green},{blue}, 0.75); 
-                        color: rgb(0,0,0, 0.75); 
-                        font-size: 20px; 
-                        border-radius: 120px; 
-                        padding-left: 20px; 
-                        padding-top: 20px; 
-                        padding-bottom: 20px; 
-                        line-height:23px;'>
-                        <i class='{iconname} fa-xs'></i> {i}
-                        </style><BR><span style='font-size: 25px; 
-                        margin-top: 0;'>{sline}</style></span></p>"""
-    return htmlstr
 euroleague_2016_2017_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2016_2017_playerstats.csv")
 euroleague_2016_2017_playerstats['idseason']=euroleague_2016_2017_playerstats['IDGAME'] + "_" + euroleague_2016_2017_playerstats['Season']
 euroleague_2016_2017_playerstats[['Fixture', 'Game']] = euroleague_2016_2017_playerstats['IDGAME'].str.split('_', n=1, expand=True)
@@ -190,34 +175,93 @@ euroleague_2023_2024_playerstats['Round']=euroleague_2023_2024_playerstats['Fixt
 
 All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats])
 
-All_Seasons=All_Seasons.rename(columns={'HA':'Home or Away','results':'Result'})
 
-filters_search_player=DynamicFilters(All_Seasons, filters=['Season','Round','Phase','Home or Away','Result'])
-search_player_filter=filters_search_player.filter_df()
-
-search_player_player=st.sidebar.selectbox("Choose a player:",search_player_filter['Player'].reset_index().sort_values('Player')['Player'].unique())
-
-filters_search_player.display_filters(location='sidebar')
-
+search_player_player=st.sidebar.selectbox("Choose a player:",All_Seasons['Player'].reset_index().sort_values('Player')['Player'].unique())
+selected_ha_player1 = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
+selected_season_player1 = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
+selected_phase_player1 = st.sidebar.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
+selected_wl_player1 = st.sidebar.selectbox("Result:",['W', 'L','All'],index=2)
+selected_round_player1 = st.sidebar.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
 
 
-teams_min_games_played=pd.merge(search_player_filter.loc[search_player_filter['Player']==search_player_player].groupby(["Player",'Team'])['MIN'].mean().round(1).reset_index(),search_player_filter.loc[search_player_filter['Player']==search_player_player][["Player",'Team']].value_counts().reset_index()).rename(columns={'count':'Games'})
+if "All" in selected_ha_player1:
+    selected_ha_player1 = ['A', 'H']
+    All_Seasons_filter=All_Seasons.loc[All_Seasons['HA'].isin(selected_ha_player1)]
+    select_ha_player1=''
+else:
+    All_Seasons_filter=All_Seasons.loc[All_Seasons['HA']==selected_ha_player1]
+    select_ha_player1 = selected_ha_player1
 
-computestats=search_player_filter.groupby('Player')[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().round(1).reset_index()
+if "All" in selected_season_player1:
+    selected_season_player1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
+    All_Seasons_filter=All_Seasons_filter.loc[All_Seasons_filter['Season'].isin(selected_season_player1)]
+    select_season_player1 = ''
+else:
+    All_Seasons_filter=All_Seasons_filter.loc[All_Seasons_filter['Season']==selected_season_player1]
+    select_season_player1 = selected_season_player1
+
+if "All" in selected_wl_player1:
+    selected_wl_player1 = ['W', 'L']
+    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['results'].isin(selected_wl_player1)]
+    select_wl_player1 = ''
+else:
+    All_Seasons_filter= All_Seasons_filter.loc[All_Seasons_filter['results'] == selected_wl_player1]
+    select_wl_player1 = selected_wl_player1
+
+if "All" in selected_phase_player1:
+    selected_phase_player1 = ['Regular Season', 'Play In','Play offs', 'Final Four']
+    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Phase'].isin(selected_phase_player1)]
+    select_phase_player1 = ''
+else:
+    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Phase'] == selected_phase_player1]
+    select_phase_player1 = selected_phase_player1
+
+if "All" in selected_round_player1:
+    selected_round_player1 = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final']
+    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Round'].isin(selected_round_player1)]
+    select_round_player1 = ''
+else:
+    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Round'] == selected_round_player1]
+    select_round_player1 = selected_round_player1
+
+
+
+def null_replace(x):
+    if x==' ':
+        return 0
+    else:
+        return x
+
+
+
+teams_min_games_played=pd.merge(All_Seasons_filter.loc[All_Seasons_filter['Player']==search_player_player].groupby(["Player",'Team'])['MIN'].mean().round(1).reset_index(),All_Seasons_filter.loc[All_Seasons_filter['Player']==search_player_player][["Player",'Team']].value_counts().reset_index()).rename(columns={'count':'Games'})
+
+computestats=All_Seasons_filter.groupby('Player')[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().round(1).reset_index()
 
 
 computestats['P2']=100*(computestats['F2M']/computestats['F2A'])
+computestats['P2']=computestats['P2'].fillna(0)
 computestats['P3']=100*(computestats['F3M']/computestats['F3A'])
+computestats['P3']=computestats['P3'].fillna(0)
 computestats['PFT']=100*(computestats['FTM']/computestats['FTA'])
+computestats['PFT']=computestats['PFT'].fillna(0)
 computestats['POS']=0.96*(computestats['F2A']+computestats['F3A']-computestats['OR']+computestats['TO']+0.44*computestats['FTA'])
 computestats['ORA']=100*(computestats['PTS']/computestats['POS'])
+computestats['ORA']=computestats['ORA'].fillna(0)
 computestats['EFG']=100*(computestats['F2M']+1.5*computestats['F3M'])/(computestats['F2A']+computestats['F3A'])
+computestats['EFG']=computestats['EFG'].fillna(0)
 computestats['TS']=100*(computestats['PTS'])/(2*(computestats['F2A']+computestats['F3A']+0.44*computestats['FTA']))
+computestats['TS']=computestats['TS'].fillna(0)
 computestats['FTR']=computestats['FTA']/(computestats['F3A']+computestats['F2A'])
+computestats['FTR']=computestats['FTR'].fillna(0)
 computestats['ASTOR']=computestats['AS']/computestats['TO']
+computestats['ASTOR']=computestats['ASTOR'].fillna(0)
 computestats['TOR']=100*(computestats['TO']/computestats['POS'])
+computestats['TOR']=computestats['TOR'].fillna(0)
 computestats['ASR']=100*(computestats['AS']/computestats['POS'])
+computestats['ASR']=computestats['ASR'].fillna(0)
 computestats['USG'] = 100 * (((computestats['F3A'] + computestats['F2A']) + 0.44 * computestats['FTA'] + computestats['TO']) * (40)) / (computestats['MIN'] * (computestats['Team_F2A'] +computestats['Team_F3A'] + 0.44 * computestats['Team_FTA'] + computestats['Team_TO']))
+computestats['USG']=computestats['USG'].fillna(0)
 computestats['ORP'] = (100 * computestats['OR']) / (computestats['Team_OR'] + computestats['Team_opp_OR'])
 def player_rating_stat_higher(dataset,stat):
     dataset1=dataset[["Player",stat]].sort_values(stat).reset_index()
@@ -261,91 +305,93 @@ computestats=computestats.loc[computestats['Player']==search_player_player]
 
 
 off, defe,ov=st.columns(3)
+try:
+    with off:
+        offense_rating_data=players_ratings.loc[players_ratings['Player'] == search_player_player][
+            ['Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_OR', 'Rating_BLKR', 'Rating_RF', 'Rating_F2M', 'Rating_F2A',
+             'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3',
+             'Rating_FTM', 'Rating_FTA', 'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS', "Rating_ORA",
+             'Rating_ASTOR', "Rating_TOR", "Rating_ASR", 'Rating_USG', 'Rating_ORP']].melt()
+        offense_ratings = offense_rating_data['value'].mean()
 
-with off:
-    offense_rating_data=players_ratings.loc[players_ratings['Player'] == search_player_player][
-        ['Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_OR', 'Rating_BLKR', 'Rating_RF', 'Rating_F2M', 'Rating_F2A',
-         'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3',
-         'Rating_FTM', 'Rating_FTA', 'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS', "Rating_ORA",
-         'Rating_ASTOR', "Rating_TOR", "Rating_ASR", 'Rating_USG', 'Rating_ORP']].melt()
-    offense_ratings = offense_rating_data['value'].mean()
+        off = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=offense_ratings.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Offense"}))
 
-    off = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=offense_ratings.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Offense"}))
+        off.update_layout(
+            autosize=False,
+            width=300,
+            height=250,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=10,
+                pad=0
+            ))
 
-    off.update_layout(
-        autosize=False,
-        width=300,
-        height=250,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=10,
-            pad=0
-        ))
+        st.write(off)
 
-    st.write(off)
+    with defe:
+        defense_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player][
+            ['Rating_ST', 'Rating_DR', 'Rating_PF', 'Rating_BLK']].melt()['value'].mean()
 
-with defe:
-    defense_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player][
-        ['Rating_ST', 'Rating_DR', 'Rating_PF', 'Rating_BLK']].melt()['value'].mean()
+        defe = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=defense_ratings.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Defense"}))
 
-    defe = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=defense_ratings.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Defense"}))
-
-    defe.update_layout(
-        autosize=True,
-        width=300,
-        height=250,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=10,
-            pad=0
+        defe.update_layout(
+            autosize=True,
+            width=300,
+            height=250,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=10,
+                pad=0
+            )
         )
-    )
 
-    st.write(defe)
+        st.write(defe)
 
 
-with ov:
-    total_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player].melt(id_vars='Player')[
-        'value'].mean()
+    with ov:
+        total_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player].melt(id_vars='Player')[
+            'value'].mean()
 
-    tot = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=total_ratings.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Overall"}))
+        tot = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=total_ratings.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Overall"}))
 
-    tot.update_layout(
-        autosize=True,
-        width=300,
-        height=250,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=10,
-            pad=0
+        tot.update_layout(
+            autosize=True,
+            width=300,
+            height=250,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=10,
+                pad=0
+            )
         )
-    )
 
-    st.write(tot)
+        st.write(tot)
+except:
+    st.error("No data available with these parameters")
 
 teamsplayed,basic,shooting,advanced=st.columns(4)
 

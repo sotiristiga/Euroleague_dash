@@ -620,12 +620,12 @@ with t1:
     tot.update_layout(
         autosize=True,
         width=250,
-        height=250,
+        height=150,
         margin=dict(
             l=30,
             r=50,
             b=10,
-            t=10,
+            t=40,
             pad=0
         )
     )
@@ -718,12 +718,12 @@ with t2:
         tot.update_layout(
             autosize=True,
             width=250,
-            height=250,
+            height=150,
             margin=dict(
                 l=30,
                 r=50,
                 b=10,
-                t=10,
+                t=40,
                 pad=0
             )
         )
@@ -756,7 +756,7 @@ with stats:
 
                 periodteams=pd.merge(periodteam1,periodteam2)
                 period_fig = go.Figure(
-                    data=go.Table(columnwidth=[3,1,1],header=dict(values=list(periodteams.columns), align='center', font_size=18, height=30),
+                    data=go.Table(columnwidth=[1.5,1,1],header=dict(values=list(periodteams.columns), align='center', font_size=18, height=30),
                                   cells=dict(values=[periodteams['Period'],periodteams['Team1'],
                                                      periodteams['Team2']], align='center', font_size=15.5, height=30)))
                 period_fig.update_layout(
@@ -764,7 +764,7 @@ with stats:
                     width=600,
                     height=490,
                     margin=dict(
-                        l=0,
+                        l=10,
                         r=10,
                         b=40,
                         t=0,
@@ -827,7 +827,7 @@ with stats:
                     width=600,
                     height=800,
                     margin=dict(
-                        l=0,
+                        l=10,
                         r=10,
                         b=40,
                         t=0,
@@ -835,7 +835,7 @@ with stats:
                     ))
                 st.write(basic_stats_fig)
             with shooting:
-                shooting_stats1 = teamstats1[['F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)','F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)','FTM', 'FTA', 'FT(%)',
+                shooting_stats1 = teamstats1[['F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)','F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)','FTM', 'FTA', 'FT(%)','opp FTM', 'opp FTA', 'opp FT(%)',
                                               'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)','TS(%)','opp TS(%)']].rename(
                     columns={'F2M': '2P.Made',
                              'F2A': '2P.Attempt',
@@ -857,14 +857,15 @@ with stats:
                              'opp 3P(%)': 'opp.3P(%)',
                              'opp FTM': 'opp.FT.Made',
                              'opp FTA': 'opp.FT.Attempt',
-                             'opp PFT': 'opp.FT(%)',
+                             'opp FT(%)': 'opp.FT(%)',
                              'opp FTR': 'opp.FT.Ratio',
-                             'opp EFG': 'opp.EFG(%)',
-                             'opp TS': 'opp.TS(%)'
-                             })
+                             'opp EFG(%)': 'opp.EFG(%)',
+                             'opp TS(%)': 'opp.TS(%)',
+                             'FT Ratio':'FT.Ratio',
+                             'opp FT Ratio':'opp.FT.Ratio' })
                 shooting_stats1 = shooting_stats1.round(1).melt().rename(
                     columns={"variable": "Shooting.Stats", "value": "Team1"})
-                shooting_stats2 = teamstats2[['F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)','F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)','FTM', 'FTA', 'FT(%)',
+                shooting_stats2 = teamstats2[['F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)','F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)','FTM', 'FTA', 'FT(%)','opp FTM', 'opp FTA', 'opp FT(%)',
                                               'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)','TS(%)','opp TS(%)']].rename(
                     columns={'F2M': '2P.Made',
                              'F2A': '2P.Attempt',
@@ -886,24 +887,26 @@ with stats:
                              'opp 3P(%)': 'opp.3P(%)',
                              'opp FTM': 'opp.FT.Made',
                              'opp FTA': 'opp.FT.Attempt',
-                             'opp PFT': 'opp.FT(%)',
+                             'opp FT(%)': 'opp.FT(%)',
                              'opp FTR': 'opp.FT.Ratio',
-                             'opp EFG': 'opp.EFG(%)',
-                             'opp TS': 'opp.TS(%)'
+                             'opp EFG(%)': 'opp.EFG(%)',
+                             'opp TS(%)': 'opp.TS(%)',
+                             'FT Ratio':'FT.Ratio',
+                             'opp FT Ratio':'opp.FT.Ratio'
                              })
                 shooting_stats2 = shooting_stats2.round(1).melt().rename(
                     columns={"variable": "Shooting.Stats", "value": "Team2"})
                 shooting_stats_data = pd.merge(shooting_stats1, shooting_stats2)
-                shooting_stats_fig = go.Figure(data=go.Table(columnwidth=[3,1,1],
+                shooting_stats_fig = go.Figure(data=go.Table(columnwidth=[1.5,1,1],
                     header=dict(values=list(shooting_stats_data.columns), align='center', font_size=18, height=30),
                     cells=dict(values=[shooting_stats_data['Shooting.Stats'], shooting_stats_data['Team1'],
                                        shooting_stats_data['Team2']], align='center', font_size=16, height=30)))
                 shooting_stats_fig.update_layout(
                     autosize=False,
                     width=8000,
-                    height=700,
+                    height=800,
                     margin=dict(
-                        l=0,
+                        l=10,
                         r=10,
                         b=40,
                         t=0,
@@ -1093,7 +1096,7 @@ try:
         periodbetdata=pd.merge(periodbetdata1,periodbetdata2)
 
         period_fig = go.Figure(
-        data = go.Table(columnwidth=[3, 1, 1],
+        data = go.Table(columnwidth=[2, 1, 1],
                         header=dict(values=list(periodbetdata.columns), align='center', font_size=18, height=30),
                         cells=dict(values=[periodbetdata['Period'], periodbetdata['Team1'],
                                            periodbetdata['Team2']], align='center', font_size=15.5, height=30)))
@@ -1102,7 +1105,7 @@ try:
         width = 600,
         height = 490,
         margin = dict(
-            l=0,
+            l=10,
             r=10,
             b=40,
             t=0,
@@ -1149,7 +1152,7 @@ try:
         width = 600,
         height = 490,
         margin = dict(
-            l=0,
+            l=10,
             r=10,
             b=40,
             t=0,
@@ -1190,7 +1193,7 @@ try:
         shootbetdata = pd.merge(shootbetdata1, shootbetdata2)
 
         shoot_fig = go.Figure(
-            data=go.Table(columnwidth=[3, 1, 1],
+            data=go.Table(columnwidth=[2, 1, 1],
                           header=dict(values=list(shootbetdata.columns), align='center', font_size=18, height=30),
                           cells=dict(values=[shootbetdata['Shooting.Stats'], shootbetdata['Team1'],
                                              shootbetdata['Team2']], align='center', font_size=15.5, height=30)))
@@ -1199,7 +1202,7 @@ try:
             width=600,
             height=490,
             margin=dict(
-                l=0,
+                l=1,
                 r=10,
                 b=40,
                 t=0,
@@ -1218,7 +1221,7 @@ try:
         advbetdata = pd.merge(advbetdata1, advbetdata2)
 
         adv_fig = go.Figure(
-            data=go.Table(columnwidth=[3, 1, 1],
+            data=go.Table(columnwidth=[2, 1, 1],
                           header=dict(values=list(advbetdata.columns), align='center', font_size=18, height=30),
                           cells=dict(values=[advbetdata['Advanced.Stats'], advbetdata['Team1'],
                                              advbetdata['Team2']], align='center', font_size=15.5, height=30)))
@@ -1227,7 +1230,7 @@ try:
             width=600,
             height=490,
             margin=dict(
-                l=0,
+                l=10,
                 r=10,
                 b=40,
                 t=0,

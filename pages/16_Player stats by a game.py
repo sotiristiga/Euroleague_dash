@@ -246,7 +246,7 @@ finalAllSeasons=(All_Seasons1[['Against','Season','Phase','Round','Fixture','Tea
                                   "results":'Result'})
                  .set_index('Against'))
 
-interactive_table(finalAllSeasons,
+interactive_table(finalAllSeasons.sort_values('Fixture',ascending=True),
                       paging=False, height=960, width=20000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,

@@ -537,101 +537,103 @@ t1, t2,stats=st.columns([1,1,2])
 
 
 with t1:
+    try:
 
-    st.write('### Team 1')
-    st.markdown("#### " + compare_teams_team1)
-    st.write('Season: '+select_season_player1)
-    st.write('Phase: '+select_phase_player1)
-    st.write('Round: '+select_round_player1)
-    st.write('Home or away: '+select_ha_player1)
-    st.write('Result: '+select_wl_player1)
-
-    offense_rating_data1=teamstats1[
-        ['Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M', 'Rating F2A',
-         'Rating 2P(%)', 'Rating F3M', 'Rating F3A', 'Rating 3P(%)','Rating FTM', 'Rating FTA', 'Rating FT(%)', 'Rating FT Ratio',
-         'Rating EFG(%)', 'Rating TS(%)', "Rating Offensive Rating",'Rating AS-TO Ratio', "Rating AS Ratio", 'Rating opp DR', 'Rating opp ST',
-         'Rating TO Ratio','Rating opp TO Ratio']].melt()
-    offense_ratings1 = offense_rating_data1['value'].mean()
-
-    off1 = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=offense_ratings1.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Offense"}))
-
-    off1.update_layout(
-        autosize=False,
-        width=250,
-        height=150,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=40,
-            pad=0
-        ))
-
-    st.write(off1)
-
-
-
-    defense_ratings1 = teamstats1[
-        ['Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK','Rating opp PTS', 'Rating opp AS',
-         'Rating opp F2M', 'Rating opp F2A', 'Rating opp 2P(%)', 'Rating opp F3M', 'Rating opp F3A', 'Rating opp 3P(%)',
-             'Rating opp FTM', 'Rating opp FTA', 'Rating opp FT(%)', 'Rating opp OR','Rating Defensive Rating','Rating opp EFG(%)', 'Rating opp TS(%)',
-             'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt()['value'].mean()
-
-    defe1 = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=defense_ratings1.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Defense"}))
-
-    defe1.update_layout(
-        autosize=True,
-        width=250,
-        height=150,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=40,
-            pad=0
+        st.write('### Team 1')
+        st.markdown("#### " + compare_teams_team1)
+        st.write('Season: '+select_season_player1)
+        st.write('Phase: '+select_phase_player1)
+        st.write('Round: '+select_round_player1)
+        st.write('Home or away: '+select_ha_player1)
+        st.write('Result: '+select_wl_player1)
+    
+        offense_rating_data1=teamstats1[
+            ['Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M', 'Rating F2A',
+             'Rating 2P(%)', 'Rating F3M', 'Rating F3A', 'Rating 3P(%)','Rating FTM', 'Rating FTA', 'Rating FT(%)', 'Rating FT Ratio',
+             'Rating EFG(%)', 'Rating TS(%)', "Rating Offensive Rating",'Rating AS-TO Ratio', "Rating AS Ratio", 'Rating opp DR', 'Rating opp ST',
+             'Rating TO Ratio','Rating opp TO Ratio']].melt()
+        offense_ratings1 = offense_rating_data1['value'].mean()
+    
+        off1 = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=offense_ratings1.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Offense"}))
+    
+        off1.update_layout(
+            autosize=False,
+            width=250,
+            height=150,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=40,
+                pad=0
+            ))
+    
+        st.write(off1)
+    
+    
+    
+        defense_ratings1 = teamstats1[
+            ['Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK','Rating opp PTS', 'Rating opp AS',
+             'Rating opp F2M', 'Rating opp F2A', 'Rating opp 2P(%)', 'Rating opp F3M', 'Rating opp F3A', 'Rating opp 3P(%)',
+                 'Rating opp FTM', 'Rating opp FTA', 'Rating opp FT(%)', 'Rating opp OR','Rating Defensive Rating','Rating opp EFG(%)', 'Rating opp TS(%)',
+                 'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt()['value'].mean()
+    
+        defe1 = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=defense_ratings1.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Defense"}))
+    
+        defe1.update_layout(
+            autosize=True,
+            width=250,
+            height=150,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=40,
+                pad=0
+            )
         )
-    )
-
-    st.write(defe1)
-
-
-    total_ratings1 = teamstats1.filter(regex='Rating').melt()['value'].mean()
-
-    tot = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=total_ratings1.round(0),
-        domain={'x': [0, 1], 'y': [0, 1]},
-        gauge={'axis': {'range': [None, 100]},
-               'bordercolor': "gray"},
-        title={'text': "Overall"}))
-
-    tot.update_layout(
-        autosize=True,
-        width=250,
-        height=150,
-        margin=dict(
-            l=30,
-            r=50,
-            b=10,
-            t=40,
-            pad=0
+    
+        st.write(defe1)
+    
+    
+        total_ratings1 = teamstats1.filter(regex='Rating').melt()['value'].mean()
+    
+        tot = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=total_ratings1.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Overall"}))
+    
+        tot.update_layout(
+            autosize=True,
+            width=250,
+            height=150,
+            margin=dict(
+                l=30,
+                r=50,
+                b=10,
+                t=40,
+                pad=0
+            )
         )
-    )
-
-    st.write(tot)
-
+    
+        st.write(tot)
+    except:
+        st.error("No data available with this parameters")
 
 
 
@@ -730,7 +732,7 @@ with t2:
 
         st.write(tot)
     except:
-        st.error("One of filters of second team does not match")
+        st.error("No data available with this parameters")
 
 with stats:
 
@@ -947,7 +949,7 @@ with stats:
                     ))
                 st.write(advanced_stats_fig)
         except:
-            st.error("One of filters does not match")
+            st.error("No data available with this parameters")
 
 try:
     st.write("### Between teams games stats")
@@ -1239,7 +1241,7 @@ try:
         st.write(adv_fig)
 
 except:
-    st.error("One of filters does not match")
+    st.error("No data available with this parameters")
 
 
 

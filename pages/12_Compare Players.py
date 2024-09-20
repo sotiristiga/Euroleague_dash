@@ -644,14 +644,14 @@ with stats:
                                                                                                                                         'RF':'FoulsDrawn'}).round(1)
             basic_stats2=basic_stats2.melt().rename(columns={"variable":"Basic.Stats","value":"Player2"})
             basic_stats_data=pd.merge(basic_stats1,basic_stats2)
-            basic_stats_fig=go.Figure(data=go.Table(header=dict(values=list(basic_stats_data.columns),align='center',font_size=18,height=30),
+            basic_stats_fig=go.Figure(data=go.Table(columnwidth=[2,1,1]header=dict(values=list(basic_stats_data.columns),align='center',font_size=18,height=30),
                             cells=dict(values=[basic_stats_data['Basic.Stats'],basic_stats_data['Player1'],basic_stats_data['Player2']],align='center',font_size=15.5,height=30)))
             basic_stats_fig.update_layout(
                 autosize=False,
                 width=600,
                 height=450,
                 margin=dict(
-                l=0,
+                l=10,
                 r=10,
                 b=40,
                 t=0,
@@ -750,14 +750,14 @@ with stats:
             shooting_stats2 = shooting_stats2.round(1).melt().rename(
                 columns={"variable": "Shooting.Stats", "value": "Player2"})
             shooting_stats_data=pd.merge(shooting_stats1,shooting_stats2)
-            shooting_stats_fig=go.Figure(data=go.Table(header=dict(values=list(shooting_stats_data.columns),align='center',font_size=18,height=30),
+            shooting_stats_fig=go.Figure(data=go.Table(columnwidth=[2,1,1],header=dict(values=list(shooting_stats_data.columns),align='center',font_size=18,height=30),
                             cells=dict(values=[shooting_stats_data['Shooting.Stats'],shooting_stats_data['Player1'],shooting_stats_data['Player2']],align='center',font_size=16,height=30)))
             shooting_stats_fig.update_layout(
             autosize=False,
             width=8000,
             height=460,
             margin=dict(
-                l=0,
+                l=10,
                 r=10,
                 b=40,
                 t=0,

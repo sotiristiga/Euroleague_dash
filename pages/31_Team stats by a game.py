@@ -416,7 +416,7 @@ all,select=st.tabs(['All Stats','Select Stat'])
 with all:
 
 
-    interactive_table(select_allstats_in_a_game1.set_index('Against'),
+    interactive_table(select_allstats_in_a_game1.set_index('Against').sort_values('Fixture',ascendind=True),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
@@ -427,7 +427,7 @@ with select:
     team_ranking_stat = st.sidebar.selectbox("Stat:", ['PTS', '2P', '3P', 'FT', 'OR', 'DR',
                                                             'TR', 'AS', 'STL', 'TO', 'BLK', 'PF', 'RF', 'PIR'], index=8)
     regex1="Against|Season|Phase|Round|Fixture|HA|results" +"|"+ team_ranking_stat
-    interactive_table(select_allstats_in_a_game1.filter(regex=regex1).set_index('Against'),
+    interactive_table(select_allstats_in_a_game1.filter(regex=regex1).set_index('Against').sort_values('Fixture',ascendind=True),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,

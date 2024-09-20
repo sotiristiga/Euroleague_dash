@@ -682,7 +682,7 @@ with games:
 with stats:
 
 
-    st.write("##### Shooting Stats")
+    st.write("##### Shooting Stats per game")
     shooting_stats1 = teamstats.loc[teamstats.Team == search_team_team1][
         ['F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)',
          'FT Ratio', 'EFG(%)', 'TS(%)']].rename(
@@ -738,7 +738,7 @@ with stats:
             pad=40
         ))
     st.write(shooting_stats_fig)
-    st.write("##### Advanced Stats")
+    st.write("##### Advanced Stats per game")
     advanced_stats1 = (teamstats.loc[teamstats.Team == search_team_team1][['Possesions', 'Offensive Rating',
                                      'AS-TO Ratio', 'TO Ratio', 'AS Ratio']]
                        .rename(columns={'Offensive Rating':'Offensive.Rating',

@@ -644,7 +644,7 @@ with stats:
                                                                                                                                         'RF':'FoulsDrawn'}).round(1)
             basic_stats2=basic_stats2.melt().rename(columns={"variable":"Basic.Stats","value":"Player2"})
             basic_stats_data=pd.merge(basic_stats1,basic_stats2)
-            basic_stats_fig=go.Figure(data=go.Table(columnwidth=[2,1,1]header=dict(values=list(basic_stats_data.columns),align='center',font_size=18,height=30),
+            basic_stats_fig=go.Figure(data=go.Table(columnwidth=[2,1,1],header=dict(values=list(basic_stats_data.columns),align='center',font_size=18,height=30),
                             cells=dict(values=[basic_stats_data['Basic.Stats'],basic_stats_data['Player1'],basic_stats_data['Player2']],align='center',font_size=15.5,height=30)))
             basic_stats_fig.update_layout(
                 autosize=False,
@@ -852,7 +852,7 @@ with stats:
             advanced_stats2 = advanced_stats2.round(1).melt().rename(
                 columns={"variable": "Advanced.Stats", "value": "Player2"})
             advanced_stats_data=pd.merge(advanced_stats1,advanced_stats2)
-            advanced_stats_fig = go.Figure(data=go.Table(
+            advanced_stats_fig = go.Figure(data=go.Table(columnwidth=[2,1,1],
                 header=dict(values=list(advanced_stats_data.columns), align='center', font_size=18, height=30),
                 cells=dict(values=[advanced_stats_data['Advanced.Stats'], advanced_stats_data['Player1'], advanced_stats_data['Player2']], align='center',
                            font_size=15, height=30)))
@@ -861,7 +861,7 @@ with stats:
                 width=700,
                 height=300,
                 margin=dict(
-                    l=0,
+                    l=10,
                     r=10,
                     b=40,
                     t=0,

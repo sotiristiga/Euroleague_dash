@@ -303,58 +303,10 @@ team_ranking_wl = st.sidebar.selectbox("Result:",['W', 'L','All'],index=2)
 
 
 
-if "All" in team_ranking_ha:
-    team_ranking_ha = ['A', 'H']
-    All_Seasons1=All_Seasons.loc[All_Seasons['HA'].isin(team_ranking_ha)]
-    period_points1=period_points.loc[period_points['HA'].isin(team_ranking_ha)]
-    select_ha_player1=''
-else:
-    All_Seasons1=All_Seasons.loc[All_Seasons['HA']==team_ranking_ha]
-    period_points1 = period_points.loc[period_points['HA'] == team_ranking_ha]
-    select_ha_player1 = team_ranking_ha
-
-if "All" in team_ranking_season:
-    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
-    All_Seasons1=All_Seasons1.loc[All_Seasons1['Season'].isin(team_ranking_season)]
-    period_points1 = period_points1.loc[period_points1['Season'].isin(team_ranking_season)]
-    select_season_player1 = ''
-else:
-    All_Seasons1=All_Seasons1.loc[All_Seasons1['Season']==team_ranking_season]
-    period_points1 = period_points1.loc[period_points1['Season'] == team_ranking_season]
-    select_season_player1 = team_ranking_season
-
-if "All" in team_ranking_wl:
-    team_ranking_wl = ['W', 'L']
-    All_Seasons1 = All_Seasons1.loc[All_Seasons1['results'].isin(team_ranking_wl)]
-    period_points1 = period_points1.loc[period_points1['results'].isin(team_ranking_wl)]
-    select_wl_player1 = ''
-else:
-    All_Seasons1= All_Seasons1.loc[All_Seasons1['results'] == team_ranking_wl]
-    period_points1 = period_points1.loc[period_points1['results'] == team_ranking_wl]
-    select_wl_player1 = team_ranking_wl
-
-if "All" in team_ranking_phase:
-    team_ranking_phase = ['Regular Season', 'Play In','Play offs', 'Final Four']
-    All_Seasons1 = All_Seasons1.loc[All_Seasons1['Phase'].isin(team_ranking_phase)]
-    period_points1 = period_points1.loc[period_points1['Phase'].isin(team_ranking_phase)]
-    select_phase_player1 = ''
-else:
-    All_Seasons1 = All_Seasons1.loc[All_Seasons1['Phase'] == team_ranking_phase]
-    period_points1 = period_points1.loc[period_points1['Phase'] == team_ranking_phase]
-    select_phase_player1 = team_ranking_phase
-
-if "All" in team_ranking_round:
-    team_ranking_round = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final']
-    All_Seasons1 = All_Seasons1.loc[All_Seasons1['Round'].isin(team_ranking_round)]
-    period_points1 = period_points1.loc[ period_points1['Round'].isin(team_ranking_round)]
-    select_round_player1 = ''
-else:
-    All_Seasons1 = All_Seasons1.loc[All_Seasons1['Round'] == team_ranking_round]
-    period_points1 = period_points1.loc[period_points1['Round'].isin(team_ranking_round)]
-    select_round_player1 = team_ranking_round
 
 
-finalstats=All_Seasons1.groupby(['idseason','Team'])[['PTS','F2M',
+
+finalstats=All_Seasons.groupby(['idseason','Team','HA','results'])[['PTS','F2M',
                               'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
                               'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',
                               'PIR','Possesions']].sum().reset_index()
@@ -368,11 +320,11 @@ finalstats['FT Ratio']=finalstats['FTA']/(finalstats['F3A']+finalstats['F2A'])
 finalstats['AS-TO Ratio']=finalstats['AS']/finalstats['TO']
 finalstats['TO Ratio']=100*(finalstats['TO']/finalstats['Possesions'])
 finalstats['AS Ratio']=100*(finalstats['AS']/finalstats['Possesions'])
-finalstats=finalstats[['idseason','Team','PTS','F2M','F2A', '2P(%)','F3M', 'F3A','3P(%)', 'FTM', 'FTA','FT(%)', 'OR','DR', 'TR',
+finalstats=finalstats[['idseason','Team','HA','results','PTS','F2M','F2A', '2P(%)','F3M', 'F3A','3P(%)', 'FTM', 'FTA','FT(%)', 'OR','DR', 'TR',
                        'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF','PIR','Possesions','Offensive Rating','EFG(%)',
                        'TS(%)','FT Ratio','AS-TO Ratio','TO Ratio','AS Ratio']].round(1)
 
-finalstats_opp=All_Seasons1.groupby(['idseason','Against'])[['PTS','F2M',
+finalstats_opp=All_Seasons.groupby(['idseason','Against'])[['PTS','F2M',
                               'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
                               'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',
                               'PIR','Possesions']].sum().reset_index()
@@ -394,31 +346,73 @@ finalstats_opp=finalstats_opp[['idseason','Against','PTS','F2M','F2A', '2P(%)','
 finalstats_opp=finalstats_opp.add_prefix('opp ').rename(columns={'opp Against':'Team','opp idseason':'idseason'})
 
 gamesstats=pd.merge(finalstats,finalstats_opp)
-allstats_in_a_game=pd.merge(period_points1,gamesstats,on=['idseason','Team'])
+allstats_in_a_game=pd.merge(period_points,gamesstats,on=['idseason','Team','HA','results'])
+
+if "All" in team_ranking_ha:
+    team_ranking_ha = ['A', 'H']
+    allstats_in_a_game1=allstats_in_a_game.loc[allstats_in_a_game['HA'].isin(team_ranking_ha)]
+else:
+    allstats_in_a_game1=allstats_in_a_game.loc[allstats_in_a_game['HA']==team_ranking_ha]
+
+
+if "All" in team_ranking_season:
+    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
+    allstats_in_a_game1=allstats_in_a_game1.loc[allstats_in_a_game1['Season'].isin(team_ranking_season)]
+
+else:
+    allstats_in_a_game1=allstats_in_a_game1.loc[allstats_in_a_game1['Season']==team_ranking_season]
+
+
+if "All" in team_ranking_wl:
+    team_ranking_wl = ['W', 'L']
+    allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['results'].isin(team_ranking_wl)]
+
+else:
+    allstats_in_a_game1= allstats_in_a_game1.loc[allstats_in_a_game1['results'] == team_ranking_wl]
+
+
+if "All" in team_ranking_phase:
+    team_ranking_phase = ['Regular Season', 'Play In','Play offs', 'Final Four']
+    allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Phase'].isin(team_ranking_phase)]
+
+else:
+    allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Phase'] == team_ranking_phase]
+
+
+if "All" in team_ranking_round:
+    team_ranking_round = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final']
+    allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Round'].isin(team_ranking_round)]
+
+else:
+    allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Round'] == team_ranking_round]
+
 
 teamranking,teampointsinaperiod,teamwinsbyperiod,teambasicstats,teamsshootstats,teamadvstats=st.tabs(["Team Ranking(Wins-Loses)",'Team Points by period','Team Wins by Period','Team Basic Stats','Team Shooting Stats',"Team Advanced Stats"])
 with teamranking:
-    games=allstats_in_a_game['Team'].value_counts().reset_index().rename(columns={'count':'Games'})
-    wins=allstats_in_a_game.groupby('Team')["Win"].sum().reset_index()
-    gameswins=pd.merge(games,wins)
-    points=allstats_in_a_game.groupby('Team')[['Scored',"Conceed"]].mean().reset_index()
-    ranking=pd.merge(games,points)
-    ranking["Diff"]=ranking['Scored']-ranking['Conceed']
-    ranking=pd.merge(ranking,wins)
-    ranking['Loses']=ranking['Games']-ranking['Win']
-    ranking['Win(%)']=(100*ranking['Win']/ranking['Games']).round(1)
-    interactive_table(ranking.round(1).set_index('Team').sort_values('Win(%)'),
-                          paging=False, height=900, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=False,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+    try:
 
+        games=allstats_in_a_game1['Team'].value_counts().reset_index().rename(columns={'count':'Games'})
+        wins=allstats_in_a_game1.groupby('Team')["Win"].sum().reset_index()
+        gameswins=pd.merge(games,wins)
+        points=allstats_in_a_game1.groupby('Team')[['Scored',"Conceed"]].mean().reset_index()
+        ranking=pd.merge(games,points)
+        ranking["Diff"]=ranking['Scored']-ranking['Conceed']
+        ranking=pd.merge(ranking,wins)
+        ranking['Loses']=ranking['Games']-ranking['Win']
+        ranking['Win(%)']=(100*ranking['Win']/ranking['Games']).round(1)
+        interactive_table(ranking.round(1).set_index('Team').sort_values('Win(%)'),
+                              paging=False, height=900, width=2000, showIndex=True,
+                              classes="display order-column nowrap table_with_monospace_font", searching=False,
+                              fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                              scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,filter='bottom',
+                              columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
+    except:
+        st.error('No data available with these parameters')
 
 
 with teampointsinaperiod:
-    periods = allstats_in_a_game.groupby('Team')[['Q1S','Q1C','Q2S','Q2C',"FHS","FHC",'Q3S','Q3C','Q4S','Q4C','SHS','SHC','EXS','EXC']].mean().reset_index()
+    periods = allstats_in_a_game1.groupby('Team')[['Q1S','Q1C','Q2S','Q2C',"FHS","FHC",'Q3S','Q3C','Q4S','Q4C','SHS','SHC','EXS','EXC']].mean().reset_index()
     interactive_table(periods.round(1).set_index('Team'),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=False,
@@ -427,7 +421,7 @@ with teampointsinaperiod:
                           columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 with teamwinsbyperiod:
-    periodwins=period_points.groupby('Team')[['Q1W','Q1W_W','Q2W','Q2W_W','FHW','FHW_W','Q3W','Q3W_W',"Q4W",'Q4W_W','SHW','SHW_W','EXW','EXW_W']].sum().reset_index()
+    periodwins=allstats_in_a_game1.groupby('Team')[['Q1W','Q1W_W','Q2W','Q2W_W','FHW','FHW_W','Q3W','Q3W_W',"Q4W",'Q4W_W','SHW','SHW_W','EXW','EXW_W']].sum().reset_index()
     periodwins=pd.merge(gameswins,periodwins)
     interactive_table(periodwins.set_index('Team'),
                       paging=False, height=900, width=2000, showIndex=True,
@@ -437,7 +431,7 @@ with teamwinsbyperiod:
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 with teambasicstats:
-    basicstats=gamesstats.groupby('Team')[['AS','opp AS','OR', 'opp OR','DR','opp DR', 'TR','opp TR','ST','opp ST', 'TO', 'opp TO','BLK', 'BLKR','PF', 'RF']].mean().reset_index()
+    basicstats=allstats_in_a_game1.groupby('Team')[['AS','opp AS','OR', 'opp OR','DR','opp DR', 'TR','opp TR','ST','opp ST', 'TO', 'opp TO','BLK', 'BLKR','PF', 'RF']].mean().reset_index().round(1)
     interactive_table(basicstats.set_index('Team'),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,
@@ -446,7 +440,7 @@ with teambasicstats:
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 with teamsshootstats:
-    shootstats=gamesstats.groupby('Team')[['F2M','F2A', 'F3M', 'F3A', 'FTM', 'FTA','opp F2M','opp F2A', 'opp F3M', 'opp F3A', 'opp FTM', 'opp FTA']].mean().reset_index()
+    shootstats=allstats_in_a_game1.groupby('Team')[['F2M','F2A', 'F3M', 'F3A', 'FTM', 'FTA','opp F2M','opp F2A', 'opp F3M', 'opp F3A', 'opp FTM', 'opp FTA']].mean().reset_index()
     shootstats['2P(%)'] = 100 * (shootstats['F2M'] / shootstats['F2A'])
     shootstats['3P(%)'] = 100 * (shootstats['F3M'] / shootstats['F3A'])
     shootstats['FT(%)'] = 100 * (shootstats['FTM'] / shootstats['FTA'])
@@ -463,7 +457,7 @@ with teamsshootstats:
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 with teamadvstats:
-    computestatsadv=gamesstats.groupby('Team')[['F2M','F2A', 'F3M', 'F3A', 'FTM', 'FTA',
+    computestatsadv=allstats_in_a_game1.groupby('Team')[['F2M','F2A', 'F3M', 'F3A', 'FTM', 'FTA',
                                               'opp F2M','opp F2A', 'opp F3M', 'opp F3A',
                                               'opp FTM', 'opp FTA','AS','opp AS','OR',
                                               'opp OR','DR','opp DR', 'TR','opp TR','ST',

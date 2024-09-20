@@ -373,6 +373,7 @@ select_allstats_in_a_game['Total FTA']=select_allstats_in_a_game['FTA']+select_a
 select_allstats_in_a_game['Total OR']=select_allstats_in_a_game['OR']+select_allstats_in_a_game['opp OR']
 select_allstats_in_a_game['Total DR']=select_allstats_in_a_game['DR']+select_allstats_in_a_game['opp DR']
 select_allstats_in_a_game['Total TR']=select_allstats_in_a_game['TR']+select_allstats_in_a_game['opp TR']
+select_allstats_in_a_game['Total STL']=select_allstats_in_a_game['STL']+select_allstats_in_a_game['opp STL']
 select_allstats_in_a_game['Total PF']=select_allstats_in_a_game['PF']+select_allstats_in_a_game['opp PF']
 select_allstats_in_a_game['Total BLK']=select_allstats_in_a_game['BLKR']+select_allstats_in_a_game['BLK']
 if "All" in team_ranking_season:

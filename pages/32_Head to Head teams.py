@@ -419,7 +419,7 @@ def compute_team_stats(dataset_stats,dataset_periods,Team_select,ha,season,wl,ph
 
 
 
-    avgteamstats = allstats_in_a_game.groupby('Team')[['Q1S',
+    avgteamstats = allstats_in_a_game1.groupby('Team')[['Q1S',
          'Q2S', 'Q1C', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q4S', 'Q3C', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC',
          'PTS', 'opp PTS', 'AS', 'opp AS', 'F2M', 'F2A',  'opp F2M', 'opp F2A',
          'F3M', 'F3A',  'opp F3M', 'opp F3A',  'FTM', 'FTA',  'opp FTM', 'opp FTA',

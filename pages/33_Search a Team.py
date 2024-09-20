@@ -330,7 +330,7 @@ if "All" in search_team_round_team1:
     select_round_player1 = ''
 else:
     All_Seasons1 = All_Seasons1.loc[All_Seasons1['Round'] == search_team_round_team1]
-    period_points1 = period_points1.loc[period_points1['Round'].isin(search_team_round_team1)]
+    period_points1 = period_points1.loc[period_points1['Round']==search_team_round_team1]
     select_round_player1 = search_team_round_team1
 
 
@@ -523,7 +523,7 @@ with ratings:
         tot.update_layout(
             autosize=True,
             width=250,
-            height=250,
+            height=150,
             margin=dict(
                 l=30,
                 r=50,
@@ -578,7 +578,7 @@ with games:
         width=210,
         height=185,
         margin=dict(
-            l=0,
+            l=10,
             r=10,
             b=40,
             t=0,
@@ -597,7 +597,7 @@ with games:
         width=200,
         height=180,
         margin=dict(
-            l=0,
+            l=10,
             r=10,
             b=40,
             t=0,
@@ -619,7 +619,7 @@ with games:
     periodteams=periodteams.loc[periodteams.Period!='Team']
     st.write('##### Period Points per game')
     period_fig = go.Figure(
-        data=go.Table(columnwidth=[1, 1, 1],
+        data=go.Table(columnwidth=[1.5, 1, 1],
                       header=dict(values=list(periodteams.columns), align='center', font_size=18, height=30),
                       cells=dict(values=[periodteams['Period'], periodteams['Team'],
                                          periodteams['Opponent']], align='center', font_size=15.5, height=30)))
@@ -628,7 +628,7 @@ with games:
         width=600,
         height=280,
         margin=dict(
-            l=0,
+            l=10,
             r=10,
             b=40,
             t=0,
@@ -672,7 +672,7 @@ with games:
         width=700,
         height=400,
         margin=dict(
-            l=0,
+            l=10,
             r=10,
             b=40,
             t=0,
@@ -731,7 +731,7 @@ with stats:
         width=8000,
         height=450,
         margin=dict(
-            l=0,
+            l=10,
             r=10,
             b=40,
             t=0,

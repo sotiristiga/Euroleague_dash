@@ -284,8 +284,6 @@ def null_replace(x):
 
 
 
-teams_min_games_played=pd.merge(All_Seasons_filter.loc[All_Seasons_filter['Player']==search_player_player].groupby(["Player",'Team'])['MIN'].mean().round(1).reset_index(),All_Seasons_filter.loc[All_Seasons_filter['Player']==search_player_player][["Player",'Team']].value_counts().reset_index()).rename(columns={'count':'Games'})
-
 computestats=All_Seasons_filter.groupby('Player')[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().round(1).reset_index()
 
 

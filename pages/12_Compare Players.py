@@ -919,3 +919,81 @@ with stats:
             st.write(adv_ratings)
     except:
         st.error('No data available with these parameters')
+
+
+filters1,filters2=st.columns(2)
+with filters1:
+        between_players_ha = st.selectbox("Home Player:",[search_player_player1, search_player_player2, 'All'],index=2)
+        between_players_season = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
+with filters2:
+        between_players_phase = st.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
+        between_players_round = st.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
+players=[search_player_player1,search_player_player2]
+dataset=All_Seasons.loc[All_Seasons.Player.isin(players)][['idseason','Team']].value_counts().reset_index()
+findids=(dataset.loc[dataset['count'] < 2]['idseason']
+          .value_counts().reset_index())
+ids=findids.loc[findids['count']>1]['idseason'].unique()
+finaldataset=(All_Seasons.loc[(All_Seasons.idseason.isin(ids)) & (All_Seasons.Player.isin(players))])
+
+
+if "All" in between_players_ha:
+    finaldataset1 = finaldataset
+elif compare_teams_team1 in between_teams_ha_team:
+    finaldataset1 = finaldataset.loc[((finaldataset.HA == "H") & (finaldataset.Player == search_player_player1)) | ((finaldataset.HA == "A") & (finaldataset.Player == search_player_player2))]
+elif compare_teams_team2 in between_teams_ha_team:
+    finaldataset1 = finaldataset.loc[((finaldataset.HA == "H") & (finaldataset.Player == search_player_player2)) | ((finaldataset.HA == "A") & (finaldataset.Player == search_player_player1))]
+
+if "All" in between_players_season:
+    between_players_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
+                                  '2022-2023', '2023-2024']
+    finaldataset1 = finaldataset1.loc[finaldataset1['Season'].isin(between_players_season)]
+
+else:
+    finaldataset1 = finaldataset1.loc[finaldataset1['Season'] == between_players_season]
+
+
+if "All" in between_players_phase:
+    between_players_phase = ['Regular Season', 'Play In', 'Play offs', 'Final Four']
+    finaldataset1 = finaldataset1.loc[finaldataset1['Phase'].isin(between_players_phase)]
+
+else:
+    finaldataset1 =finaldataset1.loc[finaldataset1['Phase'] == between_players_phase]
+
+if "All" in between_players_round:
+    between_players_round = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4',
+                                 'PO 5', 'Semi Final', 'Third Place', 'Final']
+    finaldataset1 = finaldataset1.loc[finaldataset1['Round'].isin(between_players_round)]
+
+
+else:
+    finaldataset1 = finaldataset1.loc[finaldataset1['Round'] == between_players_round]
+
+
+
+stats=(finaldataset1.groupby('Player')[['PTS','F2M','F2A',
+                     'F3M', 'F3A', 'FTM',
+                     'FTA', 'OR','DR', 'TR',
+                     'AS', 'ST', 'TO', 'BLK',
+                     'BLKR','PF', 'RF','PIR','Possesions']]
+ .mean().reset_index())
+
+
+stats['2P(%)']=100*(stats['F2M']/stats['F2A'])
+stats['3P(%)']=100*(stats['F3M']/stats['F3A'])
+stats['FT(%)']=100*(stats['FTM']/stats['FTA'])
+stats['Offensive Rating']=100*(stats['PTS']/stats['Possesions'])
+stats['EFG(%)']=100*(stats['F2M']+1.5*stats['F3M'])/(stats['F2A']+stats['F3A'])
+stats['TS(%)']=100*(stats['PTS'])/(2*(stats['F2A']+stats['F3A']+0.44*stats['FTA']))
+stats['FT Ratio']=stats['FTA']/(stats['F3A']+stats['F2A'])
+stats['AS-TO Ratio']=stats['AS']/stats['TO']
+stats['TO Ratio']=100*(stats['TO']/stats['Possesions'])
+stats['AS Ratio']=100*(stats['AS']/stats['Possesions'])
+stats=stats[['Player','PTS','F2M','F2A', '2P(%)','F3M', 'F3A','3P(%)', 'FTM', 'FTA','FT(%)', 'OR','DR', 'TR',
+                       'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF','PIR','Possesions','Offensive Rating','EFG(%)',
+                       'TS(%)','FT Ratio','AS-TO Ratio','TO Ratio','AS Ratio']].round(1)
+interactive_table(stats.set_index('Player'),
+                      paging=False, height=900, width=4000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])

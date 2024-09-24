@@ -1002,3 +1002,6 @@ interactive_table(stats.set_index('Player'),
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
                       scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+

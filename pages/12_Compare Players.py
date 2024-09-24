@@ -920,7 +920,7 @@ with stats:
     except:
         st.error('No data available with these parameters')
 
-
+st.write("#### Between games stats")
 filters1,filters2=st.columns(2)
 with filters1:
         between_players_ha = st.selectbox("Home Player:",[search_player_player1, search_player_player2, 'All'],index=2)

@@ -923,8 +923,8 @@ with stats:
 
 
 
-st.write("#### Between games stats")
 
+st.write("#### Between games stats")
 
 filters1,filters2=st.columns(2)
 with filters1:

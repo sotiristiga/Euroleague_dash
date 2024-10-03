@@ -434,20 +434,19 @@ teamstats=compute_team_stats(All_Seasons1,period_points1)[0]
 oppstats=compute_team_stats(All_Seasons1,period_points1)[1]
 ratingstats=compute_team_stats(All_Seasons1,period_points1)[2]
 
-ratings, games,stats=st.columns([1,2,2])
+teams,ratings,gamesstats=st.columns([1,1,1])
 
-
-
+with teams:
+    st.write('### Team:' + search_team_team1)
+    st.write('Season: ' + select_season_player1)
+    st.write('Phase: ' + select_phase_player1)
+    st.write('Round: ' + select_round_player1)
+    st.write('Home or away: ' + select_ha_player1)
+    st.write('Result: ' + select_wl_player1)
 
 with ratings:
     try:
-        st.write('### Team')
-        st.markdown("#### " + search_team_team1)
-        st.write('Season: '+select_season_player1)
-        st.write('Phase: '+select_phase_player1)
-        st.write('Round: '+select_round_player1)
-        st.write('Home or away: '+select_ha_player1)
-        st.write('Result: '+select_wl_player1)
+
 
         offense_rating_data1=ratingstats.loc[ratingstats.Team==search_team_team1][
             ['Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M', 'Rating F2A',
@@ -538,22 +537,22 @@ with ratings:
         st.error("No data available with this parameters")
 
 
-with games:
-    his,gam=st.columns(2)
-    games=pd.DataFrame({'Played':['Total.Games'],'No.Games':[period_points1.loc[period_points1.Team == search_team_team1]['Team'].value_counts().reset_index()['count'].sum()]})
+with gamesstats:
+
+    games=pd.DataFrame({'Played':['Total Games'],'No.Games':[period_points1.loc[period_points1.Team == search_team_team1]['Team'].value_counts().reset_index()['count'].sum()]})
     try:
-        wins = pd.DataFrame({'Played': ['Total.Wins'], 'No.Games': [
+        wins = pd.DataFrame({'Played': ['Total Wins'], 'No.Games': [
             period_points1.loc[(period_points1.Team == search_team_team1)&(period_points1.results == "W")]['Team'].value_counts().reset_index()[
                 'count'].sum()]})
     except:
-        wins=pd.DataFrame({'Played': ['Total.Wins'], 'No.Games': [0]})
+        wins=pd.DataFrame({'Played': ['Total Wins'], 'No.Games': [0]})
     try:
-        loses = pd.DataFrame({'Played': ['Total.Loses'], 'No.Games': [
+        loses = pd.DataFrame({'Played': ['Total Loses'], 'No.Games': [
             period_points1.loc[(period_points1.Team == search_team_team1) & (period_points1.results == "L")][
                 'Team'].value_counts().reset_index()[
                 'count'].sum()]})
     except:
-        loses=pd.DataFrame({'Played': ['Total.Loses'], 'No.Games': [0]})
+        loses=pd.DataFrame({'Played': ['Total Loses'], 'No.Games': [0]})
     parts=pd.DataFrame({'Euroleague':['Years'],'Participation':[period_points.loc[(period_points.Team == search_team_team1)][['Phase', 'Season']].value_counts().reset_index()['Season'].nunique()]})
     playoff = pd.DataFrame({'Euroleague': ['Playoffs'], 'Participation': [
         period_points.loc[(period_points.Team == search_team_team1)&(period_points.Phase == 'Play offs')][['Phase', 'Season']].value_counts().reset_index()[
@@ -566,210 +565,135 @@ with games:
         period_points.loc[(period_points.Team == search_team_team1) & (period_points.Phase == 'Final Four')& (period_points.Round == 'Final')& (period_points.results == 'W')][
             ['Phase', 'Season']].value_counts().reset_index()[
             'Season'].nunique()]})
-    with his:
-        st.write('##### History in Euroleague')
-        history_fig = go.Figure(
-        data=go.Table(columnwidth=[1, 1],
-                      header=dict(values=list(pd.concat([parts,playoff,finalfour,title]).columns), align='center', font_size=18, height=30),
-                      cells=dict(values=[pd.concat([parts,playoff,finalfour,title])['Euroleague'], pd.concat([parts,playoff,finalfour,title])['Participation']
-                                         ], align='center', font_size=15.5, height=30)))
-        history_fig.update_layout(
-        autosize=False,
-        width=210,
-        height=185,
-        margin=dict(
-            l=10,
-            r=10,
-            b=40,
-            t=0,
-            pad=40
-        ))
-        st.write(history_fig)
-    with gam:
-        st.write('##### Games in Euroleague')
-        games_fig = go.Figure(
-        data=go.Table(columnwidth=[1, 1],
-                      header=dict(values=list(pd.concat([games,wins,loses]).columns), align='center', font_size=18, height=30),
-                      cells=dict(values=[pd.concat([games,wins,loses])['Played'], pd.concat([games,wins,loses])['No.Games']
-                                         ], align='center', font_size=15.5, height=30)))
-        games_fig.update_layout(
-        autosize=False,
-        width=200,
-        height=180,
-        margin=dict(
-            l=10,
-            r=10,
-            b=40,
-            t=0,
-            pad=40
-        ))
-        st.write(games_fig)
 
-    periodteam1 = (period_points1.loc[period_points1.Team==search_team_team1].groupby('Team')[['Q1S', 'Q2S', 'FHS', 'Q3S', 'Q4S', 'SHS', 'EXS']].mean().reset_index().round(1)
-                   .rename(columns={'Q1S': 'Q1', 'Q2S': 'Q2', 'Q3S': 'Q3', 'Q4S': 'Q4',
-                                    'EXS': 'Extra.time', 'FHS': 'First.Half', 'SHS': 'Second.Half'
-                                    })
-                   .melt()).rename(columns={'variable': 'Period', 'value': 'Team'})
-    periodteam2 = (period_points1.loc[period_points1.Team==search_team_team1].groupby('Team')[['Q1C', 'Q2C', 'FHC', 'Q3C', 'Q4C', 'SHC', 'EXC']].mean().reset_index().round(1)
-        .rename(columns={'Q1C': 'Q1', 'Q2C': 'Q2', 'Q3C': 'Q3', 'Q4C': 'Q4','EXC': 'Extra.time', 'FHC': 'First.Half', 'SHC': 'Second.Half'
-                         })
-        .melt()).rename(columns={'variable': 'Period', 'value': 'Opponent'})
+    st.write('##### History in Euroleague')
+    interactive_table(pd.concat([parts, playoff, finalfour, title]).set_index('Euroleague'),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
-    periodteams = pd.merge(periodteam1, periodteam2)
-    periodteams=periodteams.loc[periodteams.Period!='Team']
-    st.write('##### Period Points per game')
-    period_fig = go.Figure(
-        data=go.Table(columnwidth=[1.5, 1, 1],
-                      header=dict(values=list(periodteams.columns), align='center', font_size=18, height=30),
-                      cells=dict(values=[periodteams['Period'], periodteams['Team'],
-                                         periodteams['Opponent']], align='center', font_size=15.5, height=30)))
-    period_fig.update_layout(
-        autosize=False,
-        width=600,
-        height=280,
-        margin=dict(
-            l=10,
-            r=10,
-            b=40,
-            t=0,
-            pad=40
-        ))
-    st.write(period_fig)
-
-    basic_stats1 = teamstats.loc[teamstats.Team == search_team_team1][
-        ['PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'ST', 'PF', 'PIR']].rename(
-        columns={'PTS': 'Points',
-                 'AS': 'Assists',
-                 'TO': 'Turnovers',
-                 'TR': 'TotalRebounds',
-                 'OR': 'OffensiveRebounds',
-                 'DR': 'DefensiveRebounds',
-                 'BLK': 'Blocks',
-                 'ST': 'Steals',
-                 'PF': 'Personal.Fouls'}).round(1)
-    basic_stats1 = basic_stats1.melt().rename(columns={"variable": "Stat", "value": "Team"})
-    basic_stats2 = oppstats.loc[oppstats.Team == search_team_team1][
-        ['PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'ST', 'PF', 'PIR']].rename(
-        columns={'PTS': 'Points',
-                 'AS': 'Assists',
-                 'TO': 'Turnovers',
-                 'TR': 'TotalRebounds',
-                 'OR': 'OffensiveRebounds',
-                 'DR': 'DefensiveRebounds',
-                 'BLK': 'Blocks',
-                 'ST': 'Steals',
-                 'PF': 'Personal.Fouls'}).round(1)
-    basic_stats2 = basic_stats2.melt().rename(columns={"variable": "Stat", "value": "Opponent"})
-    basic_stats_data = pd.merge(basic_stats1, basic_stats2)
-    st.write('##### Basic Stats per game')
-    basic_stats_fig = go.Figure(
-        data=go.Table(columnwidth=[2, 1, 1],
-                      header=dict(values=list(basic_stats_data.columns), align='center', font_size=18, height=30),
-                      cells=dict(values=[basic_stats_data['Stat'], basic_stats_data['Team'],
-                                         basic_stats_data['Opponent']], align='center', font_size=15.5, height=30)))
-    basic_stats_fig.update_layout(
-        autosize=False,
-        width=700,
-        height=400,
-        margin=dict(
-            l=10,
-            r=10,
-            b=40,
-            t=0,
-            pad=40
-        ))
-    st.write(basic_stats_fig)
-with stats:
+    st.write('##### Games in Euroleague')
+    interactive_table(pd.concat([games,wins,loses]).set_index('Played'),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=True,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
-    st.write("##### Shooting Stats per game")
-    shooting_stats1 = teamstats.loc[teamstats.Team == search_team_team1][
-        ['F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)',
-         'FT Ratio', 'EFG(%)', 'TS(%)']].rename(
-        columns={'F2M': '2P.Made',
-                 'F2A': '2P.Attempt',
-                 'P2': '2P(%)',
-                 'F3M': '3P.Made',
-                 'F3A': '3P.Attempt',
-                 'P3': '3P(%)',
-                 'FTM': 'FT.Made',
-                 'FTA': 'FT.Attempt',
-                 'PFT': 'FT(%)',
-                 'FTR': 'FT.Ratio',
-                 'EFG': 'EFG(%)',
-                 'TS': 'TS(%)'})
-    shooting_stats1 = shooting_stats1.round(1).melt().rename(
-        columns={"variable": "Stat", "value": "Team"})
-    shooting_stats2 = oppstats.loc[oppstats.Team == search_team_team1][
-        ['F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)',
-         'FT Ratio', 'EFG(%)', 'TS(%)']].rename(
-        columns={'F2M': '2P.Made',
-                 'F2A': '2P.Attempt',
-                 'P2': '2P(%)',
-                 'F3M': '3P.Made',
-                 'F3A': '3P.Attempt',
-                 'P3': '3P(%)',
-                 'FTM': 'FT.Made',
-                 'FTA': 'FT.Attempt',
-                 'PFT': 'FT(%)',
-                 'FTR': 'FT.Ratio',
-                 'EFG': 'EFG(%)',
-                 'TS': 'TS(%)'
-                 })
-    shooting_stats2 = shooting_stats2.round(1).melt().rename(
-        columns={"variable": "Stat", "value": "Opponent"})
-    shooting_stats_data = pd.merge(shooting_stats1, shooting_stats2)
-    shooting_stats_fig = go.Figure(data=go.Table(columnwidth=[3, 1, 1],
-                                                 header=dict(values=list(shooting_stats_data.columns),
-                                                             align='center', font_size=18, height=30),
-                                                 cells=dict(values=[shooting_stats_data['Stat'],
-                                                                    shooting_stats_data['Team'],
-                                                                    shooting_stats_data['Opponent']],
-                                                            align='center', font_size=16, height=30)))
-    shooting_stats_fig.update_layout(
-        autosize=False,
-        width=8000,
-        height=450,
-        margin=dict(
-            l=10,
-            r=10,
-            b=40,
-            t=0,
-            pad=40
-        ))
-    st.write(shooting_stats_fig)
-    st.write("##### Advanced Stats per game")
-    advanced_stats1 = (teamstats.loc[teamstats.Team == search_team_team1][['Possesions', 'Offensive Rating',
-                                     'AS-TO Ratio', 'TO Ratio', 'AS Ratio']]
-                       .rename(columns={'Offensive Rating':'Offensive.Rating',
-                                     'AS-TO Ratio':'AS-TO.Ratio', 'TO Ratio':'TO.Ratio',
-                                    'AS Ratio':'AS.Ratio'}))
-    advanced_stats1 = advanced_stats1.round(1).melt().rename( columns={"variable": "Stat", "value": "Team"})
-    advanced_stats2 = (oppstats.loc[oppstats.Team == search_team_team1][['Possesions', 'Offensive Rating',
-                                     'AS-TO Ratio', 'TO Ratio', 'AS Ratio']]
-                       .rename(columns={'Offensive Rating':'Offensive.Rating',
-                                     'AS-TO Ratio':'AS-TO.Ratio', 'TO Ratio':'TO.Ratio',
-                                    'AS Ratio':'AS.Ratio'}))
-    advanced_stats2 = advanced_stats2.round(1).melt().rename(
-        columns={"variable": "Stat", "value": "Opponent"})
-    advanced_stats_data = pd.merge(advanced_stats1, advanced_stats2)
-    advanced_stats_fig = go.Figure(data=go.Table(
-        header=dict(values=list(advanced_stats_data.columns), align='center', font_size=18, height=30),
-        cells=dict(values=[advanced_stats_data['Stat'], advanced_stats_data['Team'],
-                           advanced_stats_data['Opponent']], align='center',
-                   font_size=15, height=30)))
-    advanced_stats_fig.update_layout(
-        autosize=False,
-        width=700,
-        height=500,
-        margin=dict(
-            l=10,
-            r=10,
-            b=40,
-            t=0,
-            pad=40
-        ))
-    st.write(advanced_stats_fig)
+periodteam1 = (period_points1.loc[period_points1.Team==search_team_team1].groupby('Team')[['Q1S', 'Q2S', 'FHS', 'Q3S', 'Q4S', 'SHS', 'EXS']].mean().reset_index().round(1)
+               .rename(columns={'Q1S': 'Q1', 'Q2S': 'Q2', 'Q3S': 'Q3', 'Q4S': 'Q4',
+                                'EXS': 'Extra time', 'FHS': 'First Half', 'SHS': 'Second Half'
+                                }))
+periodteam2 = (period_points1.loc[period_points1.Team==search_team_team1].groupby('Team')[['Q1C', 'Q2C', 'FHC', 'Q3C', 'Q4C', 'SHC', 'EXC']].mean().reset_index().round(1)
+    .rename(columns={'Q1C': 'Q1', 'Q2C': 'Q2', 'Q3C': 'Q3', 'Q4C': 'Q4','EXC': 'Extra time', 'FHC': 'First Half', 'SHC': 'Second Half'
+                     }))
+periodteam2['Team']=periodteam2['Team'].str.replace(search_team_team1,"Opponent")
+periodteams = pd.concat([periodteam1, periodteam2])
+
+st.write('##### Period Points per game')
+interactive_table(periodteams.set_index("Team"),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=True,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+basic_stats1 = teamstats.loc[teamstats.Team == search_team_team1][
+    ['Team','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'ST', 'PF', 'PIR']].rename(
+    columns={'PTS': 'Points',
+             'AS': 'Assists',
+             'TO': 'Turnovers',
+             'TR': 'Total Rebounds',
+             'OR': 'Offensive Rebounds',
+             'DR': 'Defensive Rebounds',
+             'BLK': 'Blocks',
+             'ST': 'Steals',
+             'PF': 'Personal Fouls'}).round(1)
+
+basic_stats2 = oppstats.loc[oppstats.Team == search_team_team1][
+    ['Team','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'ST', 'PF', 'PIR']].rename(
+    columns={'PTS': 'Points',
+             'AS': 'Assists',
+             'TO': 'Turnovers',
+             'TR': 'Total Rebounds',
+             'OR': 'Offensive Rebounds',
+             'DR': 'Defensive Rebounds',
+             'BLK': 'Blocks',
+             'ST': 'Steals',
+             'PF': 'Personal Fouls'}).round(1)
+basic_stats2['Team'] = basic_stats2['Team'].str.replace(search_team_team1, "Opponent")
+basic_stats_data = pd.concat([basic_stats1, basic_stats2])
+st.write('##### Basic Stats per game')
+interactive_table(basic_stats_data.set_index("Team"),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=True,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+st.write("##### Shooting Stats per game")
+shooting_stats1 = teamstats.loc[teamstats.Team == search_team_team1][
+    ['Team','F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)',
+     'FT Ratio', 'EFG(%)', 'TS(%)']].rename(
+    columns={'F2M': '2P Made',
+             'F2A': '2P Attempt',
+             'P2': '2P(%)',
+             'F3M': '3P Made',
+             'F3A': '3P Attempt',
+             'P3': '3P(%)',
+             'FTM': 'FT Made',
+             'FTA': 'FT Attempt',
+             'PFT': 'FT(%)',
+             'FTR': 'FT Ratio',
+             'EFG': 'EFG(%)',
+             'TS': 'TS(%)'})
+
+shooting_stats2 = oppstats.loc[oppstats.Team == search_team_team1][
+    ['Team','F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)',
+     'FT Ratio', 'EFG(%)', 'TS(%)']].rename(
+    columns={'F2M': '2P Made',
+             'F2A': '2P Attempt',
+             'P2': '2P(%)',
+             'F3M': '3P Made',
+             'F3A': '3P Attempt',
+             'P3': '3P(%)',
+             'FTM': 'FT Made',
+             'FTA': 'FT Attempt',
+             'PFT': 'FT(%)',
+             'FTR': 'FT Ratio',
+             'EFG': 'EFG(%)',
+             'TS': 'TS(%)'
+             })
+shooting_stats2['Team'] = shooting_stats2['Team'].str.replace(search_team_team1, "Opponent")
+shooting_stats_data = pd.concat([shooting_stats1, shooting_stats2])
+interactive_table(shooting_stats_data.set_index("Team"),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=True,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+st.write("##### Advanced Stats per game")
+advanced_stats1 = (teamstats.loc[teamstats.Team == search_team_team1][["Team",'Possesions', 'Offensive Rating',
+                                 'AS-TO Ratio', 'TO Ratio', 'AS Ratio']]
+                   )
+
+advanced_stats2 = (oppstats.loc[oppstats.Team == search_team_team1][["Team",'Possesions', 'Offensive Rating',
+                                 'AS-TO Ratio', 'TO Ratio', 'AS Ratio']]
+                   )
+advanced_stats2['Team'] = advanced_stats2['Team'].str.replace(search_team_team1, "Opponent")
+advanced_stats_data = pd.concat([advanced_stats1, advanced_stats2])
+interactive_table(advanced_stats_data.set_index("Team"),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=True,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
 
 
 def compute_team_stats_against_each_team(dataset_stats,dataset_periods):

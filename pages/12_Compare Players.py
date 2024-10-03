@@ -130,6 +130,9 @@ def metrics_customize(red,green,blue,iconname,sline,i):
                         </style><BR><span style='font-size: 30px; 
                         margin-top: 0;'>{sline}</style></span></p>"""
     return htmlstr
+
+
+######### datasets ############
 euroleague_2016_2017_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2016_2017_playerstats.csv")
 euroleague_2016_2017_playerstats['idseason']=euroleague_2016_2017_playerstats['IDGAME'] + "_" + euroleague_2016_2017_playerstats['Season']
 euroleague_2016_2017_playerstats[['Fixture', 'Game']] = euroleague_2016_2017_playerstats['IDGAME'].str.split('_', n=1, expand=True)
@@ -196,7 +199,7 @@ selected_round_player1 = st.sidebar.selectbox("Round(First Player):",['First Rou
 
 st.sidebar.write("## ______________________________")
 st.sidebar.write("## Select Second player filters")
-search_player_player2=st.sidebar.selectbox("Choose Second player:",All_Seasons['Player'].reset_index().sort_values('Player')['Player'].unique())
+search_player_player2=st.sidebar.selectbox("Choose Second player:",All_Seasons['Player'].reset_index().sort_values('Player')['Player'].unique(),index=1)
 selected_ha_player2 = st.sidebar.selectbox("Home or Away games(Second Player):",['A', 'H', 'All'],index=2)
 selected_season_player2 = st.sidebar.selectbox("Season(Second Player):",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
        '2021-2022', '2022-2023', '2023-2024','All'],index=8)
@@ -359,14 +362,18 @@ def compute_player_stats(dataset,Player):
 
 player1_stats=compute_player_stats(All_Seasons1,search_player_player1)
 player2_stats=compute_player_stats(All_Seasons2,search_player_player2)
+games1=All_Seasons1.loc[All_Seasons1['Player'] == search_player_player1][["Player"]].value_counts().reset_index().rename(columns={'count': 'Games'})
+player1_stats=pd.merge(player1_stats,games1)
+games2=All_Seasons2.loc[All_Seasons2['Player'] == search_player_player2][["Player"]].value_counts().reset_index().rename(columns={'count': 'Games'})
+player2_stats=pd.merge(player2_stats,games2)
 
-p1, p2,stats=st.columns([1,1,2])
+p1,rat1, p2,rat2=st.columns([1,2,1,2])
 
 
 
+try:
+    with p1:
 
-with p1:
-    try:
         st.write('### Player 1')
         st.markdown("#### " + search_player_player1)
         st.write('Season: '+select_season_player1)
@@ -374,8 +381,30 @@ with p1:
         st.write('Round: '+select_round_player1)
         st.write('Home or away: '+select_ha_player1)
         st.write('Result: '+select_wl_player1)
+        teams_min_games_played1 = All_Seasons1.loc[All_Seasons1['Player'] == search_player_player1][
+            ["Season", 'Team']].value_counts().reset_index()[
+            ["Season", 'Team']]
+        st.write('#### Teams Played')
+        team_min_games = go.Figure(data=go.Table(columnwidth=[1, 1, 1],
+                                             header=dict(
+                                                 values=list(teams_min_games_played1[['Team', 'Season']].columns),
+                                                 align='center', font_size=18, height=30), cells=dict(
+            values=[teams_min_games_played1.Team, teams_min_games_played1.Season],
+            align='center', font_size=16, height=30)))
 
-
+        team_min_games.update_layout(
+            autosize=True,
+            width=300,
+            height=250,
+            margin=dict(
+                l=20,
+                r=20,
+                b=10,
+                t=10,
+                pad=0
+            ))
+        st.write(team_min_games)
+    with rat1:
         offense_rating_data=player1_stats.loc[player1_stats['Player'] == search_player_player1][
             ['Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_OR', 'Rating_BLKR', 'Rating_RF', 'Rating_F2M', 'Rating_F2A',
              'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3',
@@ -461,474 +490,430 @@ with p1:
         st.write(tot)
 
 
-        teams_min_games_played1 = pd.merge(
-            All_Seasons1.loc[All_Seasons1['Player'] == search_player_player1].groupby(["Player", 'Team'])[
-                'MIN'].mean().round(1).reset_index(),
-            All_Seasons1.loc[All_Seasons1['Player'] == search_player_player1][
-                ["Player", 'Team']].value_counts().reset_index()).rename(columns={'count': 'Games'})
 
+except:
+    st.error('No data available with these parameters')
+
+try:
+    with p2:
+        st.write('### Player 2')
+        st.markdown("#### " + search_player_player2)
+        st.write('Season: ' + select_season_player2)
+        st.write('Phase: ' + select_phase_player2)
+        st.write('Round: ' + select_round_player2)
+        st.write('Home or away: ' + select_ha_player2)
+        st.write('Result: ' + select_wl_player2)
+        teams_min_games_played2 = All_Seasons2.loc[All_Seasons2['Player'] == search_player_player2][
+            ["Season", 'Team']].value_counts().reset_index()[
+            ["Season", 'Team']]
+        st.write('#### Teams Played')
         team_min_games = go.Figure(data=go.Table(columnwidth=[1, 1, 1],
                                                  header=dict(
-                                                     values=list(teams_min_games_played1[['Team', 'MIN', 'Games']].columns),
+                                                     values=list(
+                                                         teams_min_games_played2[['Team', 'Season']].columns),
                                                      align='center', font_size=18, height=30), cells=dict(
-                values=[teams_min_games_played1.Team, teams_min_games_played1.MIN, teams_min_games_played1.Games],
+                values=[teams_min_games_played2.Team, teams_min_games_played2.Season],
                 align='center', font_size=16, height=30)))
 
         team_min_games.update_layout(
             autosize=True,
             width=300,
-            height=350,
+            height=250,
             margin=dict(
                 l=20,
                 r=20,
-                b=100,
-                t=40,
+                b=10,
+                t=10,
                 pad=10
             ))
         st.write(team_min_games)
-    except:
-        st.error('No data available with these parameters')
+    with rat2:
+            offense_rating_data=player2_stats.loc[player2_stats['Player'] == search_player_player2][
+                    ['Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_OR', 'Rating_BLKR', 'Rating_RF', 'Rating_F2M', 'Rating_F2A',
+                     'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3',
+                     'Rating_FTM', 'Rating_FTA', 'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS', "Rating_ORA",
+                     'Rating_ASTOR', "Rating_TOR", "Rating_ASR", 'Rating_USG', 'Rating_ORP']].melt()
+            offense_ratings = offense_rating_data['value'].mean()
+
+            off = go.Figure(go.Indicator(
+                mode="gauge+number",
+                value=offense_ratings.round(0),
+                domain={'x': [0, 1], 'y': [0, 1]},
+                gauge={'axis': {'range': [None, 100]},
+                       'bordercolor': "gray"},
+                title={'text': "Offense"}))
+
+            off.update_layout(
+                autosize=False,
+                width=250,
+                height=150,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=10,
+                    t=40,
+                    pad=0
+                ))
+
+            st.write(off)
 
 
-with p2:
-    st.write('### Player 2')
-    st.markdown("#### " + search_player_player2)
-    st.write('Season: ' + select_season_player2)
-    st.write('Phase: ' + select_phase_player2)
-    st.write('Round: ' + select_round_player2)
-    st.write('Home or away: ' + select_ha_player2)
-    st.write('Result: ' + select_wl_player2)
-    try:
-        offense_rating_data=player2_stats.loc[player2_stats['Player'] == search_player_player2][
-                ['Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_OR', 'Rating_BLKR', 'Rating_RF', 'Rating_F2M', 'Rating_F2A',
+
+            defense_ratings = player2_stats.loc[player2_stats['Player'] == search_player_player2][
+                ['Rating_ST', 'Rating_DR', 'Rating_PF', 'Rating_BLK']].melt()['value'].mean()
+
+            defe = go.Figure(go.Indicator(
+                mode="gauge+number",
+                value=defense_ratings.round(0),
+                domain={'x': [0, 1], 'y': [0, 1]},
+                gauge={'axis': {'range': [None, 100]},
+                       'bordercolor': "gray"},
+                title={'text': "Defense"}))
+
+            defe.update_layout(
+                autosize=True,
+                width=250,
+                height=150,
+                margin=dict(
+                    l=30,
+                    r=50,
+                    b=10,
+                    t=40,
+                    pad=0
+                )
+            )
+
+            st.write(defe)
+
+
+
+            total_ratings = player2_stats.loc[player2_stats['Player'] == search_player_player2][
+                ['Player','Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_OR', 'Rating_BLKR', 'Rating_RF', 'Rating_F2M', 'Rating_F2A',
                  'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3',
                  'Rating_FTM', 'Rating_FTA', 'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS', "Rating_ORA",
-                 'Rating_ASTOR', "Rating_TOR", "Rating_ASR", 'Rating_USG', 'Rating_ORP']].melt()
-        offense_ratings = offense_rating_data['value'].mean()
+                 'Rating_ASTOR', "Rating_TOR", "Rating_ASR", 'Rating_USG', 'Rating_ORP','Rating_ST', 'Rating_DR', 'Rating_PF', 'Rating_BLK']].melt(id_vars='Player')[
+                'value'].mean()
 
-        off = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=offense_ratings.round(0),
-            domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={'axis': {'range': [None, 100]},
-                   'bordercolor': "gray"},
-            title={'text': "Offense"}))
+            tot = go.Figure(go.Indicator(
+                mode="gauge+number",
+                value=total_ratings.round(0),
+                domain={'x': [0, 1], 'y': [0, 1]},
+                gauge={'axis': {'range': [None, 100]},
+                       'bordercolor': "gray"},
+                title={'text': "Overall"}))
 
-        off.update_layout(
-            autosize=False,
-            width=250,
-            height=150,
-            margin=dict(
-                l=30,
-                r=50,
-                b=10,
-                t=40,
-                pad=0
-            ))
-
-        st.write(off)
-
-
-
-        defense_ratings = player2_stats.loc[player2_stats['Player'] == search_player_player2][
-            ['Rating_ST', 'Rating_DR', 'Rating_PF', 'Rating_BLK']].melt()['value'].mean()
-
-        defe = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=defense_ratings.round(0),
-            domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={'axis': {'range': [None, 100]},
-                   'bordercolor': "gray"},
-            title={'text': "Defense"}))
-
-        defe.update_layout(
-            autosize=True,
-            width=250,
-            height=150,
-            margin=dict(
-                l=30,
-                r=50,
-                b=10,
-                t=40,
-                pad=0
-            )
-        )
-
-        st.write(defe)
-
-
-
-        total_ratings = player2_stats.loc[player2_stats['Player'] == search_player_player2][
-            ['Player','Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_OR', 'Rating_BLKR', 'Rating_RF', 'Rating_F2M', 'Rating_F2A',
-             'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3',
-             'Rating_FTM', 'Rating_FTA', 'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS', "Rating_ORA",
-             'Rating_ASTOR', "Rating_TOR", "Rating_ASR", 'Rating_USG', 'Rating_ORP','Rating_ST', 'Rating_DR', 'Rating_PF', 'Rating_BLK']].melt(id_vars='Player')[
-            'value'].mean()
-
-        tot = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=total_ratings.round(0),
-            domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={'axis': {'range': [None, 100]},
-                   'bordercolor': "gray"},
-            title={'text': "Overall"}))
-
-        tot.update_layout(
-            autosize=True,
-            width=250,
-            height=150,
-            margin=dict(
-                l=30,
-                r=50,
-                b=10,
-                t=40,
-                pad=0
-            )
-        )
-
-        st.write(tot)
-
-        teams_min_games_played2 = pd.merge(
-            All_Seasons2.loc[All_Seasons2['Player'] == search_player_player2].groupby(["Player", 'Team'])[
-                'MIN'].mean().round(1).reset_index(),
-            All_Seasons2.loc[All_Seasons2['Player'] == search_player_player2][
-                ["Player", 'Team']].value_counts().reset_index()).rename(columns={'count': 'Games'})
-
-        team_min_games = go.Figure(data=go.Table(columnwidth=[1, 1, 1],
-                                                 header=dict(
-                                                     values=list(teams_min_games_played2[['Team', 'MIN', 'Games']].columns),
-                                                     align='center', font_size=18, height=30), cells=dict(
-                values=[teams_min_games_played2.Team, teams_min_games_played2.MIN, teams_min_games_played2.Games],
-                align='center', font_size=16, height=30)))
-
-        team_min_games.update_layout(
-            autosize=True,
-            width=300,
-            height=350,
-            margin=dict(
-                l=20,
-                r=20,
-                b=100,
-                t=40,
-                pad=10
-            ))
-        st.write(team_min_games)
-    except:
-        st.error('No data available with these parameters')
-with stats:
-    try:
-        basic,shooting,advanced=st.tabs(['Basic Stats','Shooting Stats','Advanced Stats'])
-        with basic:
-            basic_stats1=player1_stats[['PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'BLKR', 'ST', 'PF', 'RF', 'PIR']].rename(columns={'PTS':'Points',
-                                                                                                                                        'AS':'Assists',
-                                                                                                                                        'TO':'Turnovers',
-                                                                                                                                        'TR':'TotalRebounds',
-                                                                                                                                        'OR':'OffensiveRebounds',
-                                                                                                                                        'DR':'DefensiveRebounds',
-                                                                                                                                        'BLK':'Blocks',
-                                                                                                                                        'BLKR':'BlocksReversed',
-                                                                                                                                        'ST':'Steals',
-                                                                                                                                        'PF':'PersonalFouls',
-                                                                                                                                        'RF':'FoulsDrawn'}).round(1)
-            basic_stats1=basic_stats1.melt().rename(columns={"variable": "Basic.Stats", "value": "Player1"})
-            basic_stats2= player2_stats[['PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'BLKR', 'ST', 'PF', 'RF', 'PIR']].rename(columns={'PTS':'Points',
-                                                                                                                                        'AS':'Assists',
-                                                                                                                                        'TO':'Turnovers',
-                                                                                                                                        'TR':'TotalRebounds',
-                                                                                                                                        'OR':'OffensiveRebounds',
-                                                                                                                                        'DR':'DefensiveRebounds',
-                                                                                                                                        'BLK':'Blocks',
-                                                                                                                                        'BLKR':'BlocksReversed',
-                                                                                                                                        'ST':'Steals',
-                                                                                                                                        'PF':'PersonalFouls',
-                                                                                                                                        'RF':'FoulsDrawn'}).round(1)
-            basic_stats2=basic_stats2.melt().rename(columns={"variable":"Basic.Stats","value":"Player2"})
-            basic_stats_data=pd.merge(basic_stats1,basic_stats2)
-            basic_stats_fig=go.Figure(data=go.Table(columnwidth=[2,1,1],header=dict(values=list(basic_stats_data.columns),align='center',font_size=18,height=30),
-                            cells=dict(values=[basic_stats_data['Basic.Stats'],basic_stats_data['Player1'],basic_stats_data['Player2']],align='center',font_size=15.5,height=30)))
-            basic_stats_fig.update_layout(
-                autosize=False,
-                width=600,
-                height=450,
+            tot.update_layout(
+                autosize=True,
+                width=250,
+                height=150,
                 margin=dict(
-                l=10,
-                r=10,
-                b=40,
-                t=0,
-                pad=40
-                ))
-            st.write(basic_stats_fig)
-            basic_player_ratings1 = player1_stats.loc[player1_stats['Player'] == search_player_player1][
-                ['Player','Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_TR', 'Rating_DR', 'Rating_OR', 'Rating_BLK', 'Rating_BLKR',
-                 'Rating_ST', 'Rating_PF', 'Rating_RF']].rename(columns={'Rating_PTS': 'Points',
-                                                                         'Rating_AS': 'Assists',
-                                                                         'Rating_TO': 'Turnovers',
-                                                                         'Rating_TR': 'Total<br>Rebounds',
-                                                                         'Rating_OR': 'Offensive<br>Rebounds',
-                                                                         'Rating_DR': 'Defensive<br>Rebounds',
-                                                                         'Rating_BLK': 'Blocks',
-                                                                         'Rating_BLKR': 'Blocks<br>Reversed',
-                                                                         'Rating_ST': 'Steals',
-                                                                         'Rating_PF': 'Personal<br>Fouls',
-                                                                         'Rating_RF': 'Fouls<br>Drawn'}).melt(id_vars='Player')
-            basic_player_ratings1['variable'] = basic_player_ratings1['variable'].str.replace('Rating_', '')
+                    l=30,
+                    r=50,
+                    b=10,
+                    t=40,
+                    pad=0
+                )
+            )
 
-            basic_player_ratings2 = player2_stats.loc[player2_stats['Player'] == search_player_player2][
-                ['Player','Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_TR', 'Rating_DR', 'Rating_OR', 'Rating_BLK', 'Rating_BLKR',
-                 'Rating_ST', 'Rating_PF', 'Rating_RF']].rename(columns={'Rating_PTS': 'Points',
-                                                                         'Rating_AS': 'Assists',
-                                                                         'Rating_TO': 'Turnovers',
-                                                                         'Rating_TR': 'Total<br>Rebounds',
-                                                                         'Rating_OR': 'Offensive<br>Rebounds',
-                                                                         'Rating_DR': 'Defensive<br>Rebounds',
-                                                                         'Rating_BLK': 'Blocks',
-                                                                         'Rating_BLKR': 'Blocks<br>Reversed',
-                                                                         'Rating_ST': 'Steals',
-                                                                         'Rating_PF': 'Personal<br>Fouls',
-                                                                         'Rating_RF': 'Fouls<br>Drawn'}).melt(id_vars='Player')
-            basic_player_ratings2['variable'] = basic_player_ratings2['variable'].str.replace('Rating_', '')
-            basic_player_ratings_data=pd.concat([basic_player_ratings1,basic_player_ratings2])
-            basic_ratings=make_subplots(rows=2, cols=1,specs=[[{"type": "barpolar"}],[{"type": "barpolar"}]])
-            basic_ratings.add_trace(go.Barpolar(
-                r=basic_player_ratings1['value'],
-                theta=basic_player_ratings1['variable'],
-                marker_color='green',
-                marker_line_color="black",
-                marker_line_width=2,
-                opacity=0.8,
-                name='Player 1',
-                hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
-                ),row=1, col=1)
-            basic_ratings.add_trace(go.Barpolar(
-                r=basic_player_ratings2['value'],
-                theta=basic_player_ratings2['variable'],
-                marker_color='blue',
-                marker_line_color="black",
-                marker_line_width=2,
-                opacity=0.8,
-                name='Player 2',
-                hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
-                ),row=2, col=1)
-            basic_ratings.update_layout(
-                title='Basic Stats Ratings',
-                template=None,
-                height=650,
-                polar=dict(
-                    radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
-                    angularaxis=dict(showticklabels=True, ticks='')
-                ))
+            st.write(tot)
 
-            st.write(basic_ratings)
-        with shooting:
-            shooting_stats1=player1_stats[['F2M', 'F2A', 'P2', 'F3M', 'F3A', 'P3', 'FTM', 'FTA', 'PFT', 'FTR', 'EFG', 'TS']].rename(columns={'F2M':'2P.Made',
-                                                                                                                                           'F2A':'2P.Attempt',
-                                                                                                                                           'P2':'2P(%)',
-                                                                                                                                           'F3M': '3P.Made',
-                                                                                                                                           'F3A': '3P.Attempt',
-                                                                                                                                           'P3': '3P(%)',
-                                                                                                                                           'FTM': 'FT.Made',
-                                                                                                                                           'FTA': 'FT.Attempt',
-                                                                                                                                           'PFT': 'FT(%)',
-                                                                                                                                           'FTR':'FT.Ratio',
-                                                                                                                                           'EFG':'EFG(%)',
-                                                                                                                                           'TS':'TS(%)'})
-            shooting_stats1=shooting_stats1.round(1).melt().rename(columns={"variable":"Shooting.Stats","value":"Player1"})
-            shooting_stats2 = player2_stats[
-                ['F2M', 'F2A', 'P2', 'F3M', 'F3A', 'P3', 'FTM', 'FTA', 'PFT', 'FTR', 'EFG', 'TS']].rename(
-                columns={'F2M':'2P.Made',
-                                                                                                                                           'F2A':'2P.Attempt',
-                                                                                                                                           'P2':'2P(%)',
-                                                                                                                                           'F3M': '3P.Made',
-                                                                                                                                           'F3A': '3P.Attempt',
-                                                                                                                                           'P3': '3P(%)',
-                                                                                                                                           'FTM': 'FT.Made',
-                                                                                                                                           'FTA': 'FT.Attempt',
-                                                                                                                                           'PFT': 'FT(%)',
-                                                                                                                                           'FTR':'FT.Ratio',
-                                                                                                                                           'EFG':'EFG(%)',
-                                                                                                                                           'TS':'TS(%)'})
-            shooting_stats2 = shooting_stats2.round(1).melt().rename(
-                columns={"variable": "Shooting.Stats", "value": "Player2"})
-            shooting_stats_data=pd.merge(shooting_stats1,shooting_stats2)
-            shooting_stats_fig=go.Figure(data=go.Table(columnwidth=[2,1,1],header=dict(values=list(shooting_stats_data.columns),align='center',font_size=18,height=30),
-                            cells=dict(values=[shooting_stats_data['Shooting.Stats'],shooting_stats_data['Player1'],shooting_stats_data['Player2']],align='center',font_size=16,height=30)))
-            shooting_stats_fig.update_layout(
-            autosize=False,
-            width=8000,
-            height=460,
-            margin=dict(
-                l=10,
-                r=10,
-                b=40,
-                t=0,
-                pad=40
+
+except:
+    st.error('No data available with these parameters')
+
+try:
+    st.write("### Euroleague Stats")
+    basic,shooting,advanced=st.tabs(['Basic Stats','Shooting Stats','Advanced Stats'])
+    with basic:
+
+        basic_stats1=player1_stats[['Player','Games','MIN','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'BLKR', 'ST', 'PF', 'RF', 'PIR']].rename(columns={'PTS':'Points',
+                                                                                                                                    'AS':'Assists',
+                                                                                                                                    'TO':'Turnovers',
+                                                                                                                                    'TR':'Total Rebounds',
+                                                                                                                                    'OR':'Offensive Rebounds',
+                                                                                                                                    'DR':'Defensive Rebounds',
+                                                                                                                                    'BLK':'Blocks',
+                                                                                                                                    'BLKR':'Blocks Reversed',
+                                                                                                                                    'ST':'Steals',
+                                                                                                                                    'PF':'Personal Fouls',
+                                                                                                                                    'RF':'Fouls Drawn','MIN':'Minutes'}).round(1)
+
+        basic_stats2= player2_stats[['Player','Games','MIN','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'BLKR', 'ST', 'PF', 'RF', 'PIR']].rename(columns={'PTS':'Points',
+                                                                                                                                    'AS':'Assists',
+                                                                                                                                    'TO':'Turnovers',
+                                                                                                                                    'TR':'Total Rebounds',
+                                                                                                                                    'OR':'Offensive Rebounds',
+                                                                                                                                    'DR':'Defensive Rebounds',
+                                                                                                                                    'BLK':'Blocks',
+                                                                                                                                    'BLKR':'Blocks Reversed',
+                                                                                                                                    'ST':'Steals',
+                                                                                                                                    'PF':'Personal Fouls',
+                                                                                                                                    'RF':'Fouls Drawn','MIN':'Minutes'}).round(1)
+        basic_stats1['Player']=search_player_player1+" "+select_season_player1+" "+select_phase_player1+" "+select_round_player1+" "+select_ha_player1+" "+select_wl_player1
+        basic_stats2[
+            'Player'] = search_player_player2 + " "+select_season_player2 + " "+select_phase_player2 + " "+select_round_player2 + " "+select_ha_player2 + " "+select_wl_player2
+        basic_stats_data=pd.concat([basic_stats1,basic_stats2])
+        interactive_table(basic_stats_data.set_index('Player'),
+                          paging=False, height=900, width=2000, showIndex=True,
+                          classes="display order-column nowrap table_with_monospace_font", searching=True,
+                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+        basic_player_ratings1 = player1_stats.loc[player1_stats['Player'] == search_player_player1][
+            ['Player','Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_TR', 'Rating_DR', 'Rating_OR', 'Rating_BLK', 'Rating_BLKR',
+             'Rating_ST', 'Rating_PF', 'Rating_RF']].rename(columns={'Rating_PTS': 'Points',
+                                                                     'Rating_AS': 'Assists',
+                                                                     'Rating_TO': 'Turnovers',
+                                                                     'Rating_TR': 'Total<br>Rebounds',
+                                                                     'Rating_OR': 'Offensive<br>Rebounds',
+                                                                     'Rating_DR': 'Defensive<br>Rebounds',
+                                                                     'Rating_BLK': 'Blocks',
+                                                                     'Rating_BLKR': 'Blocks<br>Reversed',
+                                                                     'Rating_ST': 'Steals',
+                                                                     'Rating_PF': 'Personal<br>Fouls',
+                                                                     'Rating_RF': 'Fouls<br>Drawn'}).melt(id_vars='Player')
+        basic_player_ratings1['variable'] = basic_player_ratings1['variable'].str.replace('Rating_', '')
+
+        basic_player_ratings2 = player2_stats.loc[player2_stats['Player'] == search_player_player2][
+            ['Player','Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_TR', 'Rating_DR', 'Rating_OR', 'Rating_BLK', 'Rating_BLKR',
+             'Rating_ST', 'Rating_PF', 'Rating_RF']].rename(columns={'Rating_PTS': 'Points',
+                                                                     'Rating_AS': 'Assists',
+                                                                     'Rating_TO': 'Turnovers',
+                                                                     'Rating_TR': 'Total<br>Rebounds',
+                                                                     'Rating_OR': 'Offensive<br>Rebounds',
+                                                                     'Rating_DR': 'Defensive<br>Rebounds',
+                                                                     'Rating_BLK': 'Blocks',
+                                                                     'Rating_BLKR': 'Blocks<br>Reversed',
+                                                                     'Rating_ST': 'Steals',
+                                                                     'Rating_PF': 'Personal<br>Fouls',
+                                                                     'Rating_RF': 'Fouls<br>Drawn'}).melt(id_vars='Player')
+        basic_player_ratings2['variable'] = basic_player_ratings2['variable'].str.replace('Rating_', '')
+        basic_player_ratings_data=pd.concat([basic_player_ratings1,basic_player_ratings2])
+        basic_ratings=make_subplots(rows=1, cols=2,specs=[[{"type": "barpolar"},{"type": "barpolar"}]])
+        basic_ratings.add_trace(go.Barpolar(
+            r=basic_player_ratings1['value'],
+            theta=basic_player_ratings1['variable'],
+            marker_color='green',
+            marker_line_color="black",
+            marker_line_width=2,
+            opacity=0.8,
+            name=search_player_player1+" "+select_season_player1+" "+select_phase_player1+" "+select_round_player1+" "+select_ha_player1+" "+select_wl_player1,
+            hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
+            ),row=1, col=1)
+        basic_ratings.add_trace(go.Barpolar(
+            r=basic_player_ratings2['value'],
+            theta=basic_player_ratings2['variable'],
+            marker_color='blue',
+            marker_line_color="black",
+            marker_line_width=2,
+            opacity=0.8,
+            name=search_player_player2+" "+select_season_player2+" "+select_phase_player2+" "+select_round_player2+" "+select_ha_player2+" "+select_wl_player2,
+            hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
+            ),row=1, col=2)
+        basic_ratings.update_layout(
+            title='Basic Stats Ratings',
+            template=None,
+            height=650,
+            polar=dict(
+                radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
+                angularaxis=dict(showticklabels=True, ticks='')
             ))
-            st.write(shooting_stats_fig)
 
-            shoot_player_ratings1 = player1_stats.loc[player1_stats['Player'] == search_player_player1][
-                ['Player','Rating_F2M', 'Rating_F2A', 'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3', 'Rating_FTM',
-                 'Rating_FTA', 'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS']].rename(
-                columns={'Rating_F2M': '2P Made',
-                         'Rating_F2A': '2P Attempt',
-                         'Rating_P2': '2P(%)',
-                         'Rating_F3M': '3P Made',
-                         'Rating_F3A': '3P Attempt',
-                         'Rating_P3': '3P(%)',
-                         'Rating_FTM': 'FT Made',
-                         'Rating_FTA': 'FT Attempt',
-                         'Rating_PFT': 'FT(%)',
-                         'Rating_FTR': 'FT Ratio',
-                         'Rating_EFG': 'EFG(%)',
-                         'Rating_TS': 'TS(%)'}).melt(id_vars='Player')
-            shoot_player_ratings1['variable'] = shoot_player_ratings1['variable'].str.replace('Rating_', '')
-            shoot_player_ratings2 = player2_stats.loc[player2_stats['Player'] == search_player_player2][
-                ['Player','Rating_F2M', 'Rating_F2A', 'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3', 'Rating_FTM',
-                 'Rating_FTA', 'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS']].rename(
-                columns={'Rating_F2M': '2P Made',
-                         'Rating_F2A': '2P Attempt',
-                         'Rating_P2': '2P(%)',
-                         'Rating_F3M': '3P Made',
-                         'Rating_F3A': '3P Attempt',
-                         'Rating_P3': '3P(%)',
-                         'Rating_FTM': 'FT Made',
-                         'Rating_FTA': 'FT Attempt',
-                         'Rating_PFT': 'FT(%)',
-                         'Rating_FTR': 'FT Ratio',
-                         'Rating_EFG': 'EFG(%)',
-                         'Rating_TS': 'TS(%)'}).melt(id_vars='Player')
-            shoot_player_ratings2['variable'] = shoot_player_ratings2['variable'].str.replace('Rating_', '')
-            shoot_ratings = make_subplots(rows=2, cols=1, specs=[[{"type": "barpolar"}], [{"type": "barpolar"}]])
-            shoot_ratings.add_trace(go.Barpolar(
-                r=shoot_player_ratings1['value'],
-                theta=shoot_player_ratings1['variable'],
-                marker_color='green',
-                marker_line_color="black",
-                marker_line_width=2,
-                name='Player 1',
-                opacity=0.8,
-                hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
-                ),row=1, col=1)
-            shoot_ratings.add_trace(go.Barpolar(
-                r=shoot_player_ratings2['value'],
-                theta=shoot_player_ratings2['variable'],
-                marker_color='blue',
-                marker_line_color="black",
-                marker_line_width=2,
-                name='Player 2',
-                opacity=0.8,
-                hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
-            ),row=2, col=1)
+        st.write(basic_ratings)
+    with shooting:
+        shooting_stats1=player1_stats[['F2M', 'F2A', 'P2', 'F3M', 'F3A', 'P3', 'FTM', 'FTA', 'PFT', 'FTR', 'EFG', 'TS']].rename(columns={'F2M':'2P Made',
+                                                                                                                                       'F2A':'2P Attempt',
+                                                                                                                                       'P2':'2P(%)',
+                                                                                                                                       'F3M': '3P Made',
+                                                                                                                                       'F3A': '3P Attempt',
+                                                                                                                                       'P3': '3P(%)',
+                                                                                                                                       'FTM': 'FT Made',
+                                                                                                                                       'FTA': 'FT Attempt',
+                                                                                                                                       'PFT': 'FT(%)',
+                                                                                                                                       'FTR':'FT Ratio',
+                                                                                                                                       'EFG':'EFG(%)',
+                                                                                                                                       'TS':'TS(%)'}).round(1)
 
-            shoot_ratings.update_layout(
-                title='Shooting Stats Ratings',
-                template=None,
-                hovermode="x",
-                height=650,
-                polar=dict(
-                    radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
-                    angularaxis=dict(showticklabels=True, ticks='')
-                ))
-            st.write(shoot_ratings)
+        shooting_stats2 = player2_stats[
+            ['F2M', 'F2A', 'P2', 'F3M', 'F3A', 'P3', 'FTM', 'FTA', 'PFT', 'FTR', 'EFG', 'TS']].rename(
+            columns={'F2M':'2P Made',
+                                                                                                                                       'F2A':'2P Attempt',
+                                                                                                                                       'P2':'2P(%)',
+                                                                                                                                       'F3M': '3P Made',
+                                                                                                                                       'F3A': '3P Attempt',
+                                                                                                                                       'P3': '3P(%)',
+                                                                                                                                       'FTM': 'FT Made',
+                                                                                                                                       'FTA': 'FT Attempt',
+                                                                                                                                       'PFT': 'FT(%)',
+                                                                                                                                       'FTR':'FT Ratio',
+                                                                                                                                       'EFG':'EFG(%)',
+                                                                                                                                       'TS':'TS(%)'}).round(1)
+        shooting_stats1[
+            'Player'] = search_player_player1 + " "+select_season_player1 + " "+select_phase_player1 + " "+select_round_player1 + " "+select_ha_player1 + " "+select_wl_player1
+        shooting_stats2[
+            'Player'] = search_player_player2 + " "+select_season_player2 + " "+select_phase_player2 + " "+select_round_player2 + " "+select_ha_player2 + " "+select_wl_player2
+        shooting_stats_data=pd.concat([shooting_stats1,shooting_stats2])
+        interactive_table(shooting_stats_data.set_index('Player'),
+                          paging=False, height=900, width=2000, showIndex=True,
+                          classes="display order-column nowrap table_with_monospace_font", searching=True,
+                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+        shoot_player_ratings1 = player1_stats.loc[player1_stats['Player'] == search_player_player1][
+            ['Player','Rating_F2M', 'Rating_F2A', 'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3', 'Rating_FTM',
+             'Rating_FTA', 'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS']].rename(
+            columns={'Rating_F2M': '2P Made',
+                     'Rating_F2A': '2P Attempt',
+                     'Rating_P2': '2P(%)',
+                     'Rating_F3M': '3P Made',
+                     'Rating_F3A': '3P Attempt',
+                     'Rating_P3': '3P(%)',
+                     'Rating_FTM': 'FT Made',
+                     'Rating_FTA': 'FT Attempt',
+                     'Rating_PFT': 'FT(%)',
+                     'Rating_FTR': 'FT Ratio',
+                     'Rating_EFG': 'EFG(%)',
+                     'Rating_TS': 'TS(%)'}).melt(id_vars='Player')
+        shoot_player_ratings1['variable'] = shoot_player_ratings1['variable'].str.replace('Rating_', '')
+        shoot_player_ratings2 = player2_stats.loc[player2_stats['Player'] == search_player_player2][
+            ['Player','Rating_F2M', 'Rating_F2A', 'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3', 'Rating_FTM',
+             'Rating_FTA', 'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS']].rename(
+            columns={'Rating_F2M': '2P Made',
+                     'Rating_F2A': '2P Attempt',
+                     'Rating_P2': '2P(%)',
+                     'Rating_F3M': '3P Made',
+                     'Rating_F3A': '3P Attempt',
+                     'Rating_P3': '3P(%)',
+                     'Rating_FTM': 'FT Made',
+                     'Rating_FTA': 'FT Attempt',
+                     'Rating_PFT': 'FT(%)',
+                     'Rating_FTR': 'FT Ratio',
+                     'Rating_EFG': 'EFG(%)',
+                     'Rating_TS': 'TS(%)'}).melt(id_vars='Player')
+        shoot_player_ratings2['variable'] = shoot_player_ratings2['variable'].str.replace('Rating_', '')
+        shoot_ratings = make_subplots(rows=1, cols=2, specs=[[{"type": "barpolar"}, {"type": "barpolar"}]])
+        shoot_ratings.add_trace(go.Barpolar(
+            r=shoot_player_ratings1['value'],
+            theta=shoot_player_ratings1['variable'],
+            marker_color='green',
+            marker_line_color="black",
+            marker_line_width=2,
+            name=search_player_player1+" "+select_season_player1+" "+select_phase_player1+" "+select_round_player1+" "+select_ha_player1+" "+select_wl_player1,
+            opacity=0.8,
+            hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
+            ),row=1, col=1)
+        shoot_ratings.add_trace(go.Barpolar(
+            r=shoot_player_ratings2['value'],
+            theta=shoot_player_ratings2['variable'],
+            marker_color='blue',
+            marker_line_color="black",
+            marker_line_width=2,
+            name=search_player_player2+" "+select_season_player2+" "+select_phase_player2+" "+select_round_player2+" "+select_ha_player2+" "+select_wl_player2,
+            opacity=0.8,
+            hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
+        ),row=1, col=2)
 
-        with advanced:
-            advanced_stats1 = player1_stats[['POS', 'ORA', 'ASTOR', 'TOR', 'ASR', 'USG', 'ORP']].rename(
-                columns={'POS': 'Possesions',
-                         'ORA': 'Offensive.Rating',
-                         'ASTOR': 'Assists/Turnovers.Ratio',
-                         'TOR': 'Turnovers.Ratio',
-                         'ASR': 'Assists.Ratio',
-                         'USG': 'Usage(%)',
-                         'ORP': 'OR(%)'})
-            advanced_stats1 = advanced_stats1.round(1).melt().rename(
-                columns={"variable": "Advanced.Stats", "value": "Player1"})
-            advanced_stats2 = player2_stats[['POS', 'ORA', 'ASTOR', 'TOR', 'ASR', 'USG', 'ORP']].rename(
-                columns={'POS': 'Possesions',
-                         'ORA': 'Offensive.Rating',
-                         'ASTOR': 'Assists/Turnovers.Ratio',
-                         'TOR': 'Turnovers.Ratio',
-                         'ASR': 'Assists.Ratio',
-                         'USG': 'Usage(%)',
-                         'ORP': 'OR(%)'})
-            advanced_stats2 = advanced_stats2.round(1).melt().rename(
-                columns={"variable": "Advanced.Stats", "value": "Player2"})
-            advanced_stats_data=pd.merge(advanced_stats1,advanced_stats2)
-            advanced_stats_fig = go.Figure(data=go.Table(columnwidth=[2,1,1],
-                header=dict(values=list(advanced_stats_data.columns), align='center', font_size=18, height=30),
-                cells=dict(values=[advanced_stats_data['Advanced.Stats'], advanced_stats_data['Player1'], advanced_stats_data['Player2']], align='center',
-                           font_size=15, height=30)))
-            advanced_stats_fig.update_layout(
-                autosize=False,
-                width=700,
-                height=300,
-                margin=dict(
-                    l=10,
-                    r=10,
-                    b=40,
-                    t=0,
-                    pad=40
-                ))
-            st.write(advanced_stats_fig)
-            adv_player_ratings1 = player1_stats.loc[player1_stats['Player'] == search_player_player1][
-                ['Player','Rating_ORA', 'Rating_ASTOR', 'Rating_TOR', 'Rating_ASR', 'Rating_USG', 'Rating_ORP']].rename(columns={
-                'Rating_ORA': 'Offensive<br>Rating',
-                'Rating_ASTOR': 'Assists/Turnovers<br>Ratio',
-                'Rating_TOR': 'Turnovers<br>Ratio',
-                'Rating_ASR': 'Assists<br>Ratio',
-                'Rating_USG': 'Usage(%)',
-                'Rating_ORP': 'OR(%)'}).melt(id_vars='Player')
-            adv_player_ratings2 = player2_stats.loc[player2_stats['Player'] == search_player_player2][
-                ['Player','Rating_ORA', 'Rating_ASTOR', 'Rating_TOR', 'Rating_ASR', 'Rating_USG', 'Rating_ORP']].rename(columns={
-                'Rating_ORA': 'Offensive<br>Rating',
-                'Rating_ASTOR': 'Assists/Turnovers<br>Ratio',
-                'Rating_TOR': 'Turnovers<br>Ratio',
-                'Rating_ASR': 'Assists<br>Ratio',
-                'Rating_USG': 'Usage(%)',
-                'Rating_ORP': 'OR(%)'}).melt(id_vars='Player')
+        shoot_ratings.update_layout(
+            title='Shooting Stats Ratings',
+            template=None,
+            hovermode="x",
+            height=650,
+            polar=dict(
+                radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
+                angularaxis=dict(showticklabels=True, ticks='')
+            ))
+        st.write(shoot_ratings)
 
-            adv_ratings = make_subplots(rows=2, cols=1, specs=[[{"type": "barpolar"}], [{"type": "barpolar"}]])
-            adv_ratings.add_trace(go.Barpolar(
-                r=adv_player_ratings1['value'],
-                theta=adv_player_ratings1['variable'],
-                marker_color='green',
-                marker_line_color="black",
-                marker_line_width=2,
-                name='Player 1',
-                opacity=0.8,
-                hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
-                ),row=1, col=1)
-            adv_ratings.add_trace(go.Barpolar(
-                r=adv_player_ratings2['value'],
-                theta=adv_player_ratings2['variable'],
-                marker_color='blue',
-                marker_line_color="black",
-                marker_line_width=2,
-                name='Player 2',
-                opacity=0.8,
-                hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
-                ),row=2, col=1)
+    with advanced:
+        advanced_stats1 = player1_stats[['POS', 'ORA', 'ASTOR', 'TOR', 'ASR', 'USG', 'ORP']].rename(
+            columns={'POS': 'Possesions',
+                     'ORA': 'Offensive Rating',
+                     'ASTOR': 'Assists/Turnovers Ratio',
+                     'TOR': 'Turnovers Ratio',
+                     'ASR': 'Assists Ratio',
+                     'USG': 'Usage(%)',
+                     'ORP': 'OR(%)'}).round(1)
 
-            adv_ratings.update_layout(
-                title='Advanced Stats Ratings',
-                template=None,
-                height=600,
-                polar=dict(
-                    radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
-                    angularaxis=dict(showticklabels=True, ticks='')
-                ))
+        advanced_stats2 = player2_stats[['POS', 'ORA', 'ASTOR', 'TOR', 'ASR', 'USG', 'ORP']].rename(
+            columns={'POS': 'Possesions',
+                     'ORA': 'Offensive Rating',
+                     'ASTOR': 'Assists/Turnovers Ratio',
+                     'TOR': 'Turnovers Ratio',
+                     'ASR': 'Assists Ratio',
+                     'USG': 'Usage(%)',
+                     'ORP': 'OR(%)'}).round(1)
+        advanced_stats1[
+            'Player'] = search_player_player1 + " "+select_season_player1 + " "+select_phase_player1 + " "+select_round_player1 + " "+select_ha_player1 + " "+select_wl_player1
+        advanced_stats2[
+            'Player'] = search_player_player2 + " "+select_season_player2 + " "+select_phase_player2 + " "+select_round_player2 + " "+select_ha_player2 + " "+select_wl_player2
+        advanced_stats_data=pd.concat([advanced_stats1,advanced_stats2])
+        interactive_table(advanced_stats_data.set_index('Player'),
+                          paging=False, height=900, width=2000, showIndex=True,
+                          classes="display order-column nowrap table_with_monospace_font", searching=True,
+                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+        adv_player_ratings1 = player1_stats.loc[player1_stats['Player'] == search_player_player1][
+            ['Player','Rating_ORA', 'Rating_ASTOR', 'Rating_TOR', 'Rating_ASR', 'Rating_USG', 'Rating_ORP']].rename(columns={
+            'Rating_ORA': 'Offensive<br>Rating',
+            'Rating_ASTOR': 'Assists/Turnovers<br>Ratio',
+            'Rating_TOR': 'Turnovers<br>Ratio',
+            'Rating_ASR': 'Assists<br>Ratio',
+            'Rating_USG': 'Usage(%)',
+            'Rating_ORP': 'OR(%)'}).melt(id_vars='Player')
+        adv_player_ratings2 = player2_stats.loc[player2_stats['Player'] == search_player_player2][
+            ['Player','Rating_ORA', 'Rating_ASTOR', 'Rating_TOR', 'Rating_ASR', 'Rating_USG', 'Rating_ORP']].rename(columns={
+            'Rating_ORA': 'Offensive<br>Rating',
+            'Rating_ASTOR': 'Assists/Turnovers<br>Ratio',
+            'Rating_TOR': 'Turnovers<br>Ratio',
+            'Rating_ASR': 'Assists<br>Ratio',
+            'Rating_USG': 'Usage(%)',
+            'Rating_ORP': 'OR(%)'}).melt(id_vars='Player')
 
-            st.write(adv_ratings)
-    except:
-        st.error('No data available with these parameters')
+        adv_ratings = make_subplots(rows=1, cols=2, specs=[[{"type": "barpolar"}, {"type": "barpolar"}]])
+        adv_ratings.add_trace(go.Barpolar(
+            r=adv_player_ratings1['value'],
+            theta=adv_player_ratings1['variable'],
+            marker_color='green',
+            marker_line_color="black",
+            marker_line_width=2,
+            name=search_player_player1 + " "+select_season_player1 + " "+select_phase_player1 + " "+select_round_player1 + " "+select_ha_player1 + " "+select_wl_player1,
+            opacity=0.8,
+            hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
+            ),row=1, col=1)
+        adv_ratings.add_trace(go.Barpolar(
+            r=adv_player_ratings2['value'],
+            theta=adv_player_ratings2['variable'],
+            marker_color='blue',
+            marker_line_color="black",
+            marker_line_width=2,
+            name=search_player_player2 + " "+select_season_player2 + " "+select_phase_player2 + " "+select_round_player2 + " "+select_ha_player2 + " "+select_wl_player2,
+            opacity=0.8,
+            hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
+            ),row=1, col=2)
+
+        adv_ratings.update_layout(
+            title='Advanced Stats Ratings',
+            template=None,
+            height=600,
+            polar=dict(
+                radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
+                angularaxis=dict(showticklabels=True, ticks='')
+            ))
+
+        st.write(adv_ratings)
+except:
+    st.error('No data available with these parameters')
 
 
 
-
-
+player1=search_player_player1 + " "+select_season_player1 + " "+select_phase_player1 + " "+select_round_player1 + " "+select_ha_player1 + " "+select_wl_player1
+player2=search_player_player2 + " "+select_season_player2 + " "+select_phase_player2 + " "+select_round_player2 + " "+select_ha_player2 + " "+select_wl_player2
 st.write("### Between games stats")
 
 filters1,filters2=st.columns(2)
 with filters1:
-        between_players_ha = st.selectbox("Home Player:",[search_player_player1, search_player_player2, 'All'],index=2)
+        between_players_ha = st.selectbox("Home Player:",[player1, player2, 'All'],index=2)
         between_players_season = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
 with filters2:
         between_players_phase = st.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
@@ -1002,6 +987,3 @@ interactive_table(stats.set_index('Player'),
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
                       scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
-
-
-

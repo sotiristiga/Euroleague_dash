@@ -437,7 +437,7 @@ ratingstats=compute_team_stats(All_Seasons1,period_points1)[2]
 teams,ratings,gamesstats=st.columns([1,1,1])
 
 with teams:
-    st.write('### Team:' + search_team_team1)
+    st.write('### Team: ' + search_team_team1)
     st.write('Season: ' + select_season_player1)
     st.write('Phase: ' + select_phase_player1)
     st.write('Round: ' + select_round_player1)

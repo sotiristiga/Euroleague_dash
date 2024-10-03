@@ -397,8 +397,8 @@ try:
             width=300,
             height=250,
             margin=dict(
-                l=20,
-                r=20,
+                l=5,
+                r=5,
                 b=10,
                 t=10,
                 pad=0
@@ -520,8 +520,8 @@ try:
             width=300,
             height=250,
             margin=dict(
-                l=20,
-                r=20,
+                l=5,
+                r=5,
                 b=10,
                 t=10,
                 pad=10
@@ -689,7 +689,7 @@ try:
                                                                      'Rating_RF': 'Fouls<br>Drawn'}).melt(id_vars='Player')
         basic_player_ratings2['variable'] = basic_player_ratings2['variable'].str.replace('Rating_', '')
         basic_player_ratings_data=pd.concat([basic_player_ratings1,basic_player_ratings2])
-        basic_ratings=make_subplots(rows=1, cols=2,specs=[[{"type": "barpolar"},{"type": "barpolar"}]])
+        basic_ratings=make_subplots(rows=1, cols=2,specs=[[{"type": "barpolar"},{"type": "barpolar"}]],horizontal_spacing=0.2)
         basic_ratings.add_trace(go.Barpolar(
             r=basic_player_ratings1['value'],
             theta=basic_player_ratings1['variable'],
@@ -713,7 +713,8 @@ try:
         basic_ratings.update_layout(
             title='Basic Stats Ratings',
             template=None,
-            height=650,
+            width=1600,
+            height=600,
             polar=dict(
                 radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
                 angularaxis=dict(showticklabels=True, ticks='')
@@ -791,7 +792,7 @@ try:
                      'Rating_EFG': 'EFG(%)',
                      'Rating_TS': 'TS(%)'}).melt(id_vars='Player')
         shoot_player_ratings2['variable'] = shoot_player_ratings2['variable'].str.replace('Rating_', '')
-        shoot_ratings = make_subplots(rows=1, cols=2, specs=[[{"type": "barpolar"}, {"type": "barpolar"}]])
+        shoot_ratings = make_subplots(rows=1, cols=2, specs=[[{"type": "barpolar"}, {"type": "barpolar"}]],horizontal_spacing=0.2)
         shoot_ratings.add_trace(go.Barpolar(
             r=shoot_player_ratings1['value'],
             theta=shoot_player_ratings1['variable'],
@@ -870,7 +871,7 @@ try:
             'Rating_USG': 'Usage(%)',
             'Rating_ORP': 'OR(%)'}).melt(id_vars='Player')
 
-        adv_ratings = make_subplots(rows=1, cols=2, specs=[[{"type": "barpolar"}, {"type": "barpolar"}]])
+        adv_ratings = make_subplots(rows=1, cols=2, specs=[[{"type": "barpolar"}, {"type": "barpolar"}]],horizontal_spacing=0.2)
         adv_ratings.add_trace(go.Barpolar(
             r=adv_player_ratings1['value'],
             theta=adv_player_ratings1['variable'],

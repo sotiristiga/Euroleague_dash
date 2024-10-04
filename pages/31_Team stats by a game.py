@@ -296,7 +296,7 @@ period_points['SHW_W']=period_points.apply(lambda x: period_win_res_win_format(x
 period_points['EXW_W']=period_points.apply(lambda x: period_win_res_win_format(x['EXS'],x['EXC'],x['Result']),axis=1)
 
 team_ranking_team=st.sidebar.selectbox("Choose Team:",All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
-team_ranking_season = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
+team_ranking_season = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
 team_ranking_phase = st.sidebar.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 team_ranking_round = st.sidebar.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
 team_ranking_ha = st.sidebar.selectbox("Home or Away games:",['Away','Home','All'],index=2)
@@ -377,7 +377,7 @@ select_allstats_in_a_game['Total STL']=select_allstats_in_a_game['STL']+select_a
 select_allstats_in_a_game['Total PF']=select_allstats_in_a_game['PF']+select_allstats_in_a_game['opp PF']
 select_allstats_in_a_game['Total BLK']=select_allstats_in_a_game['BLKR']+select_allstats_in_a_game['BLK']
 if "All" in team_ranking_season:
-    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
+    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025']
     select_allstats_in_a_game1=select_allstats_in_a_game.loc[select_allstats_in_a_game['Season'].isin(team_ranking_season)]
 
 else:

@@ -1030,7 +1030,7 @@ try:
         between_teams_ha_team = st.selectbox("Home team:", [team1, team2, 'All'], index=2)
         between_teams_season_team = st.selectbox("Season:",
                                                  ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                  '2021-2022', '2022-2023', '2023-2024', 'All'], index=8)
+                                                  '2021-2022', '2022-2023', '2023-2024','2024-2025', 'All'], index=8)
     with filters2:
         between_teams_phase_team = st.selectbox("Phase:",
                                                 ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
@@ -1062,7 +1062,7 @@ try:
 
     if "All" in between_teams_season_team:
         between_teams_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
-                                      '2022-2023', '2023-2024']
+                                      '2022-2023', '2023-2024','2024-2025']
         between_stats1 = between_stats1.loc[between_stats1['Season'].isin(between_teams_season_team1)]
         between_periods1 = between_periods1.loc[between_periods1['Season'].isin(between_teams_season_team1)]
     else:

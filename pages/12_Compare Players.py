@@ -192,7 +192,7 @@ All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_pla
 st.sidebar.write("## Select First player filters")
 search_player_player1=st.sidebar.selectbox("Choose First player:",All_Seasons['Player'].reset_index().sort_values('Player')['Player'].unique())
 selected_ha_player1 = st.sidebar.selectbox("Home or Away games(First Player):",['A', 'H', 'All'],index=2)
-selected_season_player1 = st.sidebar.selectbox("Season(First Player):",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
+selected_season_player1 = st.sidebar.selectbox("Season(First Player):",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
 selected_phase_player1 = st.sidebar.selectbox("Phase(First Player):",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 selected_wl_player1 = st.sidebar.selectbox("Result(First Player):",['W', 'L','All'],index=2)
 selected_round_player1 = st.sidebar.selectbox("Round(First Player):",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
@@ -202,7 +202,7 @@ st.sidebar.write("## Select Second player filters")
 search_player_player2=st.sidebar.selectbox("Choose Second player:",All_Seasons['Player'].reset_index().sort_values('Player')['Player'].unique(),index=1)
 selected_ha_player2 = st.sidebar.selectbox("Home or Away games(Second Player):",['A', 'H', 'All'],index=2)
 selected_season_player2 = st.sidebar.selectbox("Season(Second Player):",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-       '2021-2022', '2022-2023', '2023-2024','All'],index=8)
+       '2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
 selected_phase_player2 = st.sidebar.selectbox("Phase(Second Player):",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 selected_wl_player2 = st.sidebar.selectbox("Result(Second Player):",['W', 'L','All'],index=2)
 selected_round_player2 = st.sidebar.selectbox("Round(Second Player):",['First Round', 'Second Round', 'PI 1', 'PI 2','PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
@@ -217,7 +217,7 @@ else:
     select_ha_player1 = selected_ha_player1
 
 if "All" in selected_season_player1:
-    selected_season_player1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
+    selected_season_player1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025']
     All_Seasons1=All_Seasons1.loc[All_Seasons1['Season'].isin(selected_season_player1)]
     select_season_player1 = ''
 else:
@@ -259,7 +259,7 @@ else:
 
 if "All" in selected_season_player2:
     selected_season_player2 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-       '2021-2022', '2022-2023', '2023-2024']
+       '2021-2022', '2022-2023', '2023-2024','2024-2025']
     All_Seasons2=All_Seasons2.loc[All_Seasons2['Season'].isin(selected_season_player2)]
     select_season_player2 = ''
 else:
@@ -915,7 +915,7 @@ st.write("### Between games stats")
 filters1,filters2=st.columns(2)
 with filters1:
         between_players_ha = st.selectbox("Home Player:",[player1, player2, 'All'],index=2)
-        between_players_season = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
+        between_players_season = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
 with filters2:
         between_players_phase = st.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
         between_players_round = st.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
@@ -936,7 +936,7 @@ elif compare_teams_team2 in between_teams_ha_team:
 
 if "All" in between_players_season:
     between_players_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
-                                  '2022-2023', '2023-2024']
+                                  '2022-2023', '2023-2024','2024-2025']
     finaldataset1 = finaldataset1.loc[finaldataset1['Season'].isin(between_players_season)]
 
 else:

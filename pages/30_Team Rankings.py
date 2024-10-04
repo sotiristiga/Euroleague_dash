@@ -294,7 +294,7 @@ period_points['Q3W_W']=period_points.apply(lambda x: period_win_res_win_format(x
 period_points['Q4W_W']=period_points.apply(lambda x: period_win_res_win_format(x['Q4S'],x['Q4C'],x['results']),axis=1)
 period_points['SHW_W']=period_points.apply(lambda x: period_win_res_win_format(x['SHS'],x['SHC'],x['results']),axis=1)
 period_points['EXW_W']=period_points.apply(lambda x: period_win_res_win_format(x['EXS'],x['EXC'],x['results']),axis=1)
-team_ranking_season = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
+team_ranking_season = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
 team_ranking_phase = st.sidebar.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 team_ranking_round = st.sidebar.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
 team_ranking_ha = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
@@ -356,7 +356,7 @@ else:
 
 
 if "All" in team_ranking_season:
-    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
+    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025']
     allstats_in_a_game1=allstats_in_a_game1.loc[allstats_in_a_game1['Season'].isin(team_ranking_season)]
 
 else:

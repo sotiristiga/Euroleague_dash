@@ -178,7 +178,7 @@ All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_pla
 
 search_player_player=st.sidebar.selectbox("Choose a player:",All_Seasons['Player'].reset_index().sort_values('Player')['Player'].unique())
 selected_ha_player1 = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
-selected_season_player1 = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
+selected_season_player1 = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025''All'],index=8)
 selected_phase_player1 = st.sidebar.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 selected_wl_player1 = st.sidebar.selectbox("Result:",['W', 'L','All'],index=2)
 selected_round_player1 = st.sidebar.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
@@ -193,7 +193,7 @@ else:
     select_ha_player1 = selected_ha_player1
 
 if "All" in selected_season_player1:
-    selected_season_player1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
+    selected_season_player1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025']
     All_Seasons_filter=All_Seasons_filter.loc[All_Seasons_filter['Season'].isin(selected_season_player1)]
     select_season_player1 = ''
 else:

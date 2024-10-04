@@ -274,7 +274,7 @@ period_points['EXC'].replace(0, np.nan, inplace=True)
 
 search_team_team1=st.sidebar.selectbox("Choose  Team:",All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
 search_team_ha_team1 = st.sidebar.selectbox("Home or Away games(First Team):",['A', 'H', 'All'],index=2)
-search_team_season_team1 = st.sidebar.selectbox("Season(First Team):",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','All'],index=8)
+search_team_season_team1 = st.sidebar.selectbox("Season(First Team):",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
 search_team_phase_team1 = st.sidebar.selectbox("Phase(First Team):",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 search_team_wl_team1 = st.sidebar.selectbox("Result(First Team):",['W', 'L','All'],index=2)
 search_team_round_team1 = st.sidebar.selectbox("Round(First Team):",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
@@ -293,7 +293,7 @@ else:
     select_ha_player1 = search_team_ha_team1
 
 if "All" in search_team_season_team1:
-    search_team_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024']
+    search_team_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025']
     All_Seasons1=All_Seasons1.loc[All_Seasons1['Season'].isin(search_team_season_team1)]
     period_points1 = period_points1.loc[period_points1['Season'].isin(search_team_season_team1)]
     select_season_player1 = ''

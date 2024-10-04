@@ -832,7 +832,7 @@ try:
         periodteam2[
             'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
         periodteams = pd.concat([periodteam1, periodteam2])
-        interactive_table(periodteams.set_index('Team'),
+        interactive_table(periodteams.set_index('Team').round(1),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=True,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,
@@ -893,7 +893,7 @@ try:
             'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
 
         basic_stats_data = pd.concat([basic_stats1, basic_stats2])
-        interactive_table(basic_stats_data.set_index('Team'),
+        interactive_table(basic_stats_data.set_index('Team').round(1),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=True,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,
@@ -967,7 +967,7 @@ try:
             'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
         shooting_stats_data = pd.concat([shooting_stats1, shooting_stats2])
 
-        interactive_table(shooting_stats_data.set_index('Team'),
+        interactive_table(shooting_stats_data.set_index('Team').round(1),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
@@ -985,7 +985,7 @@ try:
         advanced_stats1['Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
         advanced_stats2['Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
         advanced_stats_data = pd.concat([advanced_stats1, advanced_stats2])
-        interactive_table(advanced_stats_data.set_index('Team'),
+        interactive_table(advanced_stats_data.set_index('Team').round(1),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=True,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,
@@ -1161,7 +1161,7 @@ try:
                      'SHS': 'Second Half Scored'})
         periodbetdata = pd.concat([periodbetdata1, periodbetdata2])
 
-        interactive_table(periodbetdata.set_index('Team'),
+        interactive_table(periodbetdata.set_index('Team').round(1),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=True,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,
@@ -1193,7 +1193,7 @@ try:
                      'ST': 'Steals made',
                      'PF': 'Personal Fouls'})
         basicbetdata = pd.concat([basicbetdata1, basicbetdata2])
-        interactive_table(basicbetdata.set_index('Team'),
+        interactive_table(basicbetdata.set_index('Team').round(1),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=True,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,
@@ -1234,7 +1234,7 @@ try:
                      'EFG': 'EFG(%)',
                      'TS': 'TS(%)'})
         shootbetdata = pd.concat([shootbetdata1, shootbetdata2])
-        interactive_table(shootbetdata.set_index('Team'),
+        interactive_table(shootbetdata.set_index('Team').round(1),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=True,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,
@@ -1251,7 +1251,7 @@ try:
                                                                     'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(
             1)
         advbetdata = pd.concat([advbetdata1, advbetdata2])
-        interactive_table(advbetdata.set_index('Team'),
+        interactive_table(advbetdata.set_index('Team').round(1),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=True,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,

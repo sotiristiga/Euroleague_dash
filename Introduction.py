@@ -18,8 +18,8 @@ st.set_page_config(layout='wide',page_title="Euroleague",page_icon="🏀")
 def download_image(url, save_as):
     urllib.request.urlretrieve(url, save_as)
 
-download_image('https://brandcenter.euroleague.net/uploads/2/brand_center_web/492/99//2019-06-28-10-23-1815.png',eurologo.svg')
-st.image(Image.open("eurologo.svg"),width=400)
+download_image('https://brandcenter.euroleague.net/uploads/2/brand_center_web/492/99//2019-06-28-10-23-1815.png',eurologo.png')
+st.image(Image.open("eurologo.png"),width=400)
 def fixture_format1(Fixture):
     if Fixture<=15:
         return "First Round"

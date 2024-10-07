@@ -339,8 +339,8 @@ compute_player_total_stats_season=(compute_player_total_stats_season.add_prefix(
 compute_player_mean_stats_season=pd.merge(compute_player_mean_stats_season,compute_player_games_season,on=['Player','Season'])
 compute_player_mean_stats_season=pd.merge(compute_player_mean_stats_season,compute_player_total_stats_season,on=['Player','Season'])
 compute_player_mean_stats_season=compute_player_mean_stats_season.loc[compute_player_mean_stats_season['Games']>15]
-games = st.sidebar.slider("Pick Number of games", 0, 200,value=17)
-Shoots = st.sidebar.slider("Pick Number of Shoots", 0, 200,value=100)
+games = st.sidebar.slider("Pick Number of games", 0, 200,value=0)
+Shoots = st.sidebar.slider("Pick Number of Shoots", 0, 200,value=0)
 
 
 

@@ -19,6 +19,11 @@ from itables import to_html_datatable
 from streamlit.components.v1 import html
 
 st.set_page_config(layout='wide',page_title="Player Stats",page_icon="🏀")
+def download_image(url, save_as):
+    urllib.request.urlretrieve(url, save_as)
+
+download_image('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTh6BYfXG_CbAZa1KEDq4pu2Fxw_OeTLLmFcA&s','eurologo.png')
+st.image(Image.open("eurologo.png"),width=100)
 def fixture_format1(Fixture):
     if Fixture<=15:
         return "First Round"

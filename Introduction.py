@@ -18,8 +18,8 @@ st.set_page_config(layout='wide',page_title="Euroleague",page_icon="🏀")
 def download_image(url, save_as):
     urllib.request.urlretrieve(url, save_as)
 
-download_image('https://media-cdn.incrowdsports.com/23610a1b-1c2e-4d2a-8fe4-ac2f8e400632.svg','eurologo.png')
-st.image(Image.open("eurologo.png"),width=400)
+download_image('https://media-cdn.incrowdsports.com/23610a1b-1c2e-4d2a-8fe4-ac2f8e400632.svg','eurologo.svg')
+st.image(Image.open("eurologo.svg"),width=400)
 def fixture_format1(Fixture):
     if Fixture<=15:
         return "First Round"

@@ -265,7 +265,7 @@ All_Seasons["Wins"]=All_Seasons['results'].apply(wins_against_format)
 
 player_stats_each_team_player=st.sidebar.selectbox("Choose Player:",All_Seasons['Player'].reset_index().sort_values('Player')['Player'].unique())
 player_stats_each_team_ha = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
-player_stats_each_team_season = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
+player_stats_each_team_season = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=9)
 player_stats_each_team_phase = st.sidebar.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 player_stats_each_team_wl = st.sidebar.selectbox("Result:",['W', 'L','All'],index=2)
 player_stats_each_team_round = st.sidebar.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)

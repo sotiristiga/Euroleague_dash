@@ -413,7 +413,7 @@ with teamranking:
         ranking=pd.merge(ranking,wins)
         ranking['Loses']=ranking['Games']-ranking['Win']
         ranking['Win(%)']=(100*ranking['Win']/ranking['Games']).round(1)
-        interactive_table(ranking.round(1).set_index('Team').sort_values('Win(%)'),
+        interactive_table(ranking.round(1).set_index('Team').sort_values('Win(%)',ascending=False),
                               paging=False, height=900, width=2000, showIndex=True,
                               classes="display order-column nowrap table_with_monospace_font", searching=False,
                               fixedColumns=True, select=True, info=False, scrollCollapse=True,

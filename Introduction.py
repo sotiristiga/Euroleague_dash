@@ -18,7 +18,7 @@ st.set_page_config(layout='wide',page_title="Euroleague",page_icon="🏀")
 def download_image(url, save_as):
     urllib.request.urlretrieve(url, save_as)
 
-download_image('https://www.pngwing.com/en/free-png-tcska','eurologo.png')
+download_image('https://upload.wikimedia.org/wikipedia/el/8/8d/Turkish_Airlines_EuroLeague_%28logo%29.svg','eurologo.png')
 st.image(Image.open("eurologo.png"),width=400)
 def fixture_format1(Fixture):
     if Fixture<=15:

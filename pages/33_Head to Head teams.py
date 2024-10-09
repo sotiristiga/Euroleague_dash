@@ -755,7 +755,7 @@ with rat2:
   
   
   total_ratings_data2 = teamstats2.filter(regex='Rating').melt()
-  total_ratings=total_ratings_data2['value'].mean()
+  total_ratings2=total_ratings_data2['value'].mean()
   tot2 = go.Figure(go.Indicator(
     mode="gauge+number",
     value=total_ratings2.round(0),

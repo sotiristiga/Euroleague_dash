@@ -616,7 +616,7 @@ try:
 
         off1.update_layout(
             autosize=False,
-            width=250,
+            width=150,
             height=150,
             margin=dict(
                 l=30,
@@ -671,7 +671,7 @@ try:
 
         tot.update_layout(
             autosize=True,
-            width=250,
+            width=150,
             height=150,
             margin=dict(
                 l=30,

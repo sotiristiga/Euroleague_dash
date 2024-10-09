@@ -751,6 +751,8 @@ with rat2:
       ))
   st.write(defe2)
 
+
+  
   total_ratings2 = teamstats2.filter(regex='Rating').melt()['value'].mean()
 
   tot2 = go.Figure(go.Indicator(
@@ -773,6 +775,8 @@ with rat2:
           pad=0))
 
   st.write(tot2)
+
+
 
 
 st.write("### Euroleague Stats")

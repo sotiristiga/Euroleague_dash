@@ -749,11 +749,11 @@ with rat2:
             t=40,
             pad=0
         ))
-    st.plotly_chart(defe2)
+    st.write(defe2)
 
     total_ratings2 = teamstats2.filter(regex='Rating').melt()['value'].mean()
 
-    tot = go.Figure(go.Indicator(
+    tot2 = go.Figure(go.Indicator(
         mode="gauge+number",
         value=total_ratings2.round(0),
         domain={'x': [0, 1], 'y': [0, 1]},
@@ -761,7 +761,7 @@ with rat2:
                'bordercolor': "gray"},
         title={'text': "Overall"}))
 
-    tot.update_layout(
+    tot2.update_layout(
         autosize=True,
         width=250,
         height=150,
@@ -774,7 +774,7 @@ with rat2:
         )
     )
 
-    st.write(tot)
+    st.write(tot2)
 
 
 st.write("### Euroleague Stats")

@@ -741,7 +741,7 @@ try:
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Defense"}))
+            title={'text': "Defense ba"+}))
 
         defe2team.update_layout(
             autosize=True,

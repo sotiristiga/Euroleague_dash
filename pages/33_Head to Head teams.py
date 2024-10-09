@@ -683,14 +683,13 @@ with rat1:
 
 
 with t2:
-    st.write('### Team 2: '+ compare_teams_team2)
-    st.write('Season: ' + select_season_player2)
-    st.write('Phase: ' + select_phase_player2)
-    st.write('Round: ' + select_round_player2)
-    st.write('Home or away: ' + select_ha_player2)
-    st.write('Result: ' + select_wl_player2)
+  st.write('### Team 2: '+ compare_teams_team2)
+  st.write('Season: ' + select_season_player2)
+  st.write('Phase: ' + select_phase_player2)
+  st.write('Round: ' + select_round_player2)
+  st.write('Home or away: ' + select_ha_player2)
+  st.write('Result: ' + select_wl_player2)
 with rat2:
-  
   offense_rating_data2 = teamstats2[
       ['Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M',
        'Rating F2A',

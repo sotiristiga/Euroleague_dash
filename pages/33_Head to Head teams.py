@@ -735,7 +735,7 @@ try:
              'Rating opp EFG(%)', 'Rating opp TS(%)',
              'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt()['value'].mean()
 
-        defe2 = go.Figure(go.Indicator(
+        defe2team = go.Figure(go.Indicator(
             mode="gauge+number",
             value=defense_ratings2.round(0),
             domain={'x': [0, 1], 'y': [0, 1]},
@@ -743,7 +743,7 @@ try:
                    'bordercolor': "gray"},
             title={'text': "Defense"}))
 
-        defe2.update_layout(
+        defe2team.update_layout(
             autosize=True,
             width=250,
             height=150,
@@ -756,11 +756,11 @@ try:
             )
         )
 
-        st.write(defe2)
+        st.write(defe2team)
 
         total_ratings2 = teamstats2.filter(regex='Rating').melt()['value'].mean()
 
-        tot = go.Figure(go.Indicator(
+        totteam = go.Figure(go.Indicator(
             mode="gauge+number",
             value=total_ratings2.round(0),
             domain={'x': [0, 1], 'y': [0, 1]},
@@ -768,7 +768,7 @@ try:
                    'bordercolor': "gray"},
             title={'text': "Overall"}))
 
-        tot.update_layout(
+        totteam.update_layout(
             autosize=True,
             width=250,
             height=150,
@@ -781,7 +781,7 @@ try:
             )
         )
 
-        st.write(tot)
+        st.write(totteam)
 
 except:
     st.error("No data available with this parameters")

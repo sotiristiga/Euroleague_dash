@@ -617,12 +617,12 @@ try:
         off1.update_layout(
             autosize=False,
             width=200,
-            height=150,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
                 b=0,
-                t=80,
+                t=40,
                 pad=0
             ))
 

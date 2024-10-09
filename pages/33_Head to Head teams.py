@@ -749,7 +749,7 @@ with rat2:
             t=40,
             pad=0
         ))
-    defe2.show()
+    st.plotly_chart(defe2)
 
     total_ratings2 = teamstats2.filter(regex='Rating').melt()['value'].mean()
 

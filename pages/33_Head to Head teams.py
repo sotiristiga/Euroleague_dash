@@ -621,8 +621,8 @@ try:
             margin=dict(
                 l=30,
                 r=50,
-                b=10,
-                t=10,
+                b=0,
+                t=0,
                 pad=0
             ))
 

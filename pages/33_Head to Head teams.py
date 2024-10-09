@@ -647,7 +647,7 @@ try:
         defe1.update_layout(
             autosize=True,
              width=200,
-            height=150,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
@@ -672,7 +672,7 @@ try:
         tot.update_layout(
             autosize=True,
              width=200,
-            height=150,
+           height=180,
             margin=dict(
                 l=30,
                 r=50,
@@ -716,7 +716,7 @@ try:
         off2.update_layout(
             autosize=False,
              width=200,
-            height=150,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
@@ -746,7 +746,7 @@ try:
         defe2team.update_layout(
             autosize=True,
              width=200,
-            height=150,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
@@ -771,7 +771,7 @@ try:
         totteam.update_layout(
             autosize=True,
              width=200,
-            height=150,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,

@@ -771,9 +771,7 @@ with rat2:
           r=50,
           b=10,
           t=40,
-          pad=0
-      )
-  )
+          pad=0))
 
   st.write(tot2)
 

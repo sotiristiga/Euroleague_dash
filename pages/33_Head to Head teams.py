@@ -612,7 +612,7 @@ try:
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Offense"}))
+            title={'text': "Offense<br>"+compare_teams_team1}))
 
         off1.update_layout(
             autosize=False,
@@ -642,7 +642,7 @@ try:
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Defense"}))
+            title={'text': "Defense<br>"+compare_teams_team1}))
 
         defe1.update_layout(
             autosize=True,
@@ -667,7 +667,7 @@ try:
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Overall"}))
+            title={'text': "Overall<br>"+compare_teams_team1}))
 
         tot.update_layout(
             autosize=True,
@@ -711,7 +711,7 @@ try:
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Offense"}))
+            title={'text': "Offense<br>"+compare_teams_team2}))
 
         off2.update_layout(
             autosize=False,
@@ -741,7 +741,7 @@ try:
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Defense ba"}))
+            title={'text': "Defense<br>"+compare_teams_team2}))
 
         defe2team.update_layout(
             autosize=True,
@@ -766,7 +766,7 @@ try:
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Overall"}))
+            title={'text': "Overall<br>"+compare_teams_team2}))
 
         totteam.update_layout(
             autosize=True,

@@ -317,7 +317,7 @@ compare_teams_wl_team = st.sidebar.selectbox("Result:",['W', 'L','All'],index=2)
 
 
 def team_rating_stat_higher(dataset,stat):
-    dataset1=dataset[["Team",stat]].sort_values(stat).reset_index()
+    dataset1=dataset[["Team",stat]].sort_values(stat,ascending=True).reset_index()
     dataset1.drop("index",axis=1,inplace=True)
     final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Team.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
     final_dataset.rename(columns={'Rating1':'Rating '+ stat},inplace=True)

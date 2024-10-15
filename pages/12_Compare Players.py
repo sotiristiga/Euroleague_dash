@@ -365,7 +365,7 @@ else:
     All_Seasons2 = All_Seasons2.loc[All_Seasons2['Round'] == selected_round_player2]
     select_round_player2 = selected_round_player2
 
-def player_rating_stat_higher(dataset,stat):
+def player_rating_stat_higher(dataset,stat,ascending=True):
     dataset1=dataset[["Player",stat]].sort_values(stat).reset_index()
     dataset1.drop("index",axis=1,inplace=True)
     final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Player.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
@@ -374,12 +374,13 @@ def player_rating_stat_higher(dataset,stat):
     return final_dataset
 
 def player_rating_stat_lower(dataset,stat):
-    dataset1=dataset[["Player",stat]].sort_values(stat,ascending=True).reset_index()
+    dataset1=dataset[["Player",stat]].sort_values(stat,ascending=False).reset_index()
     dataset1.drop("index",axis=1,inplace=True)
     final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Player.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
     final_dataset.rename(columns={'Rating1':'Rating_'+ stat},inplace=True)
     final_dataset.drop(["index","Rating",stat],axis=1,inplace=True)
     return final_dataset
+
 def compute_player_stats(dataset,Player):
     computestats=dataset.groupby('Player')[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().round(1).reset_index()
     computestats['P2'] = 100 * (computestats['F2M'] / computestats['F2A'])

@@ -20,6 +20,7 @@ from streamlit.components.v1 import html
 
 
 st.set_page_config(layout='wide',page_title="Search a Player",page_icon="🏀")
+st.sidebar.write("If an error message appears, please refresh the page")
 def download_image(url, save_as):
     urllib.request.urlretrieve(url, save_as)
 

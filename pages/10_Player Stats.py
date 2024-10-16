@@ -19,6 +19,7 @@ from itables import to_html_datatable
 from streamlit.components.v1 import html
 
 st.set_page_config(layout='wide',page_title="Player Stats",page_icon="🏀")
+st.sidebar.write("If an error message appears, please refresh the page")
 def download_image(url, save_as):
     urllib.request.urlretrieve(url, save_as)
 
@@ -243,7 +244,7 @@ All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_pla
 
 All_Seasons_res=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results])
 
-st.sidebar.write("If an error message appears, please refresh the page")
+
 
 selected_ha_player1 = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
 selected_season_player1 = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)

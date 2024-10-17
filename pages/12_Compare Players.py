@@ -495,12 +495,12 @@ try:
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Offense"}))
+            title={'text': "Offense<br>"+search_player_player1}))
 
         off.update_layout(
             autosize=False,
             width=250,
-            height=150,
+            height=200,
             margin=dict(
                 l=30,
                 r=50,
@@ -519,12 +519,12 @@ try:
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Defense"}))
+            title={'text': "Defense<br>"+search_player_player1}))
 
         defe.update_layout(
             autosize=True,
             width=250,
-            height=150,
+            height=200,
             margin=dict(
                 l=30,
                 r=50,
@@ -549,12 +549,12 @@ try:
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Overall"}))
+            title={'text': "Overall<br>"+search_player_player1}))
 
         tot.update_layout(
             autosize=True,
             width=250,
-            height=150,
+            height=200,
             margin=dict(
                 l=30,
                 r=50,
@@ -618,12 +618,12 @@ try:
                 domain={'x': [0, 1], 'y': [0, 1]},
                 gauge={'axis': {'range': [None, 100]},
                        'bordercolor': "gray"},
-                title={'text': "Offense"}))
+                title={'text': "Offense<br>"+search_player_player2}))
 
             off.update_layout(
                 autosize=False,
                 width=250,
-                height=150,
+                height=200,
                 margin=dict(
                     l=30,
                     r=50,
@@ -645,7 +645,7 @@ try:
                 domain={'x': [0, 1], 'y': [0, 1]},
                 gauge={'axis': {'range': [None, 100]},
                        'bordercolor': "gray"},
-                title={'text': "Defense"}))
+                title={'text': "Defense<br>"+search_player_player2}))
 
             defe.update_layout(
                 autosize=True,
@@ -677,12 +677,12 @@ try:
                 domain={'x': [0, 1], 'y': [0, 1]},
                 gauge={'axis': {'range': [None, 100]},
                        'bordercolor': "gray"},
-                title={'text': "Overall"}))
+                title={'text': "Overall<br>"+search_player_player2}))
 
             tot.update_layout(
                 autosize=True,
                 width=250,
-                height=150,
+                height=200,
                 margin=dict(
                     l=30,
                     r=50,

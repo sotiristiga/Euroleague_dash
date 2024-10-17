@@ -451,7 +451,7 @@ with teamwinsbyperiod:
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 with teambasicstats:
-    basicstats=allstats_in_a_game1.groupby('Team')[['AS','opp AS','OR', 'opp OR','DR','opp DR', 'TR','opp TR','ST','opp ST', 'TO', 'opp TO','BLK', 'BLKR','PF', 'RF']].mean().reset_index().round(1)
+    basicstats=allstats_in_a_game1.groupby('Team')[['AS','opp AS','OR', 'opp OR','DR','opp DR', 'TR','opp TR','ST','opp ST', 'TO', 'opp TO','BLK', 'BLKR','PF', 'RF',"PIR",'opp PIR']].mean().reset_index().round(1)
     interactive_table(basicstats.set_index('Team'),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,

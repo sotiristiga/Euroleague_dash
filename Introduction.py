@@ -17,9 +17,10 @@ import time
 st.set_page_config(layout='wide',page_title="Euroleague",page_icon="🏀")
 def download_image(url, save_as):
     urllib.request.urlretrieve(url, save_as)
+response = requests.get('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png')
+img = Image.open(BytesIO(response.content))
 
-download_image('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTh6BYfXG_CbAZa1KEDq4pu2Fxw_OeTLLmFcA&s','eurologo.png')
-st.image(Image.open("eurologo.png"),width=100)
+st.image(img,width=100)
 def fixture_format1(Fixture):
     if Fixture<=15:
         return "First Round"

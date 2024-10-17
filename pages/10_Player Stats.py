@@ -20,10 +20,11 @@ from streamlit.components.v1 import html
 
 st.set_page_config(layout='wide',page_title="Player Stats",page_icon="🏀")
 st.sidebar.write("If an error message appears, please refresh the page")
-response = requests.get('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png')
-img = Image.open((response.content))
+def download_image(url, save_as):
+    urllib.request.urlretrieve(url, save_as)
 
-st.image(img,width=100)
+download_image('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png','eurologo.png')
+st.image(Image.open("eurologo.png"),width=100)
 def fixture_format1(Fixture):
     if Fixture<=15:
         return "First Round"

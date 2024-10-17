@@ -21,7 +21,7 @@ from streamlit.components.v1 import html
 st.set_page_config(layout='wide',page_title="Player Stats",page_icon="🏀")
 st.sidebar.write("If an error message appears, please refresh the page")
 response = requests.get('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png')
-img = Image.open(BytesIO(response.content))
+img = Image.open((response.content))
 
 st.image(img,width=100)
 def fixture_format1(Fixture):

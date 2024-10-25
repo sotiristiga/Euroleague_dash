@@ -254,13 +254,28 @@ def result_format(Win):
         return "L"
 
 
-def result_format(Win):
-    if Win == 1:
-        return "W"
-    elif Win == 0:
+
+def ha_against_format(HA):
+    if HA == "A":
+        return "H"
+    elif HA == "H":
+        return "A"
+
+
+def result_against_format(results):
+    if results == "W":
         return "L"
+    elif results == "L":
+        return "W"
 
-
+def wins_against_format(results):
+    if results == "W":
+        return 1
+    elif results=="L":
+        return 0
+All_Seasons["HA1"] = All_Seasons['HA'].apply(ha_against_format)
+All_Seasons["Result1"] = All_Seasons['results'].apply(result_against_format)
+All_Seasons["Win"]=All_Seasons['results'].apply(wins_against_format)
 
 home_team=(All_Seasons_results[['Fixture',"Phase","Home","Away","Home_Points","Away_Points",
                                 "Q1H","Q2H","Q3H","Q4H",'EXH',"Q1A","Q2A","Q3A","Q4A",'EXA','Season','Round','Home_win','idseason']]
@@ -375,11 +390,13 @@ if "All" in search_team_ha_team1:
     All_Seasons1=All_Seasons.loc[All_Seasons['HA'].isin(search_team_ha_team1)]
     period_points1=period_points.loc[period_points['HA'].isin(search_team_ha_team1)]
     select_allstats_in_a_game1 = select_allstats_in_a_game.loc[select_allstats_in_a_game['HA'].isin(search_team_ha_team1)]
+    All_Seasons2 = All_Seasons.loc[All_Seasons['HA1'].isin(search_team_ha_team1)]
     select_ha_player1=''
 else:
     All_Seasons1=All_Seasons.loc[All_Seasons['HA']==search_team_ha_team1]
     period_points1 = period_points.loc[period_points['HA'] == search_team_ha_team1]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1.HA == search_team_ha_team1]
+    All_Seasons2 = All_Seasons.loc[All_Seasons['HA1'] == search_team_ha_team1]
     select_ha_player1 = search_team_ha_team1
 
 if "All" in search_team_season_team1:
@@ -387,11 +404,13 @@ if "All" in search_team_season_team1:
     All_Seasons1=All_Seasons1.loc[All_Seasons1['Season'].isin(search_team_season_team1)]
     period_points1 = period_points1.loc[period_points1['Season'].isin(search_team_season_team1)]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['Season'].isin(search_team_season_team1)]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Season'].isin(search_team_season_team1)]
     select_season_player1 = ''
 else:
     All_Seasons1=All_Seasons1.loc[All_Seasons1['Season']==search_team_season_team1]
     period_points1 = period_points1.loc[period_points1['Season'] == search_team_season_team1]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['Season'] == search_team_season_team1]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Season'] == search_team_season_team1]
     select_season_player1 = search_team_season_team1
 
 if "All" in search_team_wl_team1:
@@ -400,11 +419,14 @@ if "All" in search_team_wl_team1:
     period_points1 = period_points1.loc[period_points1['results'].isin(search_team_wl_team1)]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[
         select_allstats_in_a_game1['results'].isin(search_team_wl_team1)]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Result1'].isin(search_team_wl_team1)]
+
     select_wl_player1 = ''
 else:
     All_Seasons1= All_Seasons1.loc[All_Seasons1['results'] == search_team_wl_team1]
     period_points1 = period_points1.loc[period_points1['results'] == search_team_wl_team1]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['results'] == search_team_wl_team1]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Result1'] == search_team_wl_team1]
     select_wl_player1 = search_team_wl_team1
 
 if "All" in search_team_phase_team1:
@@ -413,12 +435,14 @@ if "All" in search_team_phase_team1:
     period_points1 = period_points1.loc[period_points1['Phase'].isin(search_team_phase_team1)]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[
         select_allstats_in_a_game1['Phase'].isin(search_team_phase_team1)]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Phase'].isin(search_team_phase_team1)]
     select_phase_player1 = ''
 else:
     All_Seasons1 = All_Seasons1.loc[All_Seasons1['Phase'] == search_team_phase_team1]
     period_points1 = period_points1.loc[period_points1['Phase'] == search_team_phase_team1]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[
         select_allstats_in_a_game1['Phase'] == search_team_phase_team1]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Phase'] == search_team_phase_team1]
     select_phase_player1 = search_team_phase_team1
 
 
@@ -428,12 +452,14 @@ if "All" in search_team_round_team1:
     period_points1 = period_points1.loc[ period_points1['Round'].isin(search_team_round_team1)]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[
         select_allstats_in_a_game1['Round'].isin(search_team_round_team1)]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Round'].isin(search_team_round_team1)]
     select_round_player1 = ''
 else:
     All_Seasons1 = All_Seasons1.loc[All_Seasons1['Round'] == search_team_round_team1]
     period_points1 = period_points1.loc[period_points1['Round']==search_team_round_team1]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[
         select_allstats_in_a_game1['Round'] == search_team_round_team1]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Round'] == search_team_round_team1]
     select_round_player1 = search_team_round_team1
 
 
@@ -531,12 +557,79 @@ def compute_team_stats(dataset_stats,dataset_periods):
 
     return [finalstats,finalstats_opp,teams_ratings]
 
+def compute_player_stats_by_team(dataset, Team):
+    computestats = dataset.groupby(['Player', 'Team'])[
+        ['PTS', 'MIN', 'F2M', 'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR',
+         'PF', 'RF', 'PIR', 'Team_PTS', 'Team_F2M', 'Team_F2A', 'Team_F3M', 'Team_F3A', 'Team_FTM', 'Team_FTA',
+         'Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF', 'Team_opp_PTS',
+         'Team_opp_F2M', 'Team_opp_F2A', 'Team_opp_F3M', 'Team_opp_F3A', 'Team_opp_FTM', 'Team_opp_FTA', 'Team_opp_OR',
+         'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK',
+         'Team_opp_PF']].mean().round(1).reset_index()
+    computestats['P2'] = 100 * (computestats['F2M'] / computestats['F2A'])
+    computestats['P3'] = 100 * (computestats['F3M'] / computestats['F3A'])
+    computestats['PFT'] = 100 * (computestats['FTM'] / computestats['FTA'])
+    computestats['POS'] = 0.96 * (
+                computestats['F2A'] + computestats['F3A'] - computestats['OR'] + computestats['TO'] + 0.44 *
+                computestats['FTA'])
+    computestats['ORA'] = 100 * (computestats['PTS'] / computestats['POS'])
+    computestats['EFG'] = 100 * (computestats['F2M'] + 1.5 * computestats['F3M']) / (
+                computestats['F2A'] + computestats['F3A'])
+    computestats['TS'] = 100 * (computestats['PTS']) / (
+                2 * (computestats['F2A'] + computestats['F3A'] + 0.44 * computestats['FTA']))
+    computestats['FTR'] = computestats['FTA'] / (computestats['F3A'] + computestats['F2A'])
+    computestats['ASTOR'] = computestats['AS'] / computestats['TO']
+    computestats['TOR'] = 100 * (computestats['TO'] / computestats['POS'])
+    computestats['ASR'] = 100 * (computestats['AS'] / computestats['POS'])
+    computestats['USG'] = 100 * (
+                ((computestats['F3A'] + computestats['F2A']) + 0.44 * computestats['FTA'] + computestats['TO']) * (
+            40)) / (computestats['MIN'] * (
+                computestats['Team_F2A'] + computestats['Team_F3A'] + 0.44 * computestats['Team_FTA'] + computestats[
+            'Team_TO']))
+    computestats['ORP'] = (100 * computestats['OR']) / (computestats['Team_OR'] + computestats['Team_opp_OR'])
 
+    computestatsfinal = computestats.loc[computestats['Team'] == Team]
+    computestatsfinal.drop('Team', axis=1, inplace=True)
+    computestatsfinal = computestatsfinal.set_index('Player').round(1)
+    computestatsfinal = computestatsfinal[
+        ['PTS', 'MIN', 'F2M', 'F2A', 'P2', 'F3M', 'F3A', 'P3', 'FTM', 'FTA', 'PFT', 'OR',
+         'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR', 'POS', 'ORA', 'EFG', 'TS', 'FTR', 'ASTOR',
+         'TOR', 'ASR', 'USG', 'ORP']]
+    return computestatsfinal
+
+def compute_player_stats_by_team_against(dataset,Team):
+    player_wins = dataset.loc[(dataset['Against'] == Team)].groupby('Player')['Win'].sum().reset_index()
+    player_games = dataset.loc[(dataset['Against'] == Team)]['Player'].value_counts().reset_index().rename(columns={"count": 'Games'})
+
+    computestats=dataset.groupby(['Player','Against'])[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().round(1).reset_index()
+    computestats['P2']=100*(computestats['F2M']/computestats['F2A'])
+    computestats['P3']=100*(computestats['F3M']/computestats['F3A'])
+    computestats['PFT']=100*(computestats['FTM']/computestats['FTA'])
+    computestats['POS']=0.96*(computestats['F2A']+computestats['F3A']-computestats['OR']+computestats['TO']+0.44*computestats['FTA'])
+    computestats['ORA']=100*(computestats['PTS']/computestats['POS'])
+    computestats['EFG']=100*(computestats['F2M']+1.5*computestats['F3M'])/(computestats['F2A']+computestats['F3A'])
+    computestats['TS']=100*(computestats['PTS'])/(2*(computestats['F2A']+computestats['F3A']+0.44*computestats['FTA']))
+    computestats['FTR']=computestats['FTA']/(computestats['F3A']+computestats['F2A'])
+    computestats['ASTOR']=computestats['AS']/computestats['TO']
+    computestats['TOR']=100*(computestats['TO']/computestats['POS'])
+    computestats['ASR']=100*(computestats['AS']/computestats['POS'])
+    computestats['USG'] = 100 * (((computestats['F3A'] + computestats['F2A']) + 0.44 * computestats['FTA'] + computestats['TO']) * (40)) / (computestats['MIN'] * (computestats['Team_F2A'] +computestats['Team_F3A'] + 0.44 * computestats['Team_FTA'] + computestats['Team_TO']))
+    computestats['ORP'] = (100 * computestats['OR']) / (computestats['Team_OR'] + computestats['Team_opp_OR'])
+
+    computestatsfinal = computestats.loc[computestats['Against'] == Team]
+    computestatsfinal.drop('Against',axis=1,inplace=True)
+    player_extra = pd.merge(player_games, player_wins)
+    computestatsfinal = pd.merge(player_extra, computestatsfinal)
+    computestatsfinal=computestatsfinal.set_index('Player').round(1)
+    computestatsfinal=computestatsfinal[['Games','Win','PTS', 'MIN', 'F2M', 'F2A','P2', 'F3M', 'F3A', 'P3','FTM', 'FTA', 'PFT','OR',
+                                         'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','POS','ORA','EFG','TS','FTR','ASTOR','TOR','ASR','USG','ORP']]
+
+
+    return computestatsfinal
 
 teamstats=compute_team_stats(All_Seasons1,period_points1)[0]
 oppstats=compute_team_stats(All_Seasons1,period_points1)[1]
 ratingstats=compute_team_stats(All_Seasons1,period_points1)[2]
-euroleaguestats,statsbbygame=st.tabs(['Euroleague Stats','Stats by game'])
+euroleaguestats,playersstats,statsbbygame=st.tabs(['Euroleague Stats','Players Stats','Stats by game'])
 with euroleaguestats:
     teams,ratings,gamesstats=st.columns([1,1,1])
 
@@ -860,6 +953,24 @@ with euroleaguestats:
     interactive_table(compute_team_stats_against_each_team(All_Seasons1,period_points1).set_index('Against'),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=False,
+                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+with playersstats:
+    teamplayers, opponentplayers = st.tabs(["Team's Players", "Opponent's Players"])
+    with teamplayers:
+        interactive_table(compute_player_stats_by_team(All_Seasons1, search_team_team1),
+                          paging=False, height=960, width=20000, showIndex=True,
+                          classes="display order-column nowrap table_with_monospace_font", searching=False,
+                          fixedColumns=True,
+                          select=True, info=False, scrollCollapse=True,
+                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,
+                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+    with opponentplayers:
+        interactive_table(compute_player_stats_by_team_against(All_Seasons2, search_team_team1),
+                          paging=False, height=960, width=20000, showIndex=True,
+                          classes="display order-column nowrap table_with_monospace_font", searching=True,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,
                           scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
                           columnDefs=[{"className": "dt-center", "targets": "_all"}])

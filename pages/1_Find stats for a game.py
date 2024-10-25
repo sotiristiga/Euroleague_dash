@@ -246,13 +246,11 @@ All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_pla
 
 All_Seasons_results=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results])
 
-def games_format(HA,Fixture,Season,Team,Against):
+def games_format(HA,Team,Against):
     if HA == "H":
-        return Fixture + " / " +Season + ' / ' + Team + ' - ' + Against
+        return Team + ' - ' + Against
     elif HA == "A":
-        return Fixture + " / " + Season + ' / ' + Against + ' - ' + Team
-
-
+        return Against + ' - ' + Team
 
 
 
@@ -271,20 +269,29 @@ away_team=(All_Seasons_results[['Fixture',"Phase","Home","Away","Home_Points","A
 away_team['HA']="A"
 
 period_points=pd.concat([home_team,away_team])
-period_points['Fixture']=period_points['Fixture'].astype(str)
-period_points['Fix_games']=period_points.apply(lambda x: games_format(x['HA'],x['Fixture'],x['Season'],x['Team'],x['Against']),axis=1)
+
+period_points['Fix_games']=period_points.apply(lambda x: games_format(x['HA'],x['Team'],x['Against']),axis=1)
 period_points["FHS"]=period_points["Q1S"]+period_points["Q2S"]
 period_points["FHC"]=period_points["Q1C"]+period_points["Q2C"]
 period_points["SHS"]=period_points["Q3S"]+period_points["Q4S"]
 period_points["SHC"]=period_points["Q3C"]+period_points["Q4C"]
-All_Seasons['Fixture']=All_Seasons['Fixture'].astype(str)
-
-All_Seasons['Fix_games']=All_Seasons.apply(lambda x: games_format(x['HA'],x['Fixture'],x['Season'],x['Team'],x['Against']),axis=1)
 
 
-search_game=st.sidebar.selectbox("Choose a game:",All_Seasons['Fix_games'].reset_index()['Fix_games'].unique())
-All_Seasons1=All_Seasons.loc[All_Seasons['Fix_games']==search_game]
-finalAllSeasons=(All_Seasons1[['Player','Team','MIN','PTS','F2M',
+All_Seasons['Fix_games']=All_Seasons.apply(lambda x: games_format(x['HA'],x['Team'],x['Against']),axis=1)
+
+search_season=st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025'],index=8)
+All_Seasons_season_sel=All_Seasons.loc[All_Seasons.Season==search_season]
+period_points_season_sel=period_points.loc[period_points.Season==search_season]
+
+search_fixture=st.sidebar.selectbox("Fixture:",All_Seasons_season_sel['Fixture'].reset_index().sort_values('Fixture')['Fixture'].unique())
+All_Seasons_season_fixture_sel=All_Seasons_season_sel.loc[All_Seasons_season_sel.Fixture==search_fixture]
+period_points_season_fixture_sel=period_points_season_sel.loc[period_points_season_sel.Fixture==search_fixture]
+
+search_game=st.sidebar.selectbox("Choose a game:",All_Seasons_season_fixture_sel['Fix_games'].reset_index()['Fix_games'].unique())
+All_Seasons_season_fixture_sel=All_Seasons_season_fixture_sel.loc[All_Seasons_season_fixture_sel['Fix_games']==search_game]
+period_points_season_fixture_sel=period_points_season_fixture_sel.loc[period_points_season_fixture_sel['Fix_games']==search_game]
+
+finalAllSeasons=(All_Seasons_season_fixture_sel[['Player','Team','MIN','PTS','F2M',
                               'F2A','F2GP', 'F3M', 'F3A', 'F3GP','FTM', 'FTA', 'FTP','OR',
                                          'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',
                               'PIR','HA','results','Possesions','Offensive_rating','EFG','True_shooting','FT_ratio','As_To_ratio',
@@ -304,7 +311,7 @@ finalAllSeasons=(All_Seasons1[['Player','Team','MIN','PTS','F2M',
 
 
 finalAllSeasons.drop('HA',axis=1,inplace=True)
-finalperiodpoints=(period_points.loc[period_points['Fix_games']==search_game][['Team','Q1S','Q2S',"FHS",'Q3S','Q4S','SHS','EXS','HA']]
+finalperiodpoints=(period_points_season_fixture_sel[['Team','Q1S','Q2S',"FHS",'Q3S','Q4S','SHS','EXS','HA']]
                    .set_index('Team')
                    .rename(columns={'Q1S':'Q1','Q2S':'Q2','Q3S':'Q3','Q4S':'Q4','EXS':'ET',"FHS":'FH',"SHS":'SH'}).sort_values('HA',ascending=False))
 
@@ -313,7 +320,7 @@ finalperiodpoints.drop('HA',axis=1,inplace=True)
 
 
 
-finalstats=All_Seasons1.groupby(['Team','HA'])[['PTS','F2M',
+finalstats=All_Seasons_season_fixture_sel.groupby(['Team','HA'])[['PTS','F2M',
                               'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
                                          'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',
 
@@ -340,10 +347,10 @@ finalstats=finalstats[['Team','PTS','F2M','F2A', '2P(%)','F3M', 'F3A','3P(%)', '
 
 home,away=st.columns(2)
 with home:
-    st.write("### Home Team: "+period_points.loc[(period_points['Fix_games']==search_game) & (period_points['HA']=='H')]['Team'].unique()[0])
+    st.write("### Home Team: "+period_points_season_fixture_sel.loc[period_points_season_fixture_sel['HA']=='H']['Team'].unique()[0])
 with away:
-    st.write("### Away Team: "+period_points.loc[(period_points['Fix_games']==search_game) & (period_points['HA']=='A')]['Team'].unique()[0])
-st.write("#### "+period_points.loc[period_points['Fix_games']==search_game]['Season'].unique()[0]+" "+period_points.loc[period_points['Fix_games']==search_game]['Phase'].unique()[0]+" "+period_points.loc[period_points['Fix_games']==search_game]['Round'].unique()[0])
+    st.write("### Away Team: "+period_points_season_fixture_sel.loc[period_points_season_fixture_sel['HA']=='A']['Team'].unique()[0])
+st.write("#### "+period_points_season_fixture_sel['Season'].unique()[0]+" "+period_points_season_fixture_sel['Phase'].unique()[0]+" "+period_points_season_fixture_sel['Round'].unique()[0])
 
 
 
@@ -372,6 +379,3 @@ interactive_table(finalAllSeasons,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
                       scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
-
-
-

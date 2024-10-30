@@ -17,8 +17,9 @@ import time
 st.set_page_config(layout='wide',page_title="Euroleague",page_icon="🏀")
 def download_image(url, save_as):
     urllib.request.urlretrieve(url, save_as)
-response = requests.get('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png')
-img = Image.open(BytesIO(response.content))
+
+download_image('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png','eurologo.png')
+st.image(Image.open("eurologo.png"),width=100)
 
 st.image(img,width=100)
 def fixture_format1(Fixture):

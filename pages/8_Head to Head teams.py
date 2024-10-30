@@ -323,7 +323,7 @@ compare_teams_team1 = st.sidebar.selectbox("Choose First Team:",
 compare_teams_ha_team1 = st.sidebar.selectbox("Home or Away games(First Team):", ['A', 'H', 'All'], index=2)
 compare_teams_season_team1 = st.sidebar.selectbox("Season(First Team):",
                                                   ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                   '2021-2022', '2022-2023', '2023-2024',"2024-2025", 'All'], index=9)
+                                                   '2021-2022', '2022-2023', '2023-2024',"2024-2025", 'All'], index=8)
 compare_teams_phase_team1 = st.sidebar.selectbox("Phase(First Team):",
                                                  ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
                                                  index=4)
@@ -340,7 +340,7 @@ compare_teams_team2 = st.sidebar.selectbox("Choose Second Team:",
 compare_teams_ha_team2 = st.sidebar.selectbox("Home or Away games(Second Team):", ['A', 'H', 'All'], index=2)
 compare_teams_season_team2 = st.sidebar.selectbox("Season(Second Team):",
                                                   ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                   '2021-2022', '2022-2023', '2023-2024',"2024-2025", 'All'], index=9)
+                                                   '2021-2022', '2022-2023', '2023-2024',"2024-2025", 'All'], index=8)
 compare_teams_phase_team2 = st.sidebar.selectbox("Phase(Second Team):",
                                                  ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
                                                  index=4)

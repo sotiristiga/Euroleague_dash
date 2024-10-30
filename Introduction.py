@@ -21,7 +21,7 @@ def download_image(url, save_as):
 download_image('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png','eurologo.png')
 st.image(Image.open("eurologo.png"),width=100)
 
-st.image(img,width=100)
+
 def fixture_format1(Fixture):
     if Fixture<=15:
         return "First Round"

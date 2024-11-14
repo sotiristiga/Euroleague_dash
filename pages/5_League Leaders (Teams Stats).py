@@ -21,11 +21,7 @@ from plotly.subplots import make_subplots
 
 st.set_page_config(layout='wide',page_title="Team Rankings",page_icon="🏀")
 st.sidebar.write("If an error message appears, please refresh the page")
-def download_image(url, save_as):
-    urllib.request.urlretrieve(url, save_as)
-
-download_image('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png','eurologo.png')
-st.image(Image.open("eurologo.png"),width=100)
+st.write("## Euroleague stats from 2017 to present")
 
 def fixture_format1(Fixture):
     if Fixture<=15:

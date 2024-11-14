@@ -15,11 +15,8 @@ import urllib.request
 from PIL import Image
 import time
 st.set_page_config(layout='wide',page_title="Euroleague",page_icon="🏀")
-def download_image(url, save_as):
-    urllib.request.urlretrieve(url, save_as)
 
-download_image('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png','eurologo.png')
-st.image(Image.open("eurologo.png"),width=100)
+st.write("## Euroleague stats from 2017 to present")
 
 
 def fixture_format1(Fixture):

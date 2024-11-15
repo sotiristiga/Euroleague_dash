@@ -391,7 +391,7 @@ if "All" in search_team_ha_team1:
 else:
     All_Seasons1=All_Seasons.loc[All_Seasons['HA']==search_team_ha_team1]
     period_points1 = period_points.loc[period_points['HA'] == search_team_ha_team1]
-    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1.HA == search_team_ha_team1]
+    select_allstats_in_a_game1 = select_allstats_in_a_game.loc[select_allstats_in_a_game.HA == search_team_ha_team1]
     All_Seasons2 = All_Seasons.loc[All_Seasons['HA1'] == search_team_ha_team1]
     select_ha_player1 = search_team_ha_team1
 
@@ -480,10 +480,10 @@ def team_rating_stat_lower(dataset,stat):
 
 
 
-def compute_team_stats(dataset_stats,dataset_periods):
+def compute_team_stats(dataset_stats1,dataset_stats2,dataset_periods):
 
 
-    finalstats=dataset_stats.groupby(['idseason','Team'])[['PTS','F2M',
+    finalstats=dataset_stats1.groupby(['idseason','Team'])[['PTS','F2M',
                                   'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
                                   'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',
                                   'PIR','Possesions']].sum().reset_index().groupby('Team')[['PTS','F2M',
@@ -504,7 +504,7 @@ def compute_team_stats(dataset_stats,dataset_periods):
                            'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF','PIR','Possesions','Offensive Rating','EFG(%)',
                            'TS(%)','FT Ratio','AS-TO Ratio','TO Ratio','AS Ratio']].round(1)
 
-    finalstats_opp=dataset_stats.groupby(['idseason','Against'])[['PTS','F2M',
+    finalstats_opp=dataset_stats2.groupby(['idseason','Against'])[['PTS','F2M',
                                   'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
                                   'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF',
                                   'PIR','Possesions']].sum().reset_index().groupby('Against')[['PTS','F2M',
@@ -622,9 +622,9 @@ def compute_player_stats_by_team_against(dataset,Team):
 
     return computestatsfinal
 
-teamstats=compute_team_stats(All_Seasons1,period_points1)[0]
-oppstats=compute_team_stats(All_Seasons1,period_points1)[1]
-ratingstats=compute_team_stats(All_Seasons1,period_points1)[2]
+teamstats=compute_team_stats(All_Seasons1,All_Seasons2,period_points1)[0]
+oppstats=compute_team_stats(All_Seasons1,All_Seasons2,period_points1)[1]
+ratingstats=compute_team_stats(All_Seasons1,All_Seasons2,period_points1)[2]
 euroleaguestats,playersstats,statsbbygame=st.tabs(['Euroleague Stats','Players Stats','Stats by game'])
 with euroleaguestats:
     teams,ratings,gamesstats=st.columns([1,1,1])
@@ -889,9 +889,9 @@ with euroleaguestats:
 
 
 
-    def compute_team_stats_against_each_team(dataset_stats,dataset_periods):
-        teamstats=dataset_stats.loc[dataset_stats.Team==search_team_team1]
-        oppstats=dataset_stats.loc[dataset_stats.Against==search_team_team1]
+    def compute_team_stats_against_each_team(dataset_stats1,dataset_stats2,dataset_periods):
+        teamstats=dataset_stats1.loc[dataset_stats1.Team==search_team_team1]
+        oppstats=dataset_stats2.loc[dataset_stats2.Against==search_team_team1]
 
         finalstats=teamstats.groupby(['idseason','Against'])[['PTS','F2M',
                                       'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
@@ -946,7 +946,7 @@ with euroleaguestats:
 
 
     st.write('##### Stats against each team in Euroleague')
-    interactive_table(compute_team_stats_against_each_team(All_Seasons1,period_points1).set_index('Against'),
+    interactive_table(compute_team_stats_against_each_team(All_Seasons1,All_Seasons2,period_points1).set_index('Against'),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=False,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,

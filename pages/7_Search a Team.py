@@ -356,7 +356,8 @@ finalstats_opp=finalstats_opp.add_prefix('opp ').rename(columns={'opp Against':'
 
 gamesstats=pd.merge(finalstats,finalstats_opp)
 allstats_in_a_game=pd.merge(period_points,gamesstats,on=['idseason','Team'])
-select_allstats_in_a_game = (allstats_in_a_game.loc[allstats_in_a_game.Team == search_team_team1][['Against', 'Season', 'Phase', 'Round', 'Fixture', 'HA', 'results', 'Q1S',
+
+select_allstats_in_a_game = (allstats_in_a_game[['Team','Against', 'Season', 'Phase', 'Round', 'Fixture', 'HA', 'results', 'Q1S',
      'Q2S', 'Q1C', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q4S', 'Q3C', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC',
      'PTS', 'opp PTS', 'AS', 'opp AS', 'F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)',
      'F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)', 'FTM', 'FTA', 'FT(%)', 'opp FTM', 'opp FTA', 'opp FT(%)',
@@ -914,6 +915,7 @@ with euroleaguestats:
         finalstats['AS-TO Ratio']=finalstats['AS']/finalstats['TO']
         finalstats['TO Ratio']=100*(finalstats['TO']/finalstats['Possesions'])
         finalstats['AS Ratio']=100*(finalstats['AS']/finalstats['Possesions'])
+
         finalstats=finalstats[['Against','PTS','F2M','F2A', '2P(%)','F3M', 'F3A','3P(%)', 'FTM', 'FTA','FT(%)', 'OR','DR', 'TR',
                                'AS', 'ST', 'TO', 'BLK', 'BLKR','PF', 'RF','PIR','Possesions','Offensive Rating','EFG(%)',
                                'TS(%)','FT Ratio','AS-TO Ratio','TO Ratio','AS Ratio']].round(1)
@@ -975,6 +977,226 @@ with playersstats:
                           scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
                           columnDefs=[{"className": "dt-center", "targets": "_all"}])
 with statsbbygame:
+    Teams = All_Seasons1['Team'].unique()
+    dataset_all = pd.DataFrame()
+    for team in Teams:
+        dataset = select_allstats_in_a_game1.loc[select_allstats_in_a_game1.Team == team]
+        dataset = dataset.sort_values(['Season', 'Fixture']).reset_index()
+        dataset.drop('index', axis=1, inplace=True)
+        dataset = dataset.reset_index()
+        dataset['Q1S Before'] = ((dataset['Q1S'].cumsum() - dataset['Q1S']) / (dataset['index'])).round(1)
+        dataset['Q1C Before'] = ((dataset['Q1C'].cumsum() - dataset['Q1C']) / (dataset['index'])).round(1)
+        dataset['Q2S Before'] = ((dataset['Q2S'].cumsum() - dataset['Q2S']) / (dataset['index'])).round(1)
+        dataset['Q2C Before'] = ((dataset['Q2C'].cumsum() - dataset['Q2C']) / (dataset['index'])).round(1)
+        dataset['Q3S Before'] = ((dataset['Q3S'].cumsum() - dataset['Q3S']) / (dataset['index'])).round(1)
+        dataset['Q3C Before'] = ((dataset['Q3C'].cumsum() - dataset['Q3C']) / (dataset['index'])).round(1)
+        dataset['Q4S Before'] = ((dataset['Q4S'].cumsum() - dataset['Q4S']) / (dataset['index'])).round(1)
+        dataset['Q4C Before'] = ((dataset['Q4C'].cumsum() - dataset['Q4C']) / (dataset['index'])).round(1)
+        dataset['EXS Before'] = ((dataset['EXS'].cumsum() - dataset['EXS']) / (dataset['index'])).round(1)
+        dataset['EXC Before'] = ((dataset['EXC'].cumsum() - dataset['EXC']) / (dataset['index'])).round(1)
+        dataset['FHS Before'] = ((dataset['FHS'].cumsum() - dataset['FHS']) / (dataset['index'])).round(1)
+        dataset['FHC Before'] = ((dataset['FHC'].cumsum() - dataset['FHC']) / (dataset['index'])).round(1)
+        dataset['SHS Before'] = ((dataset['SHS'].cumsum() - dataset['SHS']) / (dataset['index'])).round(1)
+        dataset['SHC Before'] = ((dataset['SHC'].cumsum() - dataset['SHC']) / (dataset['index'])).round(1)
+
+        dataset['PTS Before'] = ((dataset['PTS'].cumsum() - dataset['PTS']) / (dataset['index'])).round(1)
+        dataset['2PM Before'] = ((dataset['2PM'].cumsum() - dataset['2PM']) / (dataset['index'])).round(1)
+        dataset['2PA Before'] = ((dataset['2PA'].cumsum() - dataset['2PA']) / (dataset['index'])).round(1)
+        dataset['2P(%) Before'] = (100 * dataset['2PM Before'] / dataset['2PA Before']).round(1)
+        dataset['3PM Before'] = ((dataset['3PM'].cumsum() - dataset['3PM']) / (dataset['index'])).round(1)
+        dataset['3PA Before'] = ((dataset['3PA'].cumsum() - dataset['3PA']) / (dataset['index'])).round(1)
+        dataset['3P(%) Before'] = (100 * dataset['3PM Before'] / dataset['3PA Before']).round(1)
+        dataset['FTM Before'] = ((dataset['FTM'].cumsum() - dataset['FTM']) / (dataset['index'])).round(1)
+        dataset['FTA Before'] = ((dataset['FTA'].cumsum() - dataset['FTA']) / (dataset['index'])).round(1)
+        dataset['FT(%) Before'] = (100 * dataset['FTM Before'] / dataset['FTA Before']).round(1)
+        dataset['OR Before'] = ((dataset['OR'].cumsum() - dataset['OR']) / (dataset['index'])).round(1)
+        dataset['DR Before'] = ((dataset['DR'].cumsum() - dataset['DR']) / (dataset['index'])).round(1)
+        dataset['TR Before'] = ((dataset['TR'].cumsum() - dataset['TR']) / (dataset['index'])).round(1)
+        dataset['AS Before'] = ((dataset['AS'].cumsum() - dataset['AS']) / (dataset['index'])).round(1)
+        dataset['STL Before'] = ((dataset['STL'].cumsum() - dataset['STL']) / (dataset['index'])).round(1)
+        dataset['TO Before'] = ((dataset['TO'].cumsum() - dataset['TO']) / (dataset['index'])).round(1)
+        dataset['BLK Before'] = ((dataset['BLK'].cumsum() - dataset['BLK']) / (dataset['index'])).round(1)
+        dataset['BLKR Before'] = ((dataset['BLKR'].cumsum() - dataset['BLKR']) / (dataset['index'])).round(1)
+        dataset['PF Before'] = ((dataset['PF'].cumsum() - dataset['PF']) / (dataset['index'])).round(1)
+
+        dataset['PTS conc Before'] = ((dataset['opp PTS'].cumsum() - dataset['opp PTS']) / (dataset['index'])).round(1)
+        dataset['2PM conc Before'] = ((dataset['opp 2PM'].cumsum() - dataset['opp 2PM']) / (dataset['index'])).round(1)
+        dataset['2PA conc Before'] = ((dataset['opp 2PA'].cumsum() - dataset['opp 2PA']) / (dataset['index'])).round(1)
+        dataset['2P(%) conc Before'] = (100 * dataset['2PM conc Before'] / dataset['2PA conc Before']).round(1)
+        dataset['3PM conc Before'] = ((dataset['opp 3PM'].cumsum() - dataset['opp 3PM']) / (dataset['index'])).round(1)
+        dataset['3PA conc Before'] = ((dataset['opp 3PA'].cumsum() - dataset['opp 3PA']) / (dataset['index'])).round(1)
+        dataset['3P(%) conc Before'] = (100 * dataset['3PM conc Before'] / dataset['3PA conc Before']).round(1)
+        dataset['FTM conc Before'] = ((dataset['opp FTM'].cumsum() - dataset['opp FTM']) / (dataset['index'])).round(1)
+        dataset['FTA conc Before'] = ((dataset['opp FTA'].cumsum() - dataset['opp FTA']) / (dataset['index'])).round(1)
+        dataset['FT(%) conc Before'] = (100 * dataset['FTM conc Before'] / dataset['FTA conc Before']).round(1)
+        dataset['OR conc Before'] = ((dataset['opp OR'].cumsum() - dataset['opp OR']) / (dataset['index'])).round(1)
+        dataset['DR conc Before'] = ((dataset['opp DR'].cumsum() - dataset['opp DR']) / (dataset['index'])).round(1)
+        dataset['TR conc Before'] = ((dataset['opp TR'].cumsum() - dataset['opp TR']) / (dataset['index'])).round(1)
+        dataset['AS conc Before'] = ((dataset['opp AS'].cumsum() - dataset['opp AS']) / (dataset['index'])).round(1)
+        dataset['STL conc Before'] = ((dataset['opp STL'].cumsum() - dataset['opp STL']) / (dataset['index'])).round(1)
+        dataset['TO conc Before'] = ((dataset['opp TO'].cumsum() - dataset['opp TO']) / (dataset['index'])).round(1)
+        dataset['PF conc Before'] = ((dataset['opp PF'].cumsum() - dataset['opp PF']) / (dataset['index'])).round(1)
+        dataset = dataset.filter(regex='Team|Season|Fixture|Before')
+        dataset_all = pd.concat([dataset_all, dataset])
+
+
+    dataset_all = dataset_all.add_prefix('opp ').rename(
+        columns={'opp Team': 'Against', 'opp Fixture': 'Fixture', 'opp Season': 'Season'})
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1.Team == search_team_team1]
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.sort_values(['Season', 'Fixture']).reset_index()
+    select_allstats_in_a_game1.drop('index', axis=1, inplace=True)
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.reset_index()
+    select_allstats_in_a_game1['Q1S Before'] = (
+                (select_allstats_in_a_game1['Q1S'].cumsum() - select_allstats_in_a_game1['Q1S']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['Q1C Before'] = (
+                (select_allstats_in_a_game1['Q1C'].cumsum() - select_allstats_in_a_game1['Q1C']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['Q2S Before'] = (
+                (select_allstats_in_a_game1['Q2S'].cumsum() - select_allstats_in_a_game1['Q2S']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['Q2C Before'] = (
+                (select_allstats_in_a_game1['Q2C'].cumsum() - select_allstats_in_a_game1['Q2C']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['Q3S Before'] = (
+                (select_allstats_in_a_game1['Q3S'].cumsum() - select_allstats_in_a_game1['Q3S']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['Q3C Before'] = (
+                (select_allstats_in_a_game1['Q3C'].cumsum() - select_allstats_in_a_game1['Q3C']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['Q4S Before'] = (
+                (select_allstats_in_a_game1['Q4S'].cumsum() - select_allstats_in_a_game1['Q4S']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['Q4C Before'] = (
+                (select_allstats_in_a_game1['Q4C'].cumsum() - select_allstats_in_a_game1['Q4C']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['EXS Before'] = (
+                (select_allstats_in_a_game1['EXS'].cumsum() - select_allstats_in_a_game1['EXS']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['EXC Before'] = (
+                (select_allstats_in_a_game1['EXC'].cumsum() - select_allstats_in_a_game1['EXC']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['FHS Before'] = (
+                (select_allstats_in_a_game1['FHS'].cumsum() - select_allstats_in_a_game1['FHS']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['FHC Before'] = (
+                (select_allstats_in_a_game1['FHC'].cumsum() - select_allstats_in_a_game1['FHC']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['SHS Before'] = (
+                (select_allstats_in_a_game1['SHS'].cumsum() - select_allstats_in_a_game1['SHS']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['SHC Before'] = (
+                (select_allstats_in_a_game1['SHC'].cumsum() - select_allstats_in_a_game1['SHC']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+
+    select_allstats_in_a_game1['PTS Before'] = (
+                (select_allstats_in_a_game1['PTS'].cumsum() - select_allstats_in_a_game1['PTS']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['2PM Before'] = (
+                (select_allstats_in_a_game1['2PM'].cumsum() - select_allstats_in_a_game1['2PM']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['2PA Before'] = (
+                (select_allstats_in_a_game1['2PA'].cumsum() - select_allstats_in_a_game1['2PA']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['2P(%) Before'] = (
+                100 * select_allstats_in_a_game1['2PM Before'] / select_allstats_in_a_game1['2PA Before']).round(1)
+    select_allstats_in_a_game1['3PM Before'] = (
+                (select_allstats_in_a_game1['3PM'].cumsum() - select_allstats_in_a_game1['3PM']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['3PA Before'] = (
+                (select_allstats_in_a_game1['3PA'].cumsum() - select_allstats_in_a_game1['3PA']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['3P(%) Before'] = (
+                100 * select_allstats_in_a_game1['3PM Before'] / select_allstats_in_a_game1['3PA Before']).round(1)
+    select_allstats_in_a_game1['FTM Before'] = (
+                (select_allstats_in_a_game1['FTM'].cumsum() - select_allstats_in_a_game1['FTM']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['FTA Before'] = (
+                (select_allstats_in_a_game1['FTA'].cumsum() - select_allstats_in_a_game1['FTA']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['FT(%) Before'] = (
+                100 * select_allstats_in_a_game1['FTM Before'] / select_allstats_in_a_game1['FTA Before']).round(1)
+    select_allstats_in_a_game1['OR Before'] = (
+                (select_allstats_in_a_game1['OR'].cumsum() - select_allstats_in_a_game1['OR']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['DR Before'] = (
+                (select_allstats_in_a_game1['DR'].cumsum() - select_allstats_in_a_game1['DR']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['TR Before'] = (
+                (select_allstats_in_a_game1['TR'].cumsum() - select_allstats_in_a_game1['TR']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['AS Before'] = (
+                (select_allstats_in_a_game1['AS'].cumsum() - select_allstats_in_a_game1['AS']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['STL Before'] = (
+                (select_allstats_in_a_game1['STL'].cumsum() - select_allstats_in_a_game1['STL']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['TO Before'] = (
+                (select_allstats_in_a_game1['TO'].cumsum() - select_allstats_in_a_game1['TO']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['BLK Before'] = (
+                (select_allstats_in_a_game1['BLK'].cumsum() - select_allstats_in_a_game1['BLK']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['BLKR Before'] = (
+                (select_allstats_in_a_game1['BLKR'].cumsum() - select_allstats_in_a_game1['BLKR']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['PF Before'] = (
+                (select_allstats_in_a_game1['PF'].cumsum() - select_allstats_in_a_game1['PF']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+
+    select_allstats_in_a_game1['PTS conc Before'] = (
+                (select_allstats_in_a_game1['opp PTS'].cumsum() - select_allstats_in_a_game1['opp PTS']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['2PM conc Before'] = (
+                (select_allstats_in_a_game1['opp 2PM'].cumsum() - select_allstats_in_a_game1['opp 2PM']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['2PA conc Before'] = (
+                (select_allstats_in_a_game1['opp 2PA'].cumsum() - select_allstats_in_a_game1['opp 2PA']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['2P(%) conc Before'] = (
+                100 * select_allstats_in_a_game1['2PM conc Before'] / select_allstats_in_a_game1[
+            '2PA conc Before']).round(1)
+    select_allstats_in_a_game1['3PM conc Before'] = (
+                (select_allstats_in_a_game1['opp 3PM'].cumsum() - select_allstats_in_a_game1['opp 3PM']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['3PA conc Before'] = (
+                (select_allstats_in_a_game1['opp 3PA'].cumsum() - select_allstats_in_a_game1['opp 3PA']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['3P(%) conc Before'] = (
+                100 * select_allstats_in_a_game1['3PM conc Before'] / select_allstats_in_a_game1[
+            '3PA conc Before']).round(1)
+    select_allstats_in_a_game1['FTM conc Before'] = (
+                (select_allstats_in_a_game1['opp FTM'].cumsum() - select_allstats_in_a_game1['opp FTM']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['FTA conc Before'] = (
+                (select_allstats_in_a_game1['opp FTA'].cumsum() - select_allstats_in_a_game1['opp FTA']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['FT(%) conc Before'] = (
+                100 * select_allstats_in_a_game1['FTM conc Before'] / select_allstats_in_a_game1[
+            'FTA conc Before']).round(1)
+    select_allstats_in_a_game1['OR conc Before'] = (
+                (select_allstats_in_a_game1['opp OR'].cumsum() - select_allstats_in_a_game1['opp OR']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['DR conc Before'] = (
+                (select_allstats_in_a_game1['opp DR'].cumsum() - select_allstats_in_a_game1['opp DR']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['TR conc Before'] = (
+                (select_allstats_in_a_game1['opp TR'].cumsum() - select_allstats_in_a_game1['opp TR']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['AS conc Before'] = (
+                (select_allstats_in_a_game1['opp AS'].cumsum() - select_allstats_in_a_game1['opp AS']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['STL conc Before'] = (
+                (select_allstats_in_a_game1['opp STL'].cumsum() - select_allstats_in_a_game1['opp STL']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['TO conc Before'] = (
+                (select_allstats_in_a_game1['opp TO'].cumsum() - select_allstats_in_a_game1['opp TO']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1['PF conc Before'] = (
+                (select_allstats_in_a_game1['opp PF'].cumsum() - select_allstats_in_a_game1['opp PF']) / (
+        select_allstats_in_a_game1['index'])).round(1)
+    select_allstats_in_a_game1=pd.merge(select_allstats_in_a_game1, dataset_all)
+    select_allstats_in_a_game1.drop(['index','Team'],axis=1,inplace=True)
     all, select = st.tabs(['All Stats', 'Select Stat'])
     with all:
         interactive_table(select_allstats_in_a_game1.set_index('Against').sort_values('Fixture', ascending=True),
@@ -995,3 +1217,5 @@ with statsbbygame:
             fixedColumns=True, select=True, info=False, scrollCollapse=True,
             scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
             columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+

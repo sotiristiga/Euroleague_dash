@@ -241,6 +241,7 @@ euroleague_2024_2025_results[['Fixture', 'Game']] = euroleague_2024_2025_results
 euroleague_2024_2025_results['Fixture']=pd.to_numeric(euroleague_2024_2025_results['Fixture'])
 euroleague_2024_2025_results['Round']=euroleague_2024_2025_results['Fixture'].apply(fixture_format5)
 
+Positions=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/PlayersPositions.csv")
 
 All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats])
 
@@ -630,6 +631,7 @@ def compute_player_stats_by_team_against(dataset,Team):
 teamstats=compute_team_stats(All_Seasons1,All_Seasons2,period_points1)[0]
 oppstats=compute_team_stats(All_Seasons1,All_Seasons2,period_points1)[1]
 ratingstats=compute_team_stats(All_Seasons1,All_Seasons2,period_points1)[2]
+All_seasons_pos=pd.merge(All_Seasons1,Positions,on='Player')
 euroleaguestats,playersstats,statsbbygame=st.tabs(['Euroleague Stats','Players Stats','Stats by game'])
 with euroleaguestats:
     teams,ratings,gamesstats=st.columns([1,1,1])
@@ -959,23 +961,104 @@ with euroleaguestats:
                           scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
                           columnDefs=[{"className": "dt-center", "targets": "_all"}])
 with playersstats:
+    stats_by_pos = All_seasons_pos.loc[All_seasons_pos.Team == search_team_team1].groupby(['Team', 'Position', 'idseason']).sum()[
+        ['PTS', 'F2M',
+         'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
+         'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF',
+         'PIR', 'Possesions', 'Team_F2A', 'Team_F3A', 'Team_FTA', 'Team_TO', 'MIN']].groupby(
+        ['Team', 'Position']).mean().reset_index().round(1).sort_values('Position')
+
+    stats_by_pos['2P(%)'] = 100 * (stats_by_pos['F2M'] / stats_by_pos['F2A'])
+    stats_by_pos['3P(%)'] = 100 * (stats_by_pos['F3M'] / stats_by_pos['F3A'])
+    stats_by_pos['FT(%)'] = 100 * (stats_by_pos['FTM'] / stats_by_pos['FTA'])
+    stats_by_pos['Offensive Rating'] = 100 * (stats_by_pos['PTS'] / stats_by_pos['Possesions'])
+    stats_by_pos['EFG(%)'] = 100 * (stats_by_pos['F2M'] + 1.5 * stats_by_pos['F3M']) / (
+                stats_by_pos['F2A'] + stats_by_pos['F3A'])
+    stats_by_pos['TS(%)'] = 100 * (stats_by_pos['PTS']) / (
+                2 * (stats_by_pos['F2A'] + stats_by_pos['F3A'] + 0.44 * stats_by_pos['FTA']))
+    stats_by_pos['FT Ratio'] = stats_by_pos['FTA'] / (stats_by_pos['F3A'] + stats_by_pos['F2A'])
+    stats_by_pos['AS-TO Ratio'] = stats_by_pos['AS'] / stats_by_pos['TO']
+    stats_by_pos['TO Ratio'] = 100 * (stats_by_pos['TO'] / stats_by_pos['Possesions'])
+    stats_by_pos['AS Ratio'] = 100 * (stats_by_pos['AS'] / stats_by_pos['Possesions'])
+    stats_by_pos['USG(%)'] = 100 * (
+            ((stats_by_pos['F3A'] + stats_by_pos['F2A']) + 0.44 * stats_by_pos['FTA'] + stats_by_pos['TO']) * (
+        40)) / (stats_by_pos['MIN'] * (
+            stats_by_pos['Team_F2A'] + stats_by_pos['Team_F3A'] + 0.44 * stats_by_pos['Team_FTA'] + stats_by_pos[
+        'Team_TO']))
+    stats_by_pos = stats_by_pos[
+        ['Position', 'PTS', 'F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'OR', 'DR', 'TR',
+         'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR', 'Possesions', 'Offensive Rating', 'EFG(%)',
+         'TS(%)', 'FT Ratio', 'AS-TO Ratio', 'TO Ratio', 'AS Ratio', 'USG(%)']].round(1)
+
     teamplayers, opponentplayers = st.tabs(["Team's Players", "Opponent's Players"])
     with teamplayers:
-        interactive_table(compute_player_stats_by_team(All_Seasons1, search_team_team1),
-                          paging=False, height=960, width=20000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=False,
-                          fixedColumns=True,
-                          select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+        players,positiont=st.tabs(["Team's Players Stats",'By Position Stats'])
+        with players:
+            interactive_table(compute_player_stats_by_team(All_Seasons1, search_team_team1),
+                              paging=False, height=960, width=20000, showIndex=True,
+                              classes="display order-column nowrap table_with_monospace_font", searching=False,
+                              fixedColumns=True,
+                              select=True, info=False, scrollCollapse=True,
+                              scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,
+                              columnDefs=[{"className": "dt-center", "targets": "_all"}])
+        with positiont:
+            interactive_table(stats_by_pos.set_index('Position'),
+                              paging=False, height=960, width=20000, showIndex=True,
+                              classes="display order-column nowrap table_with_monospace_font", searching=False,
+                              fixedColumns=True,
+                              select=True, info=False, scrollCollapse=True,
+                              scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,
+                              columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
     with opponentplayers:
-        interactive_table(compute_player_stats_by_team_against(All_Seasons2, search_team_team1),
-                          paging=False, height=960, width=20000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+        stats_by_pos_opp = All_seasons_pos.loc[All_seasons_pos.Against == search_team_team1].groupby(
+            ['Against', 'Position', 'idseason']).sum()[
+            ['PTS', 'F2M',
+             'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
+             'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF',
+             'PIR', 'Possesions', 'Team_F2A', 'Team_F3A', 'Team_FTA', 'Team_TO', 'MIN']].groupby(
+            ['Against', 'Position']).mean().reset_index().round(1).sort_values('Position')
+
+        stats_by_pos_opp['2P(%)'] = 100 * (stats_by_pos_opp['F2M'] / stats_by_pos_opp['F2A'])
+        stats_by_pos_opp['3P(%)'] = 100 * (stats_by_pos_opp['F3M'] / stats_by_pos_opp['F3A'])
+        stats_by_pos_opp['FT(%)'] = 100 * (stats_by_pos_opp['FTM'] / stats_by_pos_opp['FTA'])
+        stats_by_pos_opp['Offensive Rating'] = 100 * (stats_by_pos_opp['PTS'] / stats_by_pos_opp['Possesions'])
+        stats_by_pos_opp['EFG(%)'] = 100 * (stats_by_pos_opp['F2M'] + 1.5 * stats_by_pos_opp['F3M']) / (
+                stats_by_pos_opp['F2A'] + stats_by_pos_opp['F3A'])
+        stats_by_pos_opp['TS(%)'] = 100 * (stats_by_pos_opp['PTS']) / (
+                2 * (stats_by_pos_opp['F2A'] + stats_by_pos_opp['F3A'] + 0.44 * stats_by_pos_opp['FTA']))
+        stats_by_pos_opp['FT Ratio'] = stats_by_pos_opp['FTA'] / (stats_by_pos_opp['F3A'] + stats_by_pos_opp['F2A'])
+        stats_by_pos_opp['AS-TO Ratio'] = stats_by_pos_opp['AS'] / stats_by_pos_opp['TO']
+        stats_by_pos_opp['TO Ratio'] = 100 * (stats_by_pos_opp['TO'] / stats_by_pos_opp['Possesions'])
+        stats_by_pos_opp['AS Ratio'] = 100 * (stats_by_pos_opp['AS'] / stats_by_pos_opp['Possesions'])
+        stats_by_pos_opp['USG(%)'] = 100 * (
+                ((stats_by_pos_opp['F3A'] + stats_by_pos_opp['F2A']) + 0.44 * stats_by_pos_opp['FTA'] +
+                 stats_by_pos_opp['TO']) * (
+                    40)) / (stats_by_pos_opp['MIN'] * (
+                stats_by_pos_opp['Team_F2A'] + stats_by_pos_opp['Team_F3A'] + 0.44 * stats_by_pos_opp['Team_FTA'] +
+                stats_by_pos_opp[
+                    'Team_TO']))
+        stats_by_pos_opp = stats_by_pos_opp[
+            ['Position', 'PTS', 'F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'OR', 'DR', 'TR',
+             'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR', 'Possesions', 'Offensive Rating', 'EFG(%)',
+             'TS(%)', 'FT Ratio', 'AS-TO Ratio', 'TO Ratio', 'AS Ratio', 'USG(%)']].round(1)
+
+
+        opponents, positiono = st.tabs(["Opponent's Players Stats", 'By Position Stats'])
+        with opponents:
+            interactive_table(compute_player_stats_by_team_against(All_Seasons2, search_team_team1),
+                              paging=False, height=960, width=20000, showIndex=True,
+                              classes="display order-column nowrap table_with_monospace_font", searching=True,
+                              fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                              scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                              columnDefs=[{"className": "dt-center", "targets": "_all"}])
+        with positiono:
+            interactive_table(stats_by_pos_opp.set_index('Position'),
+                              paging=False, height=960, width=20000, showIndex=True,
+                              classes="display order-column nowrap table_with_monospace_font", searching=True,
+                              fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                              scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                              columnDefs=[{"className": "dt-center", "targets": "_all"}])
 with statsbbygame:
     Teams = All_Seasons1['Team'].unique()
     dataset_all = pd.DataFrame()
@@ -1217,5 +1300,8 @@ with statsbbygame:
             fixedColumns=True, select=True, info=False, scrollCollapse=True,
             scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
             columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+
 
 

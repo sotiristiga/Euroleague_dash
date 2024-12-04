@@ -411,14 +411,14 @@ if "All" in search_team_ha_team1:
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['HA'].isin(search_team_ha_team1)]
     select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[
         select_allstats_in_a_game2['HA'].isin(search_team_ha_team1)]
-    All_Seasons2 = All_Seasons1.loc[All_Seasons1['HA1'].isin(search_team_ha_team1)]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['HA1'].isin(search_team_ha_team1)]
     select_ha_player1=''
 elif search_team_ha_team1=="H":
     All_Seasons1=All_Seasons1.loc[All_Seasons1['HA']=="H"]
     period_points1 = period_points1.loc[period_points1['HA'] == "H"]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['HA'] == "H"]
     select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[select_allstats_in_a_game2['HA'] == "A"]
-    All_Seasons2 = All_Seasons1.loc[All_Seasons1['HA1'] == "H"]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['HA1'] == "H"]
     select_ha_player1 = "H"
 
 elif search_team_ha_team1=="A":
@@ -426,7 +426,7 @@ elif search_team_ha_team1=="A":
     period_points1 = period_points1.loc[period_points1['HA'] == "A"]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['HA'] == "A"]
     select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[select_allstats_in_a_game2['HA'] == "H"]
-    All_Seasons2 = All_Seasons1.loc[All_Seasons1['HA1'] == "A"]
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['HA1'] == "A"]
     select_ha_player1 = "A"
 
 if "All" in search_team_wl_team1:
@@ -1154,7 +1154,7 @@ with statsbbygame:
         dataset = dataset.filter(regex='Team|Season|Fixture|Before')
         dataset_all = pd.concat([dataset_all, dataset])
 
-    
+
     dataset_all = dataset_all.add_prefix('opp ').rename(
         columns={'opp Team': 'Against', 'opp Fixture': 'Fixture', 'opp Season': 'Season'})
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1.Team == search_team_team1]

@@ -358,7 +358,7 @@ finalstats_opp=finalstats_opp.add_prefix('opp ').rename(columns={'opp Against':'
 gamesstats=pd.merge(finalstats,finalstats_opp)
 allstats_in_a_game=pd.merge(period_points,gamesstats,on=['idseason','Team'])
 
-select_allstats_in_a_game = (allstats_in_a_game[['Team','Against', 'Season', 'Phase', 'Round', 'Fixture', 'HA', 'results', 'Q1S',
+select_allstats_in_a_game = (allstats_in_a_game[['Team','Against', 'Season', 'Phase', 'Round', 'Fixture',"HA", 'results', 'Q1S',
      'Q2S', 'Q1C', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q4S', 'Q3C', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC',
      'PTS', 'opp PTS', 'AS', 'opp AS', 'F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)',
      'F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)', 'FTM', 'FTA', 'FT(%)', 'opp FTM', 'opp FTA', 'opp FT(%)',
@@ -387,33 +387,47 @@ select_allstats_in_a_game['Total PF']=select_allstats_in_a_game['PF']+select_all
 select_allstats_in_a_game['Total BLK']=select_allstats_in_a_game['BLKR']+select_allstats_in_a_game['BLK']
 
 
-if "All" in search_team_ha_team1:
-    search_team_ha_team1 = ['A', 'H']
-    All_Seasons1=All_Seasons.loc[All_Seasons['HA'].isin(search_team_ha_team1)]
-    period_points1=period_points.loc[period_points['HA'].isin(search_team_ha_team1)]
-    select_allstats_in_a_game1 = select_allstats_in_a_game.loc[select_allstats_in_a_game['HA'].isin(search_team_ha_team1)]
-    All_Seasons2 = All_Seasons.loc[All_Seasons['HA1'].isin(search_team_ha_team1)]
-    select_ha_player1=''
-else:
-    All_Seasons1=All_Seasons.loc[All_Seasons['HA']==search_team_ha_team1]
-    period_points1 = period_points.loc[period_points['HA'] == search_team_ha_team1]
-    select_allstats_in_a_game1 = select_allstats_in_a_game.loc[select_allstats_in_a_game.HA == search_team_ha_team1]
-    All_Seasons2 = All_Seasons.loc[All_Seasons['HA1'] == search_team_ha_team1]
-    select_ha_player1 = search_team_ha_team1
 
 if "All" in search_team_season_team1:
     search_team_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025']
-    All_Seasons1=All_Seasons1.loc[All_Seasons1['Season'].isin(search_team_season_team1)]
-    period_points1 = period_points1.loc[period_points1['Season'].isin(search_team_season_team1)]
-    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['Season'].isin(search_team_season_team1)]
-    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Season'].isin(search_team_season_team1)]
+    All_Seasons1=All_Seasons.loc[All_Seasons['Season'].isin(search_team_season_team1)]
+    period_points1 = period_points.loc[period_points['Season'].isin(search_team_season_team1)]
+    select_allstats_in_a_game1 = select_allstats_in_a_game.loc[select_allstats_in_a_game['Season'].isin(search_team_season_team1)]
+    select_allstats_in_a_game2 = select_allstats_in_a_game.loc[select_allstats_in_a_game['Season'].isin(search_team_season_team1)]
+    All_Seasons2 = All_Seasons.loc[All_Seasons['Season'].isin(search_team_season_team1)]
     select_season_player1 = ''
 else:
-    All_Seasons1=All_Seasons1.loc[All_Seasons1['Season']==search_team_season_team1]
-    period_points1 = period_points1.loc[period_points1['Season'] == search_team_season_team1]
-    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['Season'] == search_team_season_team1]
-    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Season'] == search_team_season_team1]
+    All_Seasons1=All_Seasons.loc[All_Seasons['Season']==search_team_season_team1]
+    period_points1 = period_points.loc[period_points['Season'] == search_team_season_team1]
+    select_allstats_in_a_game1 = select_allstats_in_a_game.loc[select_allstats_in_a_game['Season'] == search_team_season_team1]
+    select_allstats_in_a_game2 = select_allstats_in_a_game.loc[select_allstats_in_a_game['Season']== search_team_season_team1]
+    All_Seasons2 = All_Seasons.loc[All_Seasons['Season'] == search_team_season_team1]
     select_season_player1 = search_team_season_team1
+
+if "All" in search_team_ha_team1:
+    search_team_ha_team1 = ['A', 'H']
+    All_Seasons1=All_Seasons1.loc[All_Seasons1['HA'].isin(search_team_ha_team1)]
+    period_points1=period_points1.loc[period_points1['HA'].isin(search_team_ha_team1)]
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['HA'].isin(search_team_ha_team1)]
+    select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[
+        select_allstats_in_a_game2['HA'].isin(search_team_ha_team1)]
+    All_Seasons2 = All_Seasons1.loc[All_Seasons1['HA1'].isin(search_team_ha_team1)]
+    select_ha_player1=''
+elif search_team_ha_team1=="H":
+    All_Seasons1=All_Seasons1.loc[All_Seasons1['HA']=="H"]
+    period_points1 = period_points1.loc[period_points1['HA'] == "H"]
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['HA'] == "H"]
+    select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[select_allstats_in_a_game2['HA'] == "A"]
+    All_Seasons2 = All_Seasons1.loc[All_Seasons1['HA1'] == "H"]
+    select_ha_player1 = "H"
+
+elif search_team_ha_team1=="A":
+    All_Seasons1=All_Seasons1.loc[All_Seasons1['HA']=="A"]
+    period_points1 = period_points1.loc[period_points1['HA'] == "A"]
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['HA'] == "A"]
+    select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[select_allstats_in_a_game2['HA'] == "H"]
+    All_Seasons2 = All_Seasons1.loc[All_Seasons1['HA1'] == "A"]
+    select_ha_player1 = "A"
 
 if "All" in search_team_wl_team1:
     search_team_wl_team1 = ['W', 'L']
@@ -421,15 +435,25 @@ if "All" in search_team_wl_team1:
     period_points1 = period_points1.loc[period_points1['results'].isin(search_team_wl_team1)]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[
         select_allstats_in_a_game1['results'].isin(search_team_wl_team1)]
+    select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[
+        select_allstats_in_a_game2['results'].isin(search_team_wl_team1)]
     All_Seasons2 = All_Seasons2.loc[All_Seasons2['Result1'].isin(search_team_wl_team1)]
 
     select_wl_player1 = ''
-else:
-    All_Seasons1= All_Seasons1.loc[All_Seasons1['results'] == search_team_wl_team1]
-    period_points1 = period_points1.loc[period_points1['results'] == search_team_wl_team1]
-    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['results'] == search_team_wl_team1]
-    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Result1'] == search_team_wl_team1]
-    select_wl_player1 = search_team_wl_team1
+elif search_team_wl_team1=='W':
+    All_Seasons1= All_Seasons1.loc[All_Seasons1['results'] == 'W']
+    period_points1 = period_points1.loc[period_points1['results'] == 'W']
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['results'] == 'W']
+    select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[select_allstats_in_a_game2['results'] == 'L']
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Result1'] == 'W']
+    select_wl_player1 = 'W'
+elif search_team_wl_team1=='L':
+    All_Seasons1= All_Seasons1.loc[All_Seasons1['results'] == 'L']
+    period_points1 = period_points1.loc[period_points1['results'] == 'L']
+    select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1['results'] == 'L']
+    select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[select_allstats_in_a_game2['results'] == 'W']
+    All_Seasons2 = All_Seasons2.loc[All_Seasons2['Result1'] == 'L']
+    select_wl_player1 = 'L'
 
 if "All" in search_team_phase_team1:
     search_team_phase_team1 = ['Regular Season', 'Play In','Play offs', 'Final Four']
@@ -437,6 +461,8 @@ if "All" in search_team_phase_team1:
     period_points1 = period_points1.loc[period_points1['Phase'].isin(search_team_phase_team1)]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[
         select_allstats_in_a_game1['Phase'].isin(search_team_phase_team1)]
+    select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[
+        select_allstats_in_a_game2['Phase'].isin(search_team_phase_team1)]
     All_Seasons2 = All_Seasons2.loc[All_Seasons2['Phase'].isin(search_team_phase_team1)]
     select_phase_player1 = ''
 else:
@@ -444,6 +470,8 @@ else:
     period_points1 = period_points1.loc[period_points1['Phase'] == search_team_phase_team1]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[
         select_allstats_in_a_game1['Phase'] == search_team_phase_team1]
+    select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[
+        select_allstats_in_a_game2['Phase'] == search_team_phase_team1]
     All_Seasons2 = All_Seasons2.loc[All_Seasons2['Phase'] == search_team_phase_team1]
     select_phase_player1 = search_team_phase_team1
 
@@ -454,6 +482,8 @@ if "All" in search_team_round_team1:
     period_points1 = period_points1.loc[ period_points1['Round'].isin(search_team_round_team1)]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[
         select_allstats_in_a_game1['Round'].isin(search_team_round_team1)]
+    select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[
+        select_allstats_in_a_game2['Round'].isin(search_team_round_team1)]
     All_Seasons2 = All_Seasons2.loc[All_Seasons2['Round'].isin(search_team_round_team1)]
     select_round_player1 = ''
 else:
@@ -461,6 +491,8 @@ else:
     period_points1 = period_points1.loc[period_points1['Round']==search_team_round_team1]
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[
         select_allstats_in_a_game1['Round'] == search_team_round_team1]
+    select_allstats_in_a_game2 = select_allstats_in_a_game2.loc[
+        select_allstats_in_a_game2['Round'] == search_team_round_team1]
     All_Seasons2 = All_Seasons2.loc[All_Seasons2['Round'] == search_team_round_team1]
     select_round_player1 = search_team_round_team1
 
@@ -1063,7 +1095,7 @@ with statsbbygame:
     Teams = All_Seasons1['Team'].unique()
     dataset_all = pd.DataFrame()
     for team in Teams:
-        dataset = select_allstats_in_a_game1.loc[select_allstats_in_a_game1.Team == team]
+        dataset = select_allstats_in_a_game2.loc[select_allstats_in_a_game2.Team == team]
         dataset = dataset.sort_values(['Season', 'Fixture']).reset_index()
         dataset.drop('index', axis=1, inplace=True)
         dataset = dataset.reset_index()
@@ -1122,7 +1154,7 @@ with statsbbygame:
         dataset = dataset.filter(regex='Team|Season|Fixture|Before')
         dataset_all = pd.concat([dataset_all, dataset])
 
-
+    
     dataset_all = dataset_all.add_prefix('opp ').rename(
         columns={'opp Team': 'Against', 'opp Fixture': 'Fixture', 'opp Season': 'Season'})
     select_allstats_in_a_game1 = select_allstats_in_a_game1.loc[select_allstats_in_a_game1.Team == search_team_team1]
@@ -1300,8 +1332,3 @@ with statsbbygame:
             fixedColumns=True, select=True, info=False, scrollCollapse=True,
             scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
             columnDefs=[{"className": "dt-center", "targets": "_all"}])
-
-
-
-
-

@@ -539,7 +539,7 @@ with teams:
 
     ratings_team = pd.merge(pd.merge(offense_rating_data, defense_ratings_data), total_ratings_data)
 
-    interactive_table(ratings_team.round(0).set_index('Team'),
+    interactive_table(ratings_team.round(0).set_index('Team').sort_values('Overall'),
                       paging=False, height=900, width=4000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
@@ -629,7 +629,7 @@ with players:
 
     ratings=pd.merge(pd.merge(offense_rating_data,defense_ratings_data),total_ratings_data)
 
-    interactive_table(ratings.round(0).set_index('Player'),
+    interactive_table(ratings.round(0).set_index('Player').sort_values('Overall'),
                           paging=False, height=900, width=4000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=True,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,

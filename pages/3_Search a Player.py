@@ -308,10 +308,10 @@ All_Seasons_filter['PR']=All_Seasons_filter.PTS+All_Seasons_filter.TR
 All_Seasons_filter['RA']=All_Seasons_filter.AS+All_Seasons_filter.TR
 All_Seasons_filter['PB']=All_Seasons_filter.PTS+All_Seasons_filter.BLK
 All_Seasons_filter['SB']=All_Seasons_filter.ST+All_Seasons_filter.BLK
-finalAllSeasons=(All_Seasons_filter.loc[All_Seasons_filter.Player==search_player_player][['Against','Season','Phase','Round','Fixture','Team',"Player",'MIN','PTS','F2M',
+finalAllSeasons=(All_Seasons_filter.loc[All_Seasons_filter.Player==search_player_player][['Against','Season','Phase','Round','Fixture','HA','results','Team',"Player",'MIN','PTS','F2M',
                               'F2A','F2GP', 'F3M', 'F3A', 'F3GP','FTM', 'FTA', 'FTP','OR',
                                          'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PRA', 'PA','PR','RA','PB','SB','PF', 'RF',
-                              'PIR','HA','results','Possesions','Offensive_rating','EFG','True_shooting','FT_ratio','As_To_ratio',
+                              'PIR','Possesions','Offensive_rating','EFG','True_shooting','FT_ratio','As_To_ratio',
                               'Turnover_ratio','Assists_Ratio','Usage','OR_percent']]
                  .rename(columns={"F2GP":'2P(%)',
                                "F3GP":'3P(%)',

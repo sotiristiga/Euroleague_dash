@@ -302,4 +302,4 @@ with kpi4:
                                 All_Seasons['PF'].sum()),
         unsafe_allow_html=True)
 
-st.write("# For Play by Play analysis: https://euroleagueplaybyplayanalysis.streamlit.app/ "
+st.write("# For Play by Play analysis: https://euroleagueplaybyplayanalysis.streamlit.app/ ")

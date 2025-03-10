@@ -534,9 +534,9 @@ try:
             width=100,
             height=150,
             margin=dict(
-                l=0,
-                r=0,
-                b=0,
+                l=30,
+                r=50,
+                b=10,
                 t=70,
                 pad=0
             ))
@@ -558,8 +558,8 @@ try:
             width=100,
             height=150,
             margin=dict(
-                l=0,
-                r=0,
+                l=30,
+                r=50,
                 b=10,
                 t=70,
                 pad=0
@@ -586,9 +586,9 @@ try:
             width=100,
             height=150,
             margin=dict(
-                l=0,
-                r=0,
-                b=0,
+                l=30,
+                r=50,
+                b=10,
                 t=70,
                 pad=0
             ))
@@ -656,7 +656,7 @@ try:
             margin=dict(
                 l=30,
                 r=50,
-                b=0,
+                b=10,
                 t=40,
                 pad=0
             ))
@@ -682,7 +682,7 @@ try:
             margin=dict(
                 l=30,
                 r=50,
-                b=0,
+                b=10,
                 t=40,
                 pad=0
             ))
@@ -713,7 +713,7 @@ try:
             margin=dict(
                 l=30,
                 r=50,
-                b=0,
+                b=10,
                 t=40,
                 pad=0
             ))

@@ -560,7 +560,7 @@ try:
             margin=dict(
                 l=0,
                 r=0,
-                b=0,
+                b=10,
                 t=70,
                 pad=0
             ))

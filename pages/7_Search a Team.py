@@ -758,8 +758,7 @@ with ratings:
                 b=10,
                 t=40,
                 pad=0
-            )
-        )
+            ))
 
         st.write(defe1)
 
@@ -782,10 +781,9 @@ with ratings:
                 l=30,
                 r=50,
                 b=10,
-                t=10,
+                t=40,
                 pad=0
-            )
-        )
+            ))
 
         st.write(tot)
     except:

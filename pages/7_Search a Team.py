@@ -750,7 +750,7 @@ with ratings:
 
         defe1.update_layout(
             autosize=True,
-            width=250,
+            width=200,
             height=150,
             margin=dict(
                 l=30,
@@ -776,7 +776,7 @@ with ratings:
 
         tot.update_layout(
             autosize=True,
-            width=250,
+            width=200,
             height=150,
             margin=dict(
                 l=30,

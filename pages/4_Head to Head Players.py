@@ -531,8 +531,8 @@ try:
 
         off.update_layout(
             autosize=False,
-            width=200,
-            height=200,
+            width=150,
+            height=100,
             margin=dict(
                 l=0,
                 r=0,

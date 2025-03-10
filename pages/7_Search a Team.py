@@ -683,7 +683,7 @@ teamstats=compute_team_stats(All_Seasons1,All_Seasons2,period_points1)[0]
 oppstats=compute_team_stats(All_Seasons1,All_Seasons2,period_points1)[1]
 ratingstats=compute_team_stats(All_Seasons1,All_Seasons2,period_points1)[2]
 All_seasons_pos=pd.merge(All_Seasons1,Positions,on='Player')
-euroleaguestats,playersstats,statsbbygame=st.tabs(['Euroleague Stats','Players Stats','Stats by game'])
+
 
 
 

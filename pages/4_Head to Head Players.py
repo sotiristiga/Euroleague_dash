@@ -532,11 +532,11 @@ try:
         off.update_layout(
             autosize=False,
             width=200,
-            height=150,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
-                b=10,
+                b=0,
                 t=40,
                 pad=0
             ))
@@ -556,11 +556,11 @@ try:
         defe.update_layout(
             autosize=True,
             width=200,
-            height=150,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
-                b=10,
+                b=0,
                 t=40,
                 pad=0
             ))
@@ -585,11 +585,11 @@ try:
         tot.update_layout(
             autosize=True,
             width=200,
-            height=150,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
-                b=10,
+                b=0,
                 t=40,
                 pad=0
             ))
@@ -652,16 +652,15 @@ try:
 
             off.update_layout(
                 autosize=False,
-           width=200,
-            height=150,
+            width=200,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
-                b=10,
+                b=0,
                 t=40,
                 pad=0
             ))
-
             st.write(off)
 
 
@@ -679,12 +678,12 @@ try:
 
             defe.update_layout(
                 autosize=True,
-           width=200,
-            height=150,
+            width=200,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
-                b=10,
+                b=0,
                 t=40,
                 pad=0
             ))
@@ -710,12 +709,12 @@ try:
 
             tot.update_layout(
                 autosize=True,
-           width=200,
-            height=150,
+            width=200,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
-                b=10,
+                b=0,
                 t=40,
                 pad=0
             ))

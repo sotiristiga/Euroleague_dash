@@ -531,8 +531,8 @@ try:
 
         off.update_layout(
             autosize=False,
-            width=100,
-            height=150,
+            width=200,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
@@ -555,8 +555,8 @@ try:
 
         defe.update_layout(
             autosize=True,
-            width=100,
-            height=150,
+            width=200,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
@@ -583,8 +583,8 @@ try:
 
         tot.update_layout(
             autosize=True,
-            width=100,
-            height=150,
+            width=200,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,

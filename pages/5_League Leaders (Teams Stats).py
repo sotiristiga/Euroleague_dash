@@ -314,11 +314,30 @@ period_points['Q3W_W']=period_points.apply(lambda x: period_win_res_win_format(x
 period_points['Q4W_W']=period_points.apply(lambda x: period_win_res_win_format(x['Q4S'],x['Q4C'],x['results']),axis=1)
 period_points['SHW_W']=period_points.apply(lambda x: period_win_res_win_format(x['SHS'],x['SHC'],x['results']),axis=1)
 period_points['EXW_W']=period_points.apply(lambda x: period_win_res_win_format(x['EXS'],x['EXC'],x['results']),axis=1)
-team_ranking_season = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
-team_ranking_phase = st.sidebar.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
-team_ranking_round = st.sidebar.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
-team_ranking_ha = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
-team_ranking_wl = st.sidebar.selectbox("Result:",['W', 'L','All'],index=2)
+
+st.sidebar.markdown('''
+  * ## [Filters](#filters)
+  * ## [Standings](#standings)
+  * ## [Period Stats](#period-stats)
+  * ## [Basic Stats](#basic-stats)
+  * ## [Shooting Stats](#shooting-stats)
+  * ## [Advanced Stats](#advanced-stats)
+  * ## [Wins by period](#wins-by-period)
+
+
+''', unsafe_allow_html=True)
+st.header("Filters")
+f1,f2,f3,f4,f5=st.columns(5)
+with f1:
+    team_ranking_season = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
+with f2:
+    team_ranking_phase = st.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
+with f3:
+    team_ranking_round = st.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
+with f4:
+    team_ranking_ha = st.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
+with f5:
+    team_ranking_wl = st.selectbox("Result:",['W', 'L','All'],index=2)
 
 
 
@@ -407,108 +426,110 @@ else:
     allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Round'] == team_ranking_round]
 
 
-teamranking,teampointsinaperiod,teamwinsbyperiod,teambasicstats,teamsshootstats,teamadvstats=st.tabs(["Team Ranking(Wins-Loses)",'Team Points by period','Team Wins by Period','Team Basic Stats','Team Shooting Stats',"Team Advanced Stats"])
-with teamranking:
-    try:
+st.header("Standings")
+try:
 
-        games=allstats_in_a_game1['Team'].value_counts().reset_index().rename(columns={'count':'Games'})
-        wins=allstats_in_a_game1.groupby('Team')["Win"].sum().reset_index()
-        gameswins=pd.merge(games,wins)
-        points=allstats_in_a_game1.groupby('Team')[['Scored',"Conceed"]].mean().reset_index()
-        ranking=pd.merge(games,points)
-        ranking["Diff"]=ranking['Scored']-ranking['Conceed']
-        ranking=pd.merge(ranking,wins)
-        ranking['Loses']=ranking['Games']-ranking['Win']
-        ranking['Win(%)']=(100*ranking['Win']/ranking['Games']).round(1)
-        interactive_table(ranking.round(1).set_index('Team').sort_values('Win(%)',ascending=False),
-                              paging=False, height=900, width=2000, showIndex=True,
-                              classes="display order-column nowrap table_with_monospace_font", searching=False,
-                              fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                              scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,filter='bottom',
-                              columnDefs=[{"className": "dt-center", "targets": "_all"}])
-
-    except:
-        st.error('No data available with these parameters')
-
-
-with teampointsinaperiod:
-    periods = allstats_in_a_game1.groupby('Team')[['Q1S','Q1C','Q2S','Q2C',"FHS","FHC",'Q3S','Q3C','Q4S','Q4C','SHS','SHC','EXS','EXC']].mean().reset_index()
-    interactive_table(periods.round(1).set_index('Team'),
+    games=allstats_in_a_game1['Team'].value_counts().reset_index().rename(columns={'count':'Games'})
+    wins=allstats_in_a_game1.groupby('Team')["Win"].sum().reset_index()
+    gameswins=pd.merge(games,wins)
+    points=allstats_in_a_game1.groupby('Team')[['Scored',"Conceed"]].mean().reset_index()
+    ranking=pd.merge(games,points)
+    ranking["Diff"]=ranking['Scored']-ranking['Conceed']
+    ranking=pd.merge(ranking,wins)
+    ranking['Loses']=ranking['Games']-ranking['Win']
+    ranking['Win(%)']=(100*ranking['Win']/ranking['Games']).round(1)
+    interactive_table(ranking.round(1).set_index('Team').sort_values('Win(%)',ascending=False),
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=False,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,
                           scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,filter='bottom',
                           columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
-with teamwinsbyperiod:
-    periodwins=allstats_in_a_game1.groupby('Team')[['Q1W','Q1W_W','Q2W','Q2W_W','FHW','FHW_W','Q3W','Q3W_W',"Q4W",'Q4W_W','SHW','SHW_W','EXW','EXW_W']].sum().reset_index()
-    periodwins=pd.merge(gameswins,periodwins)
-    interactive_table(periodwins.set_index('Team'),
+except:
+    st.error('No data available with these parameters')
+
+
+st.header("Period Stats")
+periods = allstats_in_a_game1.groupby('Team')[['Q1S','Q1C','Q2S','Q2C',"FHS","FHC",'Q3S','Q3C','Q4S','Q4C','SHS','SHC','EXS','EXC']].mean().reset_index()
+interactive_table(periods.round(1).set_index('Team'),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
-with teambasicstats:
-    basicstats=allstats_in_a_game1.groupby('Team')[['AS','opp AS','OR', 'opp OR','DR','opp DR', 'TR','opp TR','ST','opp ST', 'TO', 'opp TO','BLK', 'BLKR','PF', 'RF',"PIR",'opp PIR']].mean().reset_index().round(1)
-    interactive_table(basicstats.set_index('Team'),
-                      paging=False, height=900, width=2000, showIndex=True,
-                      classes="display order-column nowrap table_with_monospace_font", searching=False,
-                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
-with teamsshootstats:
-    shootstats=allstats_in_a_game1.groupby('Team')[['F2M','F2A', 'F3M', 'F3A', 'FTM', 'FTA','opp F2M','opp F2A', 'opp F3M', 'opp F3A', 'opp FTM', 'opp FTA']].mean().reset_index()
-    shootstats['2P(%)'] = 100 * (shootstats['F2M'] / shootstats['F2A'])
-    shootstats['3P(%)'] = 100 * (shootstats['F3M'] / shootstats['F3A'])
-    shootstats['FT(%)'] = 100 * (shootstats['FTM'] / shootstats['FTA'])
-    shootstats['opp 2P(%)'] = 100 * (shootstats['opp F2M'] / shootstats['opp F2A'])
-    shootstats['opp 3P(%)'] = 100 * (shootstats['opp F3M'] / shootstats['opp F3A'])
-    shootstats['opp FT(%)'] = 100 * (shootstats['opp FTM'] / shootstats['opp FTA'])
-    interactive_table(shootstats[['Team','F2M','F2A', '2P(%)','opp F2M','opp F2A','opp 2P(%)',
-                                  'F3M', 'F3A','3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)',
-                                  'FTM', 'FTA','FT(%)', 'opp FTM', 'opp FTA','opp FT(%)']].round(1).set_index('Team'),
-                      paging=False, height=900, width=2000, showIndex=True,
-                      classes="display order-column nowrap table_with_monospace_font", searching=False,
-                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
-with teamadvstats:
-    computestatsadv=allstats_in_a_game1.groupby('Team')[['F2M','F2A', 'F3M', 'F3A', 'FTM', 'FTA',
-                                              'opp F2M','opp F2A', 'opp F3M', 'opp F3A',
-                                              'opp FTM', 'opp FTA','AS','opp AS','OR',
-                                              'opp OR','DR','opp DR', 'TR','opp TR','ST',
-                                              'opp ST', 'TO', 'opp TO','BLK', 'BLKR','PF', 'RF',
-                                             'PTS','opp PTS','Possesions','opp Possesions']].mean().reset_index()
-    computestatsadv['Offensive Rating'] = 100 * (computestatsadv['PTS'] / computestatsadv['Possesions'])
-    computestatsadv['EFG(%)'] = 100 * (computestatsadv['F2M'] + 1.5 * computestatsadv['F3M']) / (
-            computestatsadv['F2A'] + computestatsadv['F3A'])
-    computestatsadv['TS(%)'] = 100 * (computestatsadv['PTS']) / (
-            2 * (computestatsadv['F2A'] + computestatsadv['F3A'] + 0.44 * computestatsadv['FTA']))
-    computestatsadv['FT Ratio'] = computestatsadv['FTA'] / (computestatsadv['F3A'] + computestatsadv['F2A'])
-    computestatsadv['AS-TO Ratio'] = computestatsadv['AS'] / computestatsadv['TO']
-    computestatsadv['TO Ratio'] = 100 * (computestatsadv['TO'] / computestatsadv['Possesions'])
-    computestatsadv['AS Ratio'] = 100 * (computestatsadv['AS'] / computestatsadv['Possesions'])
-    computestatsadv['Defensive Rating'] = 100 * (computestatsadv['opp PTS'] / computestatsadv['opp Possesions'])
-    computestatsadv['Net Rating'] = (computestatsadv['Offensive Rating'] - computestatsadv['Defensive Rating'])
-    computestatsadv['opp EFG(%)'] = 100 * (computestatsadv['opp F2M'] + 1.5 * computestatsadv['opp F3M']) / (
-                computestatsadv['opp F2A'] + computestatsadv['opp F3A'])
-    computestatsadv['opp TS(%)'] = 100 * (computestatsadv['opp PTS']) / (
-                2 * (computestatsadv['opp F2A'] + computestatsadv['opp F3A'] + 0.44 * computestatsadv['opp FTA']))
-    computestatsadv['opp FT Ratio'] = computestatsadv['opp FTA'] / (computestatsadv['opp F3A'] + computestatsadv['opp F2A'])
-    computestatsadv['opp AS-TO Ratio'] = computestatsadv['opp AS'] / computestatsadv['opp TO']
-    computestatsadv['opp TO Ratio'] = 100 * (computestatsadv['opp TO'] / computestatsadv['opp Possesions'])
-    computestatsadv['opp AS Ratio'] = 100 * (computestatsadv['opp AS'] / computestatsadv['opp Possesions'])
-    advstats=computestatsadv[['Team','Possesions','opp Possesions','Offensive Rating','Defensive Rating','Net Rating',
-                         'EFG(%)','opp EFG(%)','TS(%)','opp TS(%)','FT Ratio','opp FT Ratio','AS-TO Ratio',
-                         'opp AS-TO Ratio','TO Ratio','opp TO Ratio','AS Ratio','opp AS Ratio']].round(2)
+st.header("Basic Stats")
+basicstats=allstats_in_a_game1.groupby('Team')[['AS','opp AS','OR', 'opp OR','DR','opp DR', 'TR','opp TR','ST','opp ST', 'TO', 'opp TO','BLK', 'BLKR','PF', 'RF',"PIR",'opp PIR']].mean().reset_index().round(1)
+interactive_table(basicstats.set_index('Team'),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=False,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
-    interactive_table(advstats.set_index('Team'),
-                      paging=False, height=900, width=2000, showIndex=True,
-                      classes="display order-column nowrap table_with_monospace_font", searching=False,
-                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
+st.header("Shooting Stats")
+shootstats=allstats_in_a_game1.groupby('Team')[['F2M','F2A', 'F3M', 'F3A', 'FTM', 'FTA','opp F2M','opp F2A', 'opp F3M', 'opp F3A', 'opp FTM', 'opp FTA']].mean().reset_index()
+shootstats['2P(%)'] = 100 * (shootstats['F2M'] / shootstats['F2A'])
+shootstats['3P(%)'] = 100 * (shootstats['F3M'] / shootstats['F3A'])
+shootstats['FT(%)'] = 100 * (shootstats['FTM'] / shootstats['FTA'])
+shootstats['opp 2P(%)'] = 100 * (shootstats['opp F2M'] / shootstats['opp F2A'])
+shootstats['opp 3P(%)'] = 100 * (shootstats['opp F3M'] / shootstats['opp F3A'])
+shootstats['opp FT(%)'] = 100 * (shootstats['opp FTM'] / shootstats['opp FTA'])
+interactive_table(shootstats[['Team','F2M','F2A', '2P(%)','opp F2M','opp F2A','opp 2P(%)',
+                              'F3M', 'F3A','3P(%)', 'opp F3M', 'opp F3A', 'opp 3P(%)',
+                              'FTM', 'FTA','FT(%)', 'opp FTM', 'opp FTA','opp FT(%)']].round(1).set_index('Team'),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=False,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+st.header("Advanced Stats")
+computestatsadv=allstats_in_a_game1.groupby('Team')[['F2M','F2A', 'F3M', 'F3A', 'FTM', 'FTA',
+                                          'opp F2M','opp F2A', 'opp F3M', 'opp F3A',
+                                          'opp FTM', 'opp FTA','AS','opp AS','OR',
+                                          'opp OR','DR','opp DR', 'TR','opp TR','ST',
+                                          'opp ST', 'TO', 'opp TO','BLK', 'BLKR','PF', 'RF',
+                                         'PTS','opp PTS','Possesions','opp Possesions']].mean().reset_index()
+computestatsadv['Offensive Rating'] = 100 * (computestatsadv['PTS'] / computestatsadv['Possesions'])
+computestatsadv['EFG(%)'] = 100 * (computestatsadv['F2M'] + 1.5 * computestatsadv['F3M']) / (
+        computestatsadv['F2A'] + computestatsadv['F3A'])
+computestatsadv['TS(%)'] = 100 * (computestatsadv['PTS']) / (
+        2 * (computestatsadv['F2A'] + computestatsadv['F3A'] + 0.44 * computestatsadv['FTA']))
+computestatsadv['FT Ratio'] = computestatsadv['FTA'] / (computestatsadv['F3A'] + computestatsadv['F2A'])
+computestatsadv['AS-TO Ratio'] = computestatsadv['AS'] / computestatsadv['TO']
+computestatsadv['TO Ratio'] = 100 * (computestatsadv['TO'] / computestatsadv['Possesions'])
+computestatsadv['AS Ratio'] = 100 * (computestatsadv['AS'] / computestatsadv['Possesions'])
+computestatsadv['Defensive Rating'] = 100 * (computestatsadv['opp PTS'] / computestatsadv['opp Possesions'])
+computestatsadv['Net Rating'] = (computestatsadv['Offensive Rating'] - computestatsadv['Defensive Rating'])
+computestatsadv['opp EFG(%)'] = 100 * (computestatsadv['opp F2M'] + 1.5 * computestatsadv['opp F3M']) / (
+            computestatsadv['opp F2A'] + computestatsadv['opp F3A'])
+computestatsadv['opp TS(%)'] = 100 * (computestatsadv['opp PTS']) / (
+            2 * (computestatsadv['opp F2A'] + computestatsadv['opp F3A'] + 0.44 * computestatsadv['opp FTA']))
+computestatsadv['opp FT Ratio'] = computestatsadv['opp FTA'] / (computestatsadv['opp F3A'] + computestatsadv['opp F2A'])
+computestatsadv['opp AS-TO Ratio'] = computestatsadv['opp AS'] / computestatsadv['opp TO']
+computestatsadv['opp TO Ratio'] = 100 * (computestatsadv['opp TO'] / computestatsadv['opp Possesions'])
+computestatsadv['opp AS Ratio'] = 100 * (computestatsadv['opp AS'] / computestatsadv['opp Possesions'])
+advstats=computestatsadv[['Team','Possesions','opp Possesions','Offensive Rating','Defensive Rating','Net Rating',
+                     'EFG(%)','opp EFG(%)','TS(%)','opp TS(%)','FT Ratio','opp FT Ratio','AS-TO Ratio',
+                     'opp AS-TO Ratio','TO Ratio','opp TO Ratio','AS Ratio','opp AS Ratio']].round(2)
+
+interactive_table(advstats.set_index('Team'),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=False,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+st.header("Wins by period")
+periodwins=allstats_in_a_game1.groupby('Team')[['Q1W','Q1W_W','Q2W','Q2W_W','FHW','FHW_W','Q3W','Q3W_W',"Q4W",'Q4W_W','SHW','SHW_W','EXW','EXW_W']].sum().reset_index()
+periodwins=pd.merge(gameswins,periodwins)
+interactive_table(periodwins.set_index('Team'),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=False,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])

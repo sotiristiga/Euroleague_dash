@@ -555,16 +555,15 @@ try:
 
         defe.update_layout(
             autosize=True,
-            width=200,
-            height=180,
+            width=100,
+            height=150,
             margin=dict(
-                l=30,
-                r=50,
+                l=0,
+                r=0,
                 b=0,
-                t=40,
+                t=70,
                 pad=0
             ))
-
         st.write(defe)
 
         total_ratings = player1_stats.loc[player1_stats['Player'] == search_player_player1][
@@ -584,13 +583,13 @@ try:
 
         tot.update_layout(
             autosize=True,
-            width=200,
-            height=180,
+            width=100,
+            height=150,
             margin=dict(
-                l=30,
-                r=50,
+                l=0,
+                r=0,
                 b=0,
-                t=40,
+                t=70,
                 pad=0
             ))
 

@@ -324,7 +324,7 @@ st.sidebar.markdown('''
   * ## [Shooting Stats](#shooting-stats)
   * ## [Advanced Stats](#advanced-stats)
   * ## [Between teams games stats](#between-teams-games-stats)
-  * ## [Between Games Period points](#between-games-period-games)
+  * ## [Between Games Period points](#between-games-period-points)
   * ## [Between Games Basic Stats](#between-games-basic-stats)
   * ## [Between Games Shooting Stats](#between-games-shooting-stats)
   * ## [Between Games Advanced Stats](#between-games-advanced-stats)

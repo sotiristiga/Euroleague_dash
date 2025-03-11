@@ -671,14 +671,14 @@ try:
             title={'text': "Defense<br>"+compare_teams_team1}))
 
         defe1.update_layout(
-            autosize=True,
+           autosize=False,
             width=200,
             height=180,
             margin=dict(
                 l=30,
-                r=50,
+                r=30,
                 b=10,
-                t=70,
+                t=75,
                 pad=0
             ))
 
@@ -695,14 +695,14 @@ try:
             title={'text': "Overall<br>"+compare_teams_team1}))
 
         tot.update_layout(
-            autosize=True,
+            autosize=False,
             width=200,
             height=180,
             margin=dict(
                 l=30,
-                r=50,
+                r=30,
                 b=10,
-                t=70,
+                t=75,
                 pad=0
             ))
 
@@ -739,16 +739,15 @@ try:
 
         off2.update_layout(
             autosize=False,
-             width=200,
+            width=200,
             height=180,
             margin=dict(
                 l=30,
-                r=50,
-                b=0,
-                t=40,
+                r=30,
+                b=10,
+                t=75,
                 pad=0
             ))
-
         st.write(off2)
 
         defense_ratings2 = teamstats2[
@@ -768,17 +767,16 @@ try:
             title={'text': "Defense<br>"+compare_teams_team2}))
 
         defe2team.update_layout(
-            autosize=True,
-             width=200,
+            autosize=False,
+            width=200,
             height=180,
             margin=dict(
                 l=30,
-                r=50,
-                b=0,
-                t=40,
+                r=30,
+                b=10,
+                t=75,
                 pad=0
-            )
-        )
+            ))
 
         st.write(defe2team)
 
@@ -793,17 +791,16 @@ try:
             title={'text': "Overall<br>"+compare_teams_team2}))
 
         totteam.update_layout(
-            autosize=True,
-             width=200,
+            autosize=False,
+            width=200,
             height=180,
             margin=dict(
                 l=30,
-                r=50,
-                b=0,
-                t=40,
+                r=30,
+                b=10,
+                t=75,
                 pad=0
-            )
-        )
+            ))
 
         st.write(totteam)
 

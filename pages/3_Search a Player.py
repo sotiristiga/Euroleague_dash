@@ -1,4 +1,3 @@
-
 import requests
 import pandas as pd
 import seaborn as sns
@@ -13,26 +12,26 @@ from streamlit_dynamic_filters import DynamicFilters
 import urllib.request
 from PIL import Image
 import time
-from dplython import (DplyFrame, X, diamonds, select, sift, sample_n, sample_frac, head, arrange, mutate, group_by, summarize, DelayFunction)
+from dplython import (DplyFrame, X, diamonds, select, sift, sample_n, sample_frac, head, arrange, mutate, group_by,
+                      summarize, DelayFunction)
 from itables.streamlit import interactive_table
 from itables import to_html_datatable
 from streamlit.components.v1 import html
+from plotly.subplots import make_subplots
 
-
-st.set_page_config(layout='wide',page_title="Search a Player",page_icon="🏀")
+st.set_page_config(layout='wide', page_title="Head to Head teams", page_icon="🏀")
 st.sidebar.write("If an error message appears, please refresh the page")
 def download_image(url, save_as):
     urllib.request.urlretrieve(url, save_as)
 
 download_image('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png','eurologo.png')
 st.image(Image.open("eurologo.png"),width=100)
-
 def fixture_format1(Fixture):
-    if Fixture<=15:
+    if Fixture <= 15:
         return "First Round"
-    elif Fixture>15 and Fixture<=30:
+    elif Fixture > 15 and Fixture <= 30:
         return "Second Round"
-    elif Fixture==31:
+    elif Fixture == 31:
         return "PO 1"
     elif Fixture == 32:
         return "PO 2"
@@ -42,12 +41,14 @@ def fixture_format1(Fixture):
         return "PO 4"
     elif Fixture == 35:
         return "PO 5"
-    elif Fixture==36:
+    elif Fixture == 36:
         return "Semi Final"
-    elif Fixture==37:
+    elif Fixture == 37:
         return "Third Place"
-    elif Fixture==38:
+    elif Fixture == 38:
         return "Final"
+
+
 def fixture_format2(Fixture):
     if Fixture <= 15:
         return "First Round"
@@ -67,11 +68,15 @@ def fixture_format2(Fixture):
         return "Third Place"
     elif Fixture == 37:
         return "Final"
+
+
 def fixture_format3(Fixture):
     if Fixture <= 17:
         return "First Round"
     elif Fixture > 17 and Fixture <= 34:
         return "Second Round"
+
+
 def fixture_format4(Fixture):
     if Fixture <= 17:
         return "First Round"
@@ -94,38 +99,34 @@ def fixture_format4(Fixture):
     elif Fixture == 42:
         return "Final"
 
+
+
 def fixture_format5(Fixture):
-        if Fixture <= 17:
-            return "First Round"
-        elif Fixture > 17 and Fixture <= 34:
-            return "Second Round"
-        elif Fixture == 35:
-            return "PI 1"
-        elif Fixture == 36:
-            return "PI 2"
-        elif Fixture == 37:
-            return "PO 1"
-        elif Fixture == 38:
-            return "PO 2"
-        elif Fixture == 39:
-            return "PO 3"
-        elif Fixture == 40:
-            return "PO 4"
-        elif Fixture == 41:
-            return "PO 5"
-        elif Fixture == 42:
-            return "Semi Final"
-        elif Fixture == 43:
-            return "Third Place"
-        elif Fixture == 44:
-            return "Final"
+    if Fixture <= 17:
+        return "First Round"
+    elif Fixture > 17 and Fixture <= 34:
+        return "Second Round"
+    elif Fixture == 35:
+        return "PI 1"
+    elif Fixture == 36:
+        return "PI 2"
+    elif Fixture == 37:
+        return "PO 1"
+    elif Fixture == 38:
+        return "PO 2"
+    elif Fixture == 39:
+        return "PO 3"
+    elif Fixture == 40:
+        return "PO 4"
+    elif Fixture == 41:
+        return "PO 5"
+    elif Fixture == 42:
+        return "Semi Final"
+    elif Fixture == 43:
+        return "Third Place"
+    elif Fixture == 44:
+        return "Final"
 
-
-def wins_against_format(results):
-    if results == "W":
-        return 1
-    elif results=="L":
-        return 0
 
 euroleague_2016_2017_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2016_2017_playerstats.csv")
 euroleague_2016_2017_playerstats['idseason']=euroleague_2016_2017_playerstats['IDGAME'] + "_" + euroleague_2016_2017_playerstats['Season']
@@ -250,277 +251,396 @@ euroleague_2024_2025_results['Round']=euroleague_2024_2025_results['Fixture'].ap
 
 All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats])
 
-All_Seasons_res=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results])
+All_Seasons_results=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results])
+
+
+
+def games_format(HA, Fixture, Season, Team, Against):
+    if HA == "H":
+        return Fixture + " / " + Season + ' / ' + Team + ' - ' + Against
+    elif HA == "A":
+        return Fixture + " / " + Season + ' / ' + Against + ' - ' + Team
+
+
+def result_format(Win):
+    if Win == 1:
+        return "W"
+    elif Win == 0:
+        return "L"
+
+
+def period_win_format(S, C):
+    if S > C:
+        return 1
+    else:
+        return 0
+
+
+def result_format(Win):
+    if Win == 1:
+        return "W"
+    elif Win == 0:
+        return "L"
+
+
+def period_win_res_win_format(S, C, result):
+    if S > C and result == "W":
+        return 1
+    else:
+        return 0
+
+
+home_team = (All_Seasons_results[['Fixture', "Phase", "Home", "Away", "Home_Points", "Away_Points",
+                                  "Q1H", "Q2H", "Q3H", "Q4H", 'EXH', "Q1A", "Q2A", "Q3A", "Q4A", 'EXA', 'Season',
+                                  'Round', 'Home_win', 'idseason']]
+             .rename(columns={"Home": 'Team', "Away": 'Against', "Home_Points": 'Scored', "Away_Points": "Conceed",
+                              "Q1H": 'Q1S', "Q2H": 'Q2S', "Q3H": 'Q3S', "Q4H": 'Q4S', 'EXH': 'EXS', "Q1A": 'Q1C',
+                              "Q2A": 'Q2C', "Q3A": 'Q3C', "Q4A": 'Q4C', 'EXA': 'EXC', 'Home_win': 'Win'}))
+
+home_team['HA'] = "H"
+away_team = (All_Seasons_results[['Fixture', "Phase", "Home", "Away", "Home_Points", "Away_Points",
+                                  "Q1H", "Q2H", "Q3H", "Q4H", 'EXH', "Q1A", "Q2A", "Q3A", "Q4A", 'EXA', 'Season',
+                                  'Round', 'Away_win', 'idseason']]
+             .rename(columns={"Home": 'Against', "Away": 'Team', "Home_Points": 'Conceed', "Away_Points": "Scored",
+                              "Q1H": 'Q1C', "Q2H": 'Q2C', "Q3H": 'Q3C', "Q4H": 'Q4C', 'EXH': 'EXC', "Q1A": 'Q1S',
+                              "Q2A": 'Q2S', "Q3A": 'Q3S', "Q4A": 'Q4S', 'EXA': 'EXS', 'Away_win': 'Win'}))
+away_team['HA'] = "A"
+
+period_points = pd.concat([home_team, away_team])
+
+period_points["FHS"] = period_points["Q1S"] + period_points["Q2S"]
+period_points["FHC"] = period_points["Q1C"] + period_points["Q2C"]
+period_points["SHS"] = period_points["Q3S"] + period_points["Q4S"]
+period_points["SHC"] = period_points["Q3C"] + period_points["Q4C"]
+period_points["results"] = period_points["Win"].apply(result_format)
+period_points['EXS'].replace(0, np.nan, inplace=True)
+period_points['EXC'].replace(0, np.nan, inplace=True)
+
+
 st.sidebar.markdown('''
   * ## [Filters](#filters)
-  * ## [Player Ratings](#player-ratings)
+  * ## [Team Ratings](#team-ratings)
   * ## [Basic Stats](#basic-stats)
   * ## [Shooting Stats](#shooting-stats)
   * ## [Advanced Stats](#advanced-stats)
-  * ## [Stats by game](#stats-by-game)
-  * ## [Stats against each team](#stats-against-each-team)
+  * ## [Between teams games stats](#between-teams-games-stats)
+  * ## [Between Games Period points](#between-games-period-games)
+  * ## [Between Games Basic Stats](#between-games-basic-stats)
+  * ## [Between Games Shooting Stats](#between-games-shooting-stats)
+  * ## [Between Games Advanced Stats](#between-games-advanced-stats)
 
 ''', unsafe_allow_html=True)
 st.header("Filters")
-f1,f2,f3,f4,f5,f6=st.columns(6)
+f1,f2=st.columns(2)
 with f1:
-    search_player_player=st.selectbox("Choose a player:",All_Seasons['Player'].reset_index().sort_values('Player')['Player'].unique())
+    st.write("### Select First team filters")
+    f11,f12=st.columns(2)
+    with f11:
+        compare_teams_team1 = st.selectbox("Choose First Team:",
+                                                   All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
+        compare_teams_season_team1 = st.selectbox("Season(First Team):",
+                                                          ['2016-2017', '2017-2018', '2018-2019', '2019-2020',
+                                                           '2020-2021',
+                                                           '2021-2022', '2022-2023', '2023-2024', "2024-2025", 'All'],
+                                                          index=8)
+        compare_teams_phase_team1 = st.selectbox("Phase(First Team):",
+                                                         ['Regular Season', 'Play In', 'Play offs', 'Final Four',
+                                                          'All'],
+                                                         index=4)
+    with f12:
+        compare_teams_round_team1 = st.selectbox("Round(First Team):",
+                                                         ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2',
+                                                          'PO 3',
+                                                          'PO 4', 'PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],
+                                                         index=12)
+        compare_teams_ha_team1 = st.selectbox("Home or Away games(First Team):", ['A', 'H', 'All'], index=2)
+        compare_teams_wl_team1 = st.selectbox("Result(First Team):", ['W', 'L', 'All'], index=2)
+
 with f2:
-    selected_season_player1 = st.selectbox("Season:",
-                                                   ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                    '2021-2022', '2022-2023', '2023-2024', '2024-2025', 'All'], index=8)
+    st.write("### Select Second team filters")
+    f21,f22=st.columns(2)
+    with f21:
+        compare_teams_team2 = st.selectbox("Choose Second Team:",
+                                                   All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique(),index=1)
+        compare_teams_season_team2 = st.selectbox("Season(Second Team):",
+                                                          ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
+                                                           '2021-2022', '2022-2023', '2023-2024', "2024-2025", 'All'],
+                                                          index=8)
+        compare_teams_phase_team2 = st.selectbox("Phase(Second Team):",
+                                                         ['Regular Season', 'Play In', 'Play offs', 'Final Four',
+                                                          'All'],
+                                                         index=4)
+    with f22:
+        compare_teams_round_team2 = st.selectbox("Round(Second Team):",
+                                                         ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2',
+                                                          'PO 3',
+                                                          'PO 4', 'PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],
+                                                         index=12)
+        compare_teams_ha_team2 = st.selectbox("Home or Away games(Second Team):", ['A', 'H', 'All'], index=2)
+        compare_teams_wl_team2 = st.selectbox("Result(Second Team):", ['W', 'L', 'All'], index=2)
 
-with f3:
-    selected_phase_player1 = st.selectbox("Phase:",
-                                                  ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
-                                                  index=4)
-with f4:
-    selected_round_player1 = st.selectbox("Round:",
-                                                  ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2',
-                                                   'PO 3', 'PO 4', 'PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],
-                                                  index=12)
-with f5:
-    selected_ha_player1 = st.selectbox("Home or Away games:", ['A', 'H', 'All'], index=2)
-with f6:
-    selected_wl_player1 = st.selectbox("Result:", ['W', 'L', 'All'], index=2)
+
+def team_rating_stat_higher(dataset, stat):
+    dataset1 = dataset[["Team", stat]].sort_values(stat,ascending=True).reset_index()
+    dataset1.drop("index", axis=1, inplace=True)
+    final_dataset = dataset1.reset_index() >> mutate(Rating=(100 * (X.index + 1) / X.Team.nunique()),
+                                                     Rating1=(100 - (100 - X.Rating.round(0)) * 0.5).round(0))
+    final_dataset.rename(columns={'Rating1': 'Rating ' + stat}, inplace=True)
+    final_dataset.drop(["index", "Rating", stat], axis=1, inplace=True)
+    return final_dataset
 
 
-if "All" in selected_ha_player1:
-    selected_ha_player1 = ['A', 'H']
-    All_Seasons_filter=All_Seasons.loc[All_Seasons['HA'].isin(selected_ha_player1)]
-    select_ha_player1=''
+def team_rating_stat_lower(dataset, stat):
+    dataset1 = dataset[["Team", stat]].sort_values(stat, ascending=False).reset_index()
+    dataset1.drop("index", axis=1, inplace=True)
+    final_dataset = dataset1.reset_index() >> mutate(Rating=(100 * (X.index + 1) / X.Team.nunique()),
+                                                     Rating1=(100 - (100 - X.Rating.round(0)) * 0.5).round(0))
+    final_dataset.rename(columns={'Rating1': 'Rating ' + stat}, inplace=True)
+    final_dataset.drop(["index", "Rating", stat], axis=1, inplace=True)
+    return final_dataset
+
+
+def compute_team_stats(dataset_stats, dataset_periods, Team_select, ha, season, wl, phase, rounds):
+    finalstats = dataset_stats.groupby(['idseason', 'Team'])[['PTS', 'F2M',
+                                                              'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
+                                                              'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF',
+                                                              'PIR', 'Possesions']].sum().reset_index()
+    finalstats['2P(%)'] = 100 * (finalstats['F2M'] / finalstats['F2A'])
+    finalstats['3P(%)'] = 100 * (finalstats['F3M'] / finalstats['F3A'])
+    finalstats['FT(%)'] = 100 * (finalstats['FTM'] / finalstats['FTA'])
+    finalstats['Offensive Rating'] = 100 * (finalstats['PTS'] / finalstats['Possesions'])
+    finalstats['EFG(%)'] = 100 * (finalstats['F2M'] + 1.5 * finalstats['F3M']) / (finalstats['F2A'] + finalstats['F3A'])
+    finalstats['TS(%)'] = 100 * (finalstats['PTS']) / (
+                2 * (finalstats['F2A'] + finalstats['F3A'] + 0.44 * finalstats['FTA']))
+    finalstats['FT Ratio'] = finalstats['FTA'] / (finalstats['F3A'] + finalstats['F2A'])
+    finalstats['AS-TO Ratio'] = finalstats['AS'] / finalstats['TO']
+    finalstats['TO Ratio'] = 100 * (finalstats['TO'] / finalstats['Possesions'])
+    finalstats['AS Ratio'] = 100 * (finalstats['AS'] / finalstats['Possesions'])
+    finalstats = finalstats[
+        ['idseason', 'Team', 'PTS', 'F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'OR', 'DR',
+         'TR',
+         'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR', 'Possesions', 'Offensive Rating', 'EFG(%)',
+         'TS(%)', 'FT Ratio', 'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(1)
+
+    finalstats_opp = dataset_stats.groupby(['idseason', 'Against'])[['PTS', 'F2M',
+                                                                     'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
+                                                                     'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF',
+                                                                     'RF',
+                                                                     'PIR', 'Possesions']].sum().reset_index()
+
+    finalstats_opp['2P(%)'] = 100 * (finalstats_opp['F2M'] / finalstats_opp['F2A'])
+    finalstats_opp['3P(%)'] = 100 * (finalstats_opp['F3M'] / finalstats_opp['F3A'])
+    finalstats_opp['FT(%)'] = 100 * (finalstats_opp['FTM'] / finalstats_opp['FTA'])
+    finalstats_opp['Offensive Rating'] = 100 * (finalstats_opp['PTS'] / finalstats_opp['Possesions'])
+    finalstats_opp['EFG(%)'] = 100 * (finalstats_opp['F2M'] + 1.5 * finalstats_opp['F3M']) / (
+                finalstats_opp['F2A'] + finalstats_opp['F3A'])
+    finalstats_opp['TS(%)'] = 100 * (finalstats_opp['PTS']) / (
+                2 * (finalstats_opp['F2A'] + finalstats_opp['F3A'] + 0.44 * finalstats_opp['FTA']))
+    finalstats_opp['FT Ratio'] = finalstats_opp['FTA'] / (finalstats_opp['F3A'] + finalstats_opp['F2A'])
+    finalstats_opp['AS-TO Ratio'] = finalstats_opp['AS'] / finalstats_opp['TO']
+    finalstats_opp['TO Ratio'] = 100 * (finalstats_opp['TO'] / finalstats_opp['Possesions'])
+    finalstats_opp['AS Ratio'] = 100 * (finalstats_opp['AS'] / finalstats_opp['Possesions'])
+    finalstats_opp = finalstats_opp[
+        ['idseason', 'Against', 'PTS', 'F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'OR', 'DR',
+         'TR',
+         'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR', 'Possesions', 'Offensive Rating', 'EFG(%)',
+         'TS(%)', 'FT Ratio', 'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(1)
+    finalstats_opp = finalstats_opp.add_prefix('opp ').rename(
+        columns={'opp Against': 'Team', 'opp idseason': 'idseason'})
+
+    gamesstats = pd.merge(finalstats, finalstats_opp)
+    allstats_in_a_game = pd.merge(dataset_periods, gamesstats, on=['idseason', 'Team'])
+    if "All" in ha:
+        ha = ['A', 'H']
+        allstats_in_a_game1 = allstats_in_a_game.loc[allstats_in_a_game['HA'].isin(ha)]
+
+    else:
+        allstats_in_a_game1 = allstats_in_a_game.loc[allstats_in_a_game['HA'] == ha]
+
+    if "All" in season:
+        season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
+                  '2022-2023', '2023-2024',"2024-2025"]
+        allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Season'].isin(season)]
+
+    else:
+        allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Season'] == season]
+
+    if "All" in wl:
+        wl = ['W', 'L']
+        allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['results'].isin(wl)]
+
+    else:
+        allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['results'] == wl]
+
+    if "All" in phase:
+        phase = ['Regular Season', 'Play In', 'Play offs', 'Final Four']
+        allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Phase'].isin(phase)]
+
+
+    else:
+        allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Phase'] == phase]
+
+    if "All" in rounds:
+        rounds = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4',
+                  'PO 5', 'Semi Final', 'Third Place', 'Final']
+        allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Round'].isin(rounds)]
+
+
+    else:
+        allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Round'] == rounds]
+
+    avgteamstats = allstats_in_a_game1.groupby('Team')[['Q1S',
+                                                        'Q2S', 'Q1C', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q4S', 'Q3C', 'Q4C',
+                                                        'SHS', 'SHC', 'EXS', 'EXC',
+                                                        'PTS', 'opp PTS', 'AS', 'opp AS', 'F2M', 'F2A', 'opp F2M',
+                                                        'opp F2A',
+                                                        'F3M', 'F3A', 'opp F3M', 'opp F3A', 'FTM', 'FTA', 'opp FTM',
+                                                        'opp FTA',
+                                                        'OR', 'DR', 'TR', 'opp OR', 'opp DR', 'opp TR', 'ST', 'opp ST',
+                                                        'TO', 'opp TO', 'BLK', 'BLKR', 'PF', 'RF',
+                                                        'PIR', 'opp PIR', 'Possesions',
+                                                        'opp Possesions']].mean().reset_index().round(2)
+
+    avgteamstats['2P(%)'] = 100 * (avgteamstats['F2M'] / avgteamstats['F2A'])
+    avgteamstats['3P(%)'] = 100 * (avgteamstats['F3M'] / avgteamstats['F3A'])
+    avgteamstats['FT(%)'] = 100 * (avgteamstats['FTM'] / avgteamstats['FTA'])
+    avgteamstats['opp 2P(%)'] = 100 * (avgteamstats['opp F2M'] / avgteamstats['opp F2A'])
+    avgteamstats['opp 3P(%)'] = 100 * (avgteamstats['opp F3M'] / avgteamstats['opp F3A'])
+    avgteamstats['opp FT(%)'] = 100 * (avgteamstats['opp FTM'] / avgteamstats['opp FTA'])
+    avgteamstats['Offensive Rating'] = 100 * (avgteamstats['PTS'] / avgteamstats['Possesions'])
+    avgteamstats['EFG(%)'] = 100 * (avgteamstats['F2M'] + 1.5 * avgteamstats['F3M']) / (
+                avgteamstats['F2A'] + avgteamstats['F3A'])
+    avgteamstats['TS(%)'] = 100 * (avgteamstats['PTS']) / (
+            2 * (avgteamstats['F2A'] + avgteamstats['F3A'] + 0.44 * avgteamstats['FTA']))
+    avgteamstats['FT Ratio'] = avgteamstats['FTA'] / (avgteamstats['F3A'] + avgteamstats['F2A'])
+    avgteamstats['AS-TO Ratio'] = avgteamstats['AS'] / avgteamstats['TO']
+    avgteamstats['TO Ratio'] = 100 * (avgteamstats['TO'] / avgteamstats['Possesions'])
+    avgteamstats['AS Ratio'] = 100 * (avgteamstats['AS'] / avgteamstats['Possesions'])
+    avgteamstats['Defensive Rating'] = 100 * (avgteamstats['opp PTS'] / avgteamstats['opp Possesions'])
+    avgteamstats['opp EFG(%)'] = 100 * (avgteamstats['opp F2M'] + 1.5 * avgteamstats['opp F3M']) / (
+            avgteamstats['opp F2A'] + avgteamstats['opp F3A'])
+    avgteamstats['opp TS(%)'] = 100 * (avgteamstats['opp PTS']) / (
+            2 * (avgteamstats['opp F2A'] + avgteamstats['opp F3A'] + 0.44 * avgteamstats['opp FTA']))
+    avgteamstats['opp FT Ratio'] = avgteamstats['opp FTA'] / (avgteamstats['opp F3A'] + avgteamstats['opp F2A'])
+    avgteamstats['opp AS-TO Ratio'] = avgteamstats['opp AS'] / avgteamstats['opp TO']
+    avgteamstats['opp TO Ratio'] = 100 * (avgteamstats['opp TO'] / avgteamstats['opp Possesions'])
+    avgteamstats['opp AS Ratio'] = 100 * (avgteamstats['opp AS'] / avgteamstats['opp Possesions'])
+    colsplus = ['AS', 'F2M', 'F2A', 'F3M', 'F3A', 'FTM',
+                'FTA', 'OR', 'DR', 'TR', 'BLK', 'RF', 'ST', '2P(%)', '3P(%)', 'FT(%)', 'EFG(%)', 'TS(%)', 'FT Ratio',
+                'AS-TO Ratio',
+                'AS Ratio', 'opp TO Ratio', 'Offensive Rating']
+
+    colsminus = ['BLKR', 'PF', 'opp PTS', 'opp AS', 'opp F2M', 'opp F2A', 'opp 2P(%)', 'opp F3M', 'opp F3A',
+                 'opp 3P(%)',
+                 'opp FTM', 'opp FTA', 'opp FT(%)', 'opp OR', 'opp DR', 'opp TR', 'opp ST', 'Defensive Rating',
+                 'opp EFG(%)', 'opp TS(%)',
+                 'opp FT Ratio', 'opp AS-TO Ratio', 'opp AS Ratio', 'TO Ratio']
+
+    teams_ratings1 = team_rating_stat_higher(avgteamstats, "PTS")
+    for i in colsplus:
+        df2 = team_rating_stat_higher(avgteamstats, i)
+        teams_ratings1 = pd.merge(teams_ratings1, df2)
+
+    teams_ratings2 = team_rating_stat_lower(avgteamstats, "TO")
+    for i in colsminus:
+        df3 = team_rating_stat_lower(avgteamstats, i)
+        teams_ratings2 = pd.merge(teams_ratings2, df3)
+    teams_ratings = pd.merge(teams_ratings1, teams_ratings2)
+
+    all_avg_teamstats = pd.merge(avgteamstats, teams_ratings)
+    all_avg_teamstats = all_avg_teamstats.loc[all_avg_teamstats.Team == Team_select]
+    return all_avg_teamstats
+
+
+teamstats1 = compute_team_stats(All_Seasons, period_points, compare_teams_team1, compare_teams_ha_team1,
+                                compare_teams_season_team1, compare_teams_wl_team1, compare_teams_phase_team1,
+                                compare_teams_round_team1)
+teamstats2 = compute_team_stats(All_Seasons, period_points, compare_teams_team2, compare_teams_ha_team2,
+                                compare_teams_season_team2, compare_teams_wl_team2, compare_teams_phase_team2,
+                                compare_teams_round_team2)
+
+if "All" in compare_teams_ha_team1:
+    select_ha_player1 = ''
 else:
-    All_Seasons_filter=All_Seasons.loc[All_Seasons['HA']==selected_ha_player1]
-    select_ha_player1 = selected_ha_player1
+    select_ha_player1 = compare_teams_ha_team1
 
-if "All" in selected_season_player1:
-    selected_season_player1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025']
-    All_Seasons_filter=All_Seasons_filter.loc[All_Seasons_filter['Season'].isin(selected_season_player1)]
+if "All" in compare_teams_season_team1:
     select_season_player1 = ''
 else:
-    All_Seasons_filter=All_Seasons_filter.loc[All_Seasons_filter['Season']==selected_season_player1]
-    select_season_player1 = selected_season_player1
+    select_season_player1 = compare_teams_season_team1
 
-if "All" in selected_wl_player1:
-    selected_wl_player1 = ['W', 'L']
-    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['results'].isin(selected_wl_player1)]
+if "All" in compare_teams_wl_team1:
     select_wl_player1 = ''
 else:
-    All_Seasons_filter= All_Seasons_filter.loc[All_Seasons_filter['results'] == selected_wl_player1]
-    select_wl_player1 = selected_wl_player1
+    select_wl_player1 = compare_teams_wl_team1
 
-if "All" in selected_phase_player1:
-    selected_phase_player1 = ['Regular Season', 'Play In','Play offs', 'Final Four']
-    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Phase'].isin(selected_phase_player1)]
+if "All" in compare_teams_phase_team1:
     select_phase_player1 = ''
 else:
-    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Phase'] == selected_phase_player1]
-    select_phase_player1 = selected_phase_player1
+    select_phase_player1 = compare_teams_phase_team1
 
-if "All" in selected_round_player1:
-    selected_round_player1 = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final']
-    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Round'].isin(selected_round_player1)]
+if "All" in compare_teams_round_team1:
     select_round_player1 = ''
 else:
-    All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Round'] == selected_round_player1]
-    select_round_player1 = selected_round_player1
 
-All_Seasons_filter["Wins"]=All_Seasons_filter['results'].apply(wins_against_format)
+    select_round_player1 = compare_teams_round_team1
 
-All_Seasons_filter['PRA']=All_Seasons_filter.PTS+All_Seasons_filter.AS+All_Seasons_filter.TR
-All_Seasons_filter['PA']=All_Seasons_filter.PTS+All_Seasons_filter.AS
-All_Seasons_filter['PR']=All_Seasons_filter.PTS+All_Seasons_filter.TR
-All_Seasons_filter['RA']=All_Seasons_filter.AS+All_Seasons_filter.TR
-All_Seasons_filter['PB']=All_Seasons_filter.PTS+All_Seasons_filter.BLK
-All_Seasons_filter['SB']=All_Seasons_filter.ST+All_Seasons_filter.BLK
-finalAllSeasons=(All_Seasons_filter.loc[All_Seasons_filter.Player==search_player_player][['Against','Season','Phase','Round','Fixture','HA','results','Team',"Player",'MIN','PTS','F2M',
-                              'F2A','F2GP', 'F3M', 'F3A', 'F3GP','FTM', 'FTA', 'FTP','OR',
-                                         'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR','PRA', 'PA','PR','RA','PB','SB','PF', 'RF',
-                              'PIR','Possesions','Offensive_rating','EFG','True_shooting','FT_ratio','As_To_ratio',
-                              'Turnover_ratio','Assists_Ratio','Usage','OR_percent']]
-                 .rename(columns={"F2GP":'2P(%)',
-                               "F3GP":'3P(%)',
-                               "FTP":'FT(%)',
-                                'Offensive_rating':'Offensive Rating',
-                                  'EFG':'EFG(%)',
-                                  'True_shooting':'TS(%)',
-                                  'FT_ratio':'FT Ratio',
-                                  'As_To_ratio':'AS-TO Ratio',
-                                  'Turnover_ratio':'TO Ratio',
-                                  'Usage':'USG(%)',
-                                  'OR_percent':'OR(%)',
-                                  "results":'Result'})
-                 .set_index('Against'))
+if "All" in compare_teams_ha_team2:
+    select_ha_player2 = ''
+else:
+    select_ha_player2 = compare_teams_ha_team2
 
-def null_replace(x):
-    if x==' ':
-        return 0
-    else:
-        return x
+if "All" in compare_teams_season_team2:
+    select_season_player2 = ''
+else:
+    select_season_player2 = compare_teams_season_team2
 
-def compute_player_stats_each_team_against(dataset,Player):
-    player_wins_against = dataset.loc[(dataset['Player'] == Player)].groupby('Against')['Wins'].sum().reset_index()
-    player_games_against = dataset.loc[(dataset['Player'] == Player)]['Against'].value_counts().reset_index().rename(columns={"count": 'Games'})
+if "All" in compare_teams_wl_team2:
+    select_wl_player2 = ''
+else:
+    select_wl_player2 = compare_teams_wl_team2
 
-    computestats_against=dataset.groupby(['Player','Against'])[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().round(1).reset_index()
-    computestats_against['P2']=100*(computestats_against['F2M']/computestats_against['F2A'])
-    computestats_against['P3']=100*(computestats_against['F3M']/computestats_against['F3A'])
-    computestats_against['PFT']=100*(computestats_against['FTM']/computestats_against['FTA'])
-    computestats_against['POS']=0.96*(computestats_against['F2A']+computestats_against['F3A']-computestats_against['OR']+computestats_against['TO']+0.44*computestats_against['FTA'])
-    computestats_against['ORA']=100*(computestats_against['PTS']/computestats_against['POS'])
-    computestats_against['EFG']=100*(computestats_against['F2M']+1.5*computestats_against['F3M'])/(computestats_against['F2A']+computestats_against['F3A'])
-    computestats_against['TS']=100*(computestats_against['PTS'])/(2*(computestats_against['F2A']+computestats_against['F3A']+0.44*computestats_against['FTA']))
-    computestats_against['FTR']=computestats_against['FTA']/(computestats_against['F3A']+computestats_against['F2A'])
-    computestats_against['ASTOR']=computestats_against['AS']/computestats_against['TO']
-    computestats_against['TOR']=100*(computestats_against['TO']/computestats_against['POS'])
-    computestats_against['ASR']=100*(computestats_against['AS']/computestats_against['POS'])
-    computestats_against['USG'] = 100 * (((computestats_against['F3A'] + computestats_against['F2A']) + 0.44 * computestats_against['FTA'] + computestats_against['TO']) * (40)) / (computestats_against['MIN'] * (computestats_against['Team_F2A'] +computestats_against['Team_F3A'] + 0.44 * computestats_against['Team_FTA'] + computestats_against['Team_TO']))
-    computestats_against['ORP'] = (100 * computestats_against['OR']) / (computestats_against['Team_OR'] + computestats_against['Team_opp_OR'])
+if "All" in compare_teams_phase_team2:
+    select_phase_player2 = ''
+else:
+    select_phase_player2 = compare_teams_phase_team2
 
-    computestats_againstfinal = computestats_against.loc[computestats_against['Player'] == Player]
-    computestats_againstfinal.drop('Player',axis=1,inplace=True)
-    player_extra_against = pd.merge(player_games_against, player_wins_against)
-    computestats_againstfinal = pd.merge(player_extra_against, computestats_againstfinal)
+if "All" in compare_teams_round_team2:
+    select_round_player2 = ''
+else:
 
-    player_wins = dataset.loc[(dataset['Player'] == Player)].groupby('Player')['Wins'].sum().reset_index()
-    player_games = dataset.loc[(dataset['Player'] == Player)]['Player'].value_counts().reset_index().rename(columns={"count": 'Games'})
+    select_round_player2 = compare_teams_round_team2
+st.header("Team Ratings")
+t1, rat1 ,t2,rat2= st.columns([1, 1, 1,1])
+try:
 
-    computestats=dataset.groupby('Player')[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().round(1).reset_index()
-    computestats['P2']=100*(computestats['F2M']/computestats['F2A'])
-    computestats['P3']=100*(computestats['F3M']/computestats['F3A'])
-    computestats['PFT']=100*(computestats['FTM']/computestats['FTA'])
-    computestats['POS']=0.96*(computestats['F2A']+computestats['F3A']-computestats['OR']+computestats['TO']+0.44*computestats['FTA'])
-    computestats['ORA']=100*(computestats['PTS']/computestats['POS'])
-    computestats['EFG']=100*(computestats['F2M']+1.5*computestats['F3M'])/(computestats['F2A']+computestats['F3A'])
-    computestats['TS']=100*(computestats['PTS'])/(2*(computestats['F2A']+computestats['F3A']+0.44*computestats['FTA']))
-    computestats['FTR']=computestats['FTA']/(computestats['F3A']+computestats['F2A'])
-    computestats['ASTOR']=computestats['AS']/computestats['TO']
-    computestats['TOR']=100*(computestats['TO']/computestats['POS'])
-    computestats['ASR']=100*(computestats['AS']/computestats['POS'])
-    computestats['USG'] = 100 * (((computestats['F3A'] + computestats['F2A']) + 0.44 * computestats['FTA'] + computestats['TO']) * (40)) / (computestats['MIN'] * (computestats['Team_F2A'] +computestats['Team_F3A'] + 0.44 * computestats['Team_FTA'] + computestats['Team_TO']))
-    computestats['ORP'] = (100 * computestats['OR']) / (computestats['Team_OR'] + computestats['Team_opp_OR'])
+    with t1:
+        st.write('### Team 1: '+ compare_teams_team1)
+        st.write('Season: ' + select_season_player1)
+        st.write('Phase: ' + select_phase_player1)
+        st.write('Round: ' + select_round_player1)
+        st.write('Home or away: ' + select_ha_player1)
+        st.write('Result: ' + select_wl_player1)
+    with rat1:
+        offense_rating_data1 = teamstats1[
+            ['Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M',
+             'Rating F2A',
+             'Rating 2P(%)', 'Rating F3M', 'Rating F3A', 'Rating 3P(%)', 'Rating FTM', 'Rating FTA', 'Rating FT(%)',
+             'Rating FT Ratio',
+             'Rating EFG(%)', 'Rating TS(%)', "Rating Offensive Rating", 'Rating AS-TO Ratio', "Rating AS Ratio",
+             'Rating opp DR', 'Rating opp ST',
+             'Rating TO Ratio', 'Rating opp TO Ratio']].melt()
+        offense_ratings1 = offense_rating_data1['value'].mean()
 
-    computestatsfinal = computestats.loc[computestats['Player'] == Player]
-
-
-    player_extra = pd.merge(player_games, player_wins)
-    computestatsfinal = pd.merge(player_extra, computestatsfinal)
-    computestatsfinal['Against']='AVG'
-    computestatsfinal.drop('Player', axis=1, inplace=True)
-    computestatsfinal_total=pd.concat([computestatsfinal,computestats_againstfinal])
-
-
-
-    computestatsfinal_total=computestatsfinal_total.set_index('Against').round(1)
-    computestatsfinal_total=computestatsfinal_total[['Games','Wins','PTS', 'MIN', 'F2M', 'F2A','P2', 'F3M', 'F3A', 'P3','FTM', 'FTA', 'PFT','OR',
-                                         'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','POS','ORA','EFG','TS','FTR','ASTOR','TOR','ASR','USG','ORP']]
-
-
-    return computestatsfinal_total
-
-
-teams_min_games_played=pd.merge(All_Seasons_filter.loc[All_Seasons_filter['Player']==search_player_player].groupby(["Player",'Team'])['MIN'].mean().round(1).reset_index(),All_Seasons_filter.loc[All_Seasons_filter['Player']==search_player_player][["Player",'Team']].value_counts().reset_index()).rename(columns={'count':'Games'})
-
-computestats=All_Seasons_filter.groupby('Player')[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().round(1).reset_index()
-
-
-computestats['P2']=100*(computestats['F2M']/computestats['F2A'])
-computestats['P2']=computestats['P2'].fillna(0)
-computestats['P3']=100*(computestats['F3M']/computestats['F3A'])
-computestats['P3']=computestats['P3'].fillna(0)
-computestats['PFT']=100*(computestats['FTM']/computestats['FTA'])
-computestats['PFT']=computestats['PFT'].fillna(0)
-computestats['POS']=0.96*(computestats['F2A']+computestats['F3A']-computestats['OR']+computestats['TO']+0.44*computestats['FTA'])
-computestats['ORA']=100*(computestats['PTS']/computestats['POS'])
-computestats['ORA']=computestats['ORA'].fillna(0)
-computestats['EFG']=100*(computestats['F2M']+1.5*computestats['F3M'])/(computestats['F2A']+computestats['F3A'])
-computestats['EFG']=computestats['EFG'].fillna(0)
-computestats['TS']=100*(computestats['PTS'])/(2*(computestats['F2A']+computestats['F3A']+0.44*computestats['FTA']))
-computestats['TS']=computestats['TS'].fillna(0)
-computestats['FTR']=computestats['FTA']/(computestats['F3A']+computestats['F2A'])
-computestats['FTR']=computestats['FTR'].fillna(0)
-computestats['ASTOR']=computestats['AS']/computestats['TO']
-computestats['ASTOR']=computestats['ASTOR'].fillna(0)
-computestats['TOR']=100*(computestats['TO']/computestats['POS'])
-computestats['TOR']=computestats['TOR'].fillna(0)
-computestats['ASR']=100*(computestats['AS']/computestats['POS'])
-computestats['ASR']=computestats['ASR'].fillna(0)
-computestats['USG'] = 100 * (((computestats['F3A'] + computestats['F2A']) + 0.44 * computestats['FTA'] + computestats['TO']) * (40)) / (computestats['MIN'] * (computestats['Team_F2A'] +computestats['Team_F3A'] + 0.44 * computestats['Team_FTA'] + computestats['Team_TO']))
-computestats['USG']=computestats['USG'].fillna(0)
-computestats['ORP'] = (100 * computestats['OR']) / (computestats['Team_OR'] + computestats['Team_opp_OR'])
-def player_rating_stat_higher(dataset,stat,ascending=True):
-    dataset1=dataset[["Player",stat]].sort_values(stat).reset_index()
-    dataset1.drop("index",axis=1,inplace=True)
-    final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Player.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
-    final_dataset.rename(columns={'Rating1':'Rating_'+ stat},inplace=True)
-    final_dataset.drop(["index","Rating",stat],axis=1,inplace=True)
-    return final_dataset
-
-def player_rating_stat_lower(dataset,stat):
-    dataset1=dataset[["Player",stat]].sort_values(stat,ascending=False).reset_index()
-    dataset1.drop("index",axis=1,inplace=True)
-    final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Player.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
-    final_dataset.rename(columns={'Rating1':'Rating_'+ stat},inplace=True)
-    final_dataset.drop(["index","Rating",stat],axis=1,inplace=True)
-    return final_dataset
-
-
-player_rating_stat_higher(computestats,'PTS')
-
-colsplus=['AS', 'F2M', 'F2A', 'F3M', 'F3A', 'FTM',
-       'FTA', 'OR', 'DR', 'TR',  'BLK',  'RF', 'ST', 'P2', 'P3', 'PFT','ORA','EFG','TS','FTR','ASTOR','ASR','USG','ORP']
-
-
-colsminus=[ 'BLKR',
-       'PF','TOR' ]
-
-players_ratings1=player_rating_stat_higher(computestats,"PTS")
-for i in colsplus:
-    df2=player_rating_stat_higher(computestats,i)
-    players_ratings1=pd.merge(players_ratings1,df2)
-
-players_ratings2=player_rating_stat_lower(computestats,"TO")
-for i in colsminus:
-    df3=player_rating_stat_lower(computestats,i)
-    players_ratings2=pd.merge(players_ratings2,df3)
-
-
-players_ratings=pd.merge(players_ratings1,players_ratings2)
-computestats=computestats.loc[computestats['Player']==search_player_player]
-games=All_Seasons_filter.loc[All_Seasons_filter['Player'] == search_player_player][["Player"]].value_counts().reset_index().rename(columns={'count': 'Games'})
-computestats=pd.merge(computestats,games)
-teams_min_games_played = All_Seasons_filter.loc[All_Seasons_filter['Player'] == search_player_player][
-    ["Season", 'Team']].value_counts().reset_index()[
-    ["Season", 'Team']].sort_values('Season')
-st.header('Player Ratings')
-
-
-col1,col2,col3=st.columns([1,1,1])
-with col1:
-    st.write('### Player: ' + search_player_player)
-    st.write('Season: ' + select_season_player1)
-    st.write('Phase: ' + select_phase_player1)
-    st.write('Round: ' + select_round_player1)
-    st.write('Home or away: ' + select_ha_player1)
-    st.write('Result: ' + select_wl_player1)
-with col2:
-    try:
-        offense_rating_data = players_ratings.loc[players_ratings['Player'] == search_player_player][
-            ['Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_OR', 'Rating_BLKR', 'Rating_RF', 'Rating_F2M', 'Rating_F2A',
-             'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3',
-             'Rating_FTM', 'Rating_FTA', 'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS', "Rating_ORA",
-             'Rating_ASTOR', "Rating_TOR", "Rating_ASR", 'Rating_USG', 'Rating_ORP']].melt()
-        offense_ratings = offense_rating_data['value'].mean()
-
-        off = go.Figure(go.Indicator(
+        off1 = go.Figure(go.Indicator(
             mode="gauge+number",
-            value=offense_ratings.round(0),
+            value=offense_ratings1.round(0),
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Offense"}))
+            title={'text': "Offense<br>"+compare_teams_team1}))
 
-        off.update_layout(
+        off1.update_layout(
             autosize=False,
             width=200,
             height=180,
@@ -528,265 +648,624 @@ with col2:
                 l=30,
                 r=50,
                 b=0,
-                t=0,
+                t=40,
                 pad=0
             ))
 
-        st.write(off)
-        defense_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player][
-            ['Rating_ST', 'Rating_DR', 'Rating_PF', 'Rating_BLK']].melt()['value'].mean()
+        st.write(off1)
 
-        defe = go.Figure(go.Indicator(
+        defense_ratings1 = teamstats1[
+            ['Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK', 'Rating opp PTS', 'Rating opp AS',
+             'Rating opp F2M', 'Rating opp F2A', 'Rating opp 2P(%)', 'Rating opp F3M', 'Rating opp F3A',
+             'Rating opp 3P(%)',
+             'Rating opp FTM', 'Rating opp FTA', 'Rating opp FT(%)', 'Rating opp OR', 'Rating Defensive Rating',
+             'Rating opp EFG(%)', 'Rating opp TS(%)',
+             'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt()['value'].mean()
+
+        defe1 = go.Figure(go.Indicator(
             mode="gauge+number",
-            value=defense_ratings.round(0),
+            value=defense_ratings1.round(0),
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Defense"}))
+            title={'text': "Defense<br>"+compare_teams_team1}))
 
-        defe.update_layout(
+        defe1.update_layout(
             autosize=True,
-            width=200,
+             width=200,
             height=180,
             margin=dict(
                 l=30,
                 r=50,
                 b=0,
-                t=0,
+                t=40,
                 pad=0
             )
         )
 
-        st.write(defe)
-        total_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player].melt(id_vars='Player')[
-            'value'].mean()
+        st.write(defe1)
+
+        total_ratings1 = teamstats1.filter(regex='Rating').melt()['value'].mean()
 
         tot = go.Figure(go.Indicator(
             mode="gauge+number",
-            value=total_ratings.round(0),
+            value=total_ratings1.round(0),
             domain={'x': [0, 1], 'y': [0, 1]},
             gauge={'axis': {'range': [None, 100]},
                    'bordercolor': "gray"},
-            title={'text': "Overall"}))
+            title={'text': "Overall<br>"+compare_teams_team1}))
 
         tot.update_layout(
             autosize=True,
-            width=200,
-            height=180,
+             width=200,
+           height=180,
             margin=dict(
                 l=30,
                 r=50,
                 b=0,
-                t=0,
+                t=40,
                 pad=0
             )
         )
 
         st.write(tot)
 
-    except:
-        st.error("No data available with these parameters")
 
-with col3:
-    try:
-        team_min_games = go.Figure(data=go.Table(columnwidth=[1, 1, 1],
-                                                     header=dict(
-                                                         values=list(teams_min_games_played[['Team', 'Season']].columns),
-                                                         align='center', font_size=18, height=30), cells=dict(
-                    values=[teams_min_games_played.Team, teams_min_games_played.Season],
-                    align='center', font_size=16, height=30)))
+    with t2:
 
-        team_min_games.update_layout(
-            autosize=True,
-            width=400,
-            height=200,
+        st.write('### Team 2: '+ compare_teams_team2)
+        st.write('Season: ' + select_season_player2)
+        st.write('Phase: ' + select_phase_player2)
+        st.write('Round: ' + select_round_player2)
+        st.write('Home or away: ' + select_ha_player2)
+        st.write('Result: ' + select_wl_player2)
+    with rat2:
+
+        offense_rating_data2 = teamstats2[
+            ['Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M',
+             'Rating F2A',
+             'Rating 2P(%)', 'Rating F3M', 'Rating F3A', 'Rating 3P(%)', 'Rating FTM', 'Rating FTA', 'Rating FT(%)',
+             'Rating FT Ratio',
+             'Rating EFG(%)', 'Rating TS(%)', "Rating Offensive Rating", 'Rating AS-TO Ratio', "Rating AS Ratio",
+             'Rating opp DR', 'Rating opp ST',
+             'Rating TO Ratio', 'Rating opp TO Ratio']].melt()
+        offense_ratings2 = offense_rating_data2['value'].mean()
+
+        off2 = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=offense_ratings2.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Offense<br>"+compare_teams_team2}))
+
+        off2.update_layout(
+            autosize=False,
+             width=200,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
-                b=10,
-                t=10,
-                pad=10
+                b=0,
+                t=40,
+                pad=0
             ))
-        st.write('##### Teams Played')
-        st.write(team_min_games)
 
-    except:
-        st.error("No data available with these parameters")
+        st.write(off2)
+
+        defense_ratings2 = teamstats2[
+            ['Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK', 'Rating opp PTS', 'Rating opp AS',
+             'Rating opp F2M', 'Rating opp F2A', 'Rating opp 2P(%)', 'Rating opp F3M', 'Rating opp F3A',
+             'Rating opp 3P(%)',
+             'Rating opp FTM', 'Rating opp FTA', 'Rating opp FT(%)', 'Rating opp OR', 'Rating Defensive Rating',
+             'Rating opp EFG(%)', 'Rating opp TS(%)',
+             'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt()['value'].mean()
+
+        defe2team = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=defense_ratings2.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Defense<br>"+compare_teams_team2}))
+
+        defe2team.update_layout(
+            autosize=True,
+             width=200,
+            height=180,
+            margin=dict(
+                l=30,
+                r=50,
+                b=0,
+                t=40,
+                pad=0
+            )
+        )
+
+        st.write(defe2team)
+
+        total_ratings2 = teamstats2.filter(regex='Rating').melt()['value'].mean()
+
+        totteam = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=total_ratings2.round(0),
+            domain={'x': [0, 1], 'y': [0, 1]},
+            gauge={'axis': {'range': [None, 100]},
+                   'bordercolor': "gray"},
+            title={'text': "Overall<br>"+compare_teams_team2}))
+
+        totteam.update_layout(
+            autosize=True,
+             width=200,
+            height=180,
+            margin=dict(
+                l=30,
+                r=50,
+                b=0,
+                t=40,
+                pad=0
+            )
+        )
+
+        st.write(totteam)
+
+except:
+    st.error("No data available with this parameters")
+
 
 
 try:
 
-        st.write('### Basic Stats')
-        basic_stats=computestats[['Player','Games','MIN','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'BLKR', 'ST', 'PF', 'RF', 'PIR']].rename(columns={'PTS':'Points',
-                                                                                                                                'AS':'Assists',
-                                                                                                                                'TO':'Turnovers',
-                                                                                                                                'TR':'Total Rebounds',
-                                                                                                                                'OR':'Offensive Rebounds',
-                                                                                                                                'DR':'Defensive Rebounds',
-                                                                                                                                'BLK':'Blocks',
-                                                                                                                                'BLKR':'Blocks Reversed',
-                                                                                                                                'ST':'Steals',
-                                                                                                                                'PF':'Personal Fouls',
-                                                                                                                                'RF':'Fouls Drawn','MIN':'Minutes'})
-
-        interactive_table(basic_stats.set_index('Player'),
-                          paging=False, height=600, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
-
-        basic_player_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player][
-            ['Rating_PTS', 'Rating_AS', 'Rating_TO', 'Rating_TR', 'Rating_DR', 'Rating_OR', 'Rating_BLK', 'Rating_BLKR',
-             'Rating_ST', 'Rating_PF', 'Rating_RF']].rename(columns={'Rating_PTS': 'Points',
-                                                                     'Rating_AS': 'Assists',
-                                                                     'Rating_TO': 'Turnovers',
-                                                                     'Rating_TR': 'Total<br>Rebounds',
-                                                                     'Rating_OR': 'Offensive<br>Rebounds',
-                                                                     'Rating_DR': 'Defensive<br>Rebounds',
-                                                                     'Rating_BLK': 'Blocks',
-                                                                     'Rating_BLKR': 'Blocks<br>Reversed',
-                                                                     'Rating_ST': 'Steals',
-                                                                     'Rating_PF': 'Personal<br>Fouls',
-                                                                     'Rating_RF': 'Fouls<br>Drawn'}).melt()
-        basic_player_ratings['variable'] = basic_player_ratings['variable'].str.replace('Rating_', '')
-        basic_ratings = go.Figure(go.Barpolar(
-            r=basic_player_ratings['value'],
-            theta=basic_player_ratings['variable'],
-            marker_color='green',
-            marker_line_color="black",
-            marker_line_width=2,
-            opacity=0.8,
-            hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
-        ))
-
-        basic_ratings.update_layout(
-            title='Basic Stats Ratings',
-            template=None,
-            polar=dict(
-                radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
-                angularaxis=dict(showticklabels=True, ticks='')
-            ))
-
-        st.write(basic_ratings)
+    st.header("Period Stats")
+    periodteam1 = (teamstats1[
+                       ['Team','Q1S', 'Q1C', 'Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q3C', 'Q4S', 'Q4C', 'SHS', 'SHC',
+                        'EXS', 'EXC']]
+                   .rename(
+        columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
+                 'EXS': 'Extra time Scored', 'FHS': 'First Half Scored', 'SHS': 'Second Half Scored',
+                 'Q1C': 'Q1 Conceed', 'Q2C': 'Q2 Conceed', 'Q3C': 'Q3 Conceed', 'Q4C': 'Q4 Conceed',
+                 'EXC': 'Extra time Conceed', 'FHC': 'First Half Conceed', 'SHC': 'Second Half Conceed'
+                 }))
+    periodteam2 = (
+        teamstats2[
+            ['Team','Q1S', 'Q1C', 'Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q3C', 'Q4S', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC']]
+        .rename(columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
+                 'EXS': 'Extra time Scored', 'FHS': 'First Half Scored', 'SHS': 'Second Half Scored',
+                 'Q1C': 'Q1 Conceed', 'Q2C': 'Q2 Conceed', 'Q3C': 'Q3 Conceed', 'Q4C': 'Q4 Conceed',
+                 'EXC': 'Extra time Conceed', 'FHC': 'First Half Conceed', 'SHC': 'Second Half Conceed'
+                         })
+        )
+    periodteam1[
+        'Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
+    periodteam2[
+        'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
+    periodteams = pd.concat([periodteam1, periodteam2])
+    interactive_table(periodteams.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
-        st.write('### Shooting Stats')
-        shooting_stats=computestats[['Player','F2M', 'F2A', 'P2', 'F3M', 'F3A', 'P3', 'FTM', 'FTA', 'PFT', 'FTR', 'EFG', 'TS']].rename(columns={'F2M':'2P Made',
-                                                                                                                                       'F2A':'2P Attempt',
-                                                                                                                                       'P2':'2P(%)',
-                                                                                                                                       'F3M': '3P Made',
-                                                                                                                                       'F3A': '3P Attempt',
-                                                                                                                                       'P3': '3P(%)',
-                                                                                                                                       'FTM': 'FT Made',
-                                                                                                                                       'FTA': 'FT Attempt',
-                                                                                                                                       'PFT': 'FT(%)',
-                                                                                                                                       'FTR':'FT Ratio',
-                                                                                                                                       'EFG':'EFG(%)',
-                                                                                                                                       'TS':'TS(%)'}).round(1)
-        interactive_table(shooting_stats.set_index('Player'),
-                                  paging=False, height=900, width=2000, showIndex=True,
-                                  classes="display order-column nowrap table_with_monospace_font", searching=True,
-                                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+    st.header("Basic Stats")
 
-        shoot_player_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player][
-            ['Rating_F2M', 'Rating_F2A', 'Rating_P2', 'Rating_F3M', 'Rating_F3A', 'Rating_P3', 'Rating_FTM', 'Rating_FTA',
-             'Rating_PFT', 'Rating_FTR', 'Rating_EFG', 'Rating_TS']].rename(columns={'Rating_F2M': '2P Made',
-                                                                                     'Rating_F2A': '2P Attempt',
-                                                                                     'Rating_P2': '2P(%)',
-                                                                                     'Rating_F3M': '3P Made',
-                                                                                     'Rating_F3A': '3P Attempt',
-                                                                                     'Rating_P3': '3P(%)',
-                                                                                     'Rating_FTM': 'FT Made',
-                                                                                     'Rating_FTA': 'FT Attempt',
-                                                                                     'Rating_PFT': 'FT(%)',
-                                                                                     'Rating_FTR': 'FT Ratio',
-                                                                                     'Rating_EFG': 'EFG(%)',
-                                                                                     'Rating_TS': 'TS(%)'}).melt()
-        shoot_player_ratings['variable'] = shoot_player_ratings['variable'].str.replace('Rating_', '')
-        shoot_ratings = go.Figure(go.Barpolar(
-            r=shoot_player_ratings['value'],
-            theta=shoot_player_ratings['variable'],
-            marker_color='green',
-            marker_line_color="black",
-            marker_line_width=2,
-            opacity=0.8,
-            hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
-        ))
+    basic_stats1 = teamstats1[
+        ['Team','PTS', 'opp PTS', 'AS', 'opp AS', 'TO', 'opp TO', 'TR', 'DR', 'OR', 'opp TR', 'opp DR', 'opp OR',
+         'BLK', 'BLKR', 'ST', 'opp ST', 'PF', 'RF', 'PIR', 'opp PIR']].rename(
+        columns={'PTS': 'Points Scored',
+                 'AS': 'Assists made',
+                 'TO': 'Turnovers made',
+                 'TR': 'TotalRebounds taken',
+                 'OR': 'OffensiveRebounds taken',
+                 'DR': 'DefensiveRebounds taken',
+                 'opp PTS': 'Points Conceed',
+                 'opp AS': 'opp Assists',
+                 'opp TO': 'opp Turnovers',
+                 'opp TR': 'Total Rebounds opp taken',
+                 'opp OR': 'Offensive Rebounds opp taken',
+                 'opp DR': 'Defensive Rebounds opp taken',
+                 'BLK': 'Blocks',
+                 'BLKR': 'Blocks Reversed',
+                 'ST': 'Steals made',
+                 'opp ST': 'opp Steals',
+                 'PF': 'Personal Fouls',
+                 'RF': 'Fouls Drawn',
+                 'opp PIR': 'opp PIR'}).round(1)
 
-        shoot_ratings.update_layout(
-            title='Shooting Stats Ratings',
-            template=None,
-            hovermode="x",
-            polar=dict(
-                radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
-                angularaxis=dict(showticklabels=True, ticks='')
-            ))
+    basic_stats2 = teamstats2[
+        ['Team','PTS', 'opp PTS', 'AS', 'opp AS', 'TO', 'opp TO', 'TR', 'DR', 'OR', 'opp TR', 'opp DR', 'opp OR',
+         'BLK', 'BLKR', 'ST', 'opp ST', 'PF', 'RF', 'PIR', 'opp PIR']].rename(
+        columns={'PTS': 'Points Scored',
+                 'AS': 'Assists made',
+                 'TO': 'Turnovers made',
+                 'TR': 'TotalRebounds taken',
+                 'OR': 'OffensiveRebounds taken',
+                 'DR': 'DefensiveRebounds taken',
+                 'opp PTS': 'Points Conceed',
+                 'opp AS': 'opp Assists',
+                 'opp TO': 'opp Turnovers',
+                 'opp TR': 'Total Rebounds opp taken',
+                 'opp OR': 'Offensive Rebounds opp taken',
+                 'opp DR': 'Defensive Rebounds opp taken',
+                 'BLK': 'Blocks',
+                 'BLKR': 'Blocks Reversed',
+                 'ST': 'Steals made',
+                 'opp ST': 'opp Steals',
+                 'PF': 'Personal Fouls',
+                 'RF': 'Fouls Drawn',
+                 'opp PIR': 'opp PIR'}).round(1)
+    basic_stats1[
+        'Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
+    basic_stats2[
+        'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
 
-        st.write(shoot_ratings)
+    basic_stats_data = pd.concat([basic_stats1, basic_stats2])
+    interactive_table(basic_stats_data.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
+    st.header("Shooting Stats")
+    shooting_stats1 = teamstats1[
+        ['Team','F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)', 'F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A',
+         'opp 3P(%)', 'FTM', 'FTA', 'FT(%)', 'opp FTM', 'opp FTA', 'opp FT(%)',
+         'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)', 'TS(%)', 'opp TS(%)']].rename(
+        columns={'F2M': '2P Made',
+                 'F2A': '2P Attempt',
+                 'P2': '2P(%)',
+                 'F3M': '3P Made',
+                 'F3A': '3P Attempt',
+                 'P3': '3P(%)',
+                 'FTM': 'FT Made',
+                 'FTA': 'FT Attempt',
+                 'PFT': 'FT(%)',
+                 'FTR': 'FT Ratio',
+                 'EFG': 'EFG(%)',
+                 'TS': 'TS(%)',
+                 'opp F2M': 'opp 2P Made',
+                 'opp F2A': 'opp 2P Attempt',
+                 'opp 2P(%)': 'opp 2P(%)',
+                 'opp F3M': 'opp 3P Made',
+                 'opp F3A': 'opp 3P Attempt',
+                 'opp 3P(%)': 'opp 3P(%)',
+                 'opp FTM': 'opp FT Made',
+                 'opp FTA': 'opp FT Attempt',
+                 'opp FT(%)': 'opp FT(%)',
+                 'opp FTR': 'opp FT Ratio',
+                 'opp EFG(%)': 'opp EFG(%)',
+                 'opp TS(%)': 'opp TS(%)',
+                 'FT Ratio': 'FT Ratio',
+                 'opp FT Ratio': 'opp FT Ratio'})
 
+    shooting_stats2 = teamstats2[
+        ['Team','F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)', 'F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A',
+         'opp 3P(%)', 'FTM', 'FTA', 'FT(%)', 'opp FTM', 'opp FTA', 'opp FT(%)',
+         'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)', 'TS(%)', 'opp TS(%)']].rename(
+        columns={'F2M': '2P Made',
+                 'F2A': '2P Attempt',
+                 'P2': '2P(%)',
+                 'F3M': '3P Made',
+                 'F3A': '3P Attempt',
+                 'P3': '3P(%)',
+                 'FTM': 'FT Made',
+                 'FTA': 'FT Attempt',
+                 'PFT': 'FT(%)',
+                 'FTR': 'FT Ratio',
+                 'EFG': 'EFG(%)',
+                 'TS': 'TS(%)',
+                 'opp F2M': 'opp 2P Made',
+                 'opp F2A': 'opp 2P Attempt',
+                 'opp 2P(%)': 'opp 2P(%)',
+                 'opp F3M': 'opp 3P Made',
+                 'opp F3A': 'opp 3P Attempt',
+                 'opp 3P(%)': 'opp 3P(%)',
+                 'opp FTM': 'opp FT Made',
+                 'opp FTA': 'opp FT Attempt',
+                 'opp FT(%)': 'opp FT(%)',
+                 'opp FTR': 'opp FT Ratio',
+                 'opp EFG(%)': 'opp EFG(%)',
+                 'opp TS(%)': 'opp TS(%)',
+                 'FT Ratio': 'FT Ratio',
+                 'opp FT Ratio': 'opp FT Ratio'})
+    shooting_stats1[
+        'Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
+    shooting_stats2[
+        'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
+    shooting_stats_data = pd.concat([shooting_stats1, shooting_stats2])
 
+    interactive_table(shooting_stats_data.set_index('Team').round(1),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=True,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+    st.header("Advanced Stats")
+    advanced_stats1 = (teamstats1[['Team','Possesions', 'opp Possesions', 'Offensive Rating', 'Defensive Rating',
+                                   'AS-TO Ratio', 'opp AS-TO Ratio', 'TO Ratio', 'opp TO Ratio', 'AS Ratio',
+                                   'opp AS Ratio']]
+                     )
 
-        st.write('### Advanced Stats')
-        advanced_stats = computestats[['Player','POS', 'ORA', 'ASTOR', 'TOR', 'ASR', 'USG', 'ORP']].rename(columns={'POS':'Possesions',
-                                                                                                           'ORA':'Offensive Rating',
-                                                                                                           'ASTOR':'Assists/Turnovers Ratio',
-                                                                                                           'TOR':'Turnovers Ratio',
-                                                                                                           'ASR':'Assists Ratio',
-                                                                                                           'USG':'Usage(%)',
-                                                                                                           'ORP':'OR(%)'}).round(1)
-
-        interactive_table(advanced_stats.set_index('Player'),
-                                  paging=False, height=900, width=2000, showIndex=True,
-                                  classes="display order-column nowrap table_with_monospace_font", searching=True,
-                                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
-
-        adv_player_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player][
-                [ 'Rating_ORA', 'Rating_ASTOR', 'Rating_TOR', 'Rating_ASR', 'Rating_USG', 'Rating_ORP']].rename(columns={
-                                                                                                               'Rating_ORA':'Offensive<br>Rating',
-                                                                                                               'Rating_ASTOR':'Assists/Turnovers<br>Ratio',
-                                                                                                               'Rating_TOR':'Turnovers<br>Ratio',
-                                                                                                               'Rating_ASR':'Assists<br>Ratio',
-                                                                                                               'Rating_USG':'Usage(%)',
-                                                                                                               'Rating_ORP':'OR(%)'}).melt()
-        adv_ratings = go.Figure(go.Barpolar(
-            r=adv_player_ratings['value'],
-            theta=adv_player_ratings['variable'],
-            marker_color='green',
-            marker_line_color="black",
-            marker_line_width=2,
-            opacity=0.8,
-            hovertemplate='%{theta} <br>Rating: %{r:.f}<extra></extra>'
-        ))
-
-        adv_ratings.update_layout(
-            title='Advanced Stats Ratings',
-            template=None,
-            polar=dict(
-                radialaxis=dict(range=[0, 100], showticklabels=False, ticks=''),
-                angularaxis=dict(showticklabels=True, ticks='')
-            ))
-
-        st.write(adv_ratings)
+    advanced_stats2 = teamstats2[['Team','Possesions', 'opp Possesions', 'Offensive Rating', 'Defensive Rating',
+                                  'AS-TO Ratio', 'opp AS-TO Ratio', 'TO Ratio', 'opp TO Ratio', 'AS Ratio',
+                                  'opp AS Ratio']]
+    advanced_stats1['Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
+    advanced_stats2['Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
+    advanced_stats_data = pd.concat([advanced_stats1, advanced_stats2])
+    interactive_table(advanced_stats_data.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 except:
-    st.error("No data available with these parameters")
+    st.error("No data available with this parameters")
 
-st.header("Stats by game")
-interactive_table(finalAllSeasons.sort_values('Fixture', ascending=True),
-                  paging=False, height=960, width=20000, showIndex=True,
-                  classes="display order-column nowrap table_with_monospace_font", searching=True,
-                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+try:
+    st.header("Between teams games stats")
 
-st.header("Stats against each team")
-interactive_table(compute_player_stats_each_team_against(All_Seasons_filter, search_player_player),
-                  paging=False, height=960, width=20000, showIndex=True,
-                  classes="display order-column nowrap table_with_monospace_font", searching=True,
-                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+    def teams_format(Team):
+        if Team == compare_teams_team1:
+            return "Team 1"
+        elif Team == compare_teams_team2:
+            return "Team 2"
+
+
+    lnk = '<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">'
+
+
+    def metrics_customize(red, green, blue, iconname, sline, i):
+
+        htmlstr = f"""<p style='background-color: rgb({red},{green},{blue}, 0.75); 
+                            color: rgb(0,0,0, 0.75); 
+                            font-size: 25px; 
+                            border-radius: 7px; 
+                            padding-left: 12px; 
+                            padding-top: 18px; 
+                            padding-bottom: 18px; 
+                            line-height:25px;'>
+                            <i class='{iconname} fa-xs'></i> {i}
+                            </style><BR><span style='font-size: 22px; 
+                            margin-top: 0;'>{sline}</style></span></p>"""
+        return htmlstr
+
+
+    filters1, filters2 = st.columns(2)
+    with filters1:
+        team1=compare_teams_team1+" "+select_season_player1+" "+select_phase_player1+" "+select_round_player1+" "+select_ha_player1+" "+select_wl_player1
+        team2 = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
+        between_teams_ha_team = st.selectbox("Home team:", [team1, team2, 'All'], index=2)
+        between_teams_season_team = st.selectbox("Season:",
+                                                 ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
+                                                  '2021-2022', '2022-2023', '2023-2024','2024-2025', 'All'], index=8)
+    with filters2:
+        between_teams_phase_team = st.selectbox("Phase:",
+                                                ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
+                                                index=4)
+        between_teams_round_team = st.selectbox("Round:",
+                                                ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3',
+                                                 'PO 4', 'PO 5', 'Semi Final', 'Third Place', 'Final', 'All'], index=12)
+
+    teams = [compare_teams_team1, compare_teams_team2]
+    between_stats = All_Seasons.loc[(All_Seasons.Team.isin(teams)) & (All_Seasons.Against.isin(teams))]
+    between_stats['Team_select'] = between_stats['Team'].apply(teams_format)
+    between_periods = period_points.loc[(period_points.Team.isin(teams)) & (period_points.Against.isin(teams))]
+    between_periods['Team_select'] = between_periods['Team'].apply(teams_format)
+    if "All" in between_teams_ha_team:
+        between_stats1 = between_stats
+        between_periods1 = between_periods
+    elif compare_teams_team1 in between_teams_ha_team:
+        between_stats1 = between_stats.loc[((between_stats.HA == "H") & (between_stats.Team == compare_teams_team1)) | (
+                    (between_stats.HA == "A") & (between_stats.Team == compare_teams_team2))]
+        between_periods1 = between_periods.loc[
+            ((between_periods.HA == "H") & (between_periods.Team == compare_teams_team1)) | (
+                        (between_periods.HA == "A") & (between_periods.Team == compare_teams_team2))]
+    elif compare_teams_team2 in between_teams_ha_team:
+        between_stats1 = between_stats.loc[((between_stats.HA == "H") & (between_stats.Team == compare_teams_team2)) | (
+                    (between_stats.HA == "A") & (between_stats.Team == compare_teams_team1))]
+        between_periods1 = between_periods.loc[
+            ((between_periods.HA == "H") & (between_periods.Team == compare_teams_team2)) | (
+                        (between_periods.HA == "A") & (between_periods.Team == compare_teams_team1))]
+
+    if "All" in between_teams_season_team:
+        between_teams_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
+                                      '2022-2023', '2023-2024','2024-2025']
+        between_stats1 = between_stats1.loc[between_stats1['Season'].isin(between_teams_season_team1)]
+        between_periods1 = between_periods1.loc[between_periods1['Season'].isin(between_teams_season_team1)]
+    else:
+        between_stats1 = between_stats1.loc[between_stats1['Season'] == between_teams_season_team]
+        between_periods1 = between_periods1.loc[between_periods1['Season'] == between_teams_season_team]
+
+    if "All" in between_teams_phase_team:
+        between_teams_phase_team1 = ['Regular Season', 'Play In', 'Play offs', 'Final Four']
+        between_stats1 = between_stats1.loc[between_stats1['Phase'].isin(between_teams_phase_team1)]
+        between_periods1 = between_periods1.loc[between_periods1['Phase'].isin(between_teams_phase_team1)]
+    else:
+        between_stats1 = between_stats1.loc[between_stats1['Phase'] == between_teams_phase_team]
+        between_periods1 = between_periods1.loc[between_periods1['Phase'] == between_teams_phase_team]
+
+    if "All" in between_teams_round_team:
+        between_teams_round_team1 = ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4',
+                                     'PO 5', 'Semi Final', 'Third Place', 'Final']
+        between_stats1 = between_stats1.loc[between_stats1['Round'].isin(between_teams_round_team1)]
+        between_periods1 = between_periods1.loc[between_periods1['Round'].isin(between_teams_round_team1)]
+
+    else:
+        between_stats1 = between_stats1.loc[between_stats1['Round'] == between_teams_round_team]
+        between_periods1 = between_periods1.loc[between_periods1['Round'].isin(between_teams_round_team)]
+
+    wins = (between_stats1[['idseason', 'Team_select', 'results']]
+            .value_counts().reset_index()[['idseason', 'Team_select', 'results']]
+            .value_counts().reset_index().groupby(["Team_select", 'results'])['count']
+            .sum().reset_index())
+
+    try:
+        winsteam1 = wins.loc[(wins.results == "W") & (wins.Team_select == 'Team 1')]['count'].unique()[0]
+    except:
+        winsteam1 = 0
+    try:
+        winsteam2 = wins.loc[(wins.results == "W") & (wins.Team_select == 'Team 2')]['count'].unique()[0]
+    except:
+        winsteam2 = 0
+    kpi1, kpi2, kpi3 = st.columns(3)
+    with kpi1:
+        st.markdown(lnk + metrics_customize(204, 153, 0, "", between_stats1['idseason'].nunique(), "Total Games"),
+                    unsafe_allow_html=True)
+    with kpi2:
+        st.markdown(lnk + metrics_customize(204, 153, 0, "", winsteam1, compare_teams_team1 + " Wins"),
+                    unsafe_allow_html=True)
+    with kpi3:
+        st.markdown(lnk + metrics_customize(204, 153, 0, "", winsteam2, compare_teams_team2 + " Wins"),
+                    unsafe_allow_html=True)
+
+    finalstats = between_stats1.groupby(['idseason', 'Team'])[['PTS', 'F2M',
+                                                               'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
+                                                               'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF',
+                                                               'PIR', 'Possesions']].sum().reset_index().groupby(
+        'Team')[['PTS', 'F2M',
+                 'F2A', 'F3M', 'F3A', 'FTM', 'FTA', 'OR',
+                 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF',
+                 'PIR', 'Possesions']].mean().reset_index()
+
+    finalstats['2P(%)'] = 100 * (finalstats['F2M'] / finalstats['F2A'])
+    finalstats['3P(%)'] = 100 * (finalstats['F3M'] / finalstats['F3A'])
+    finalstats['FT(%)'] = 100 * (finalstats['FTM'] / finalstats['FTA'])
+    finalstats['Offensive Rating'] = 100 * (finalstats['PTS'] / finalstats['Possesions'])
+    finalstats['EFG(%)'] = 100 * (finalstats['F2M'] + 1.5 * finalstats['F3M']) / (finalstats['F2A'] + finalstats['F3A'])
+    finalstats['TS(%)'] = 100 * (finalstats['PTS']) / (
+                2 * (finalstats['F2A'] + finalstats['F3A'] + 0.44 * finalstats['FTA']))
+    finalstats['FT Ratio'] = finalstats['FTA'] / (finalstats['F3A'] + finalstats['F2A'])
+    finalstats['AS-TO Ratio'] = finalstats['AS'] / finalstats['TO']
+    finalstats['TO Ratio'] = 100 * (finalstats['TO'] / finalstats['Possesions'])
+    finalstats['AS Ratio'] = 100 * (finalstats['AS'] / finalstats['Possesions'])
+    finalstats = finalstats[
+        ['Team', 'PTS', 'F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'OR', 'DR', 'TR',
+         'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR', 'Possesions', 'Offensive Rating', 'EFG(%)',
+         'TS(%)', 'FT Ratio', 'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(1)
+
+    finalperiods = between_periods1.groupby('Team')[
+        ['Q1S', 'Q2S', 'Q1C', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q4S', 'Q3C', 'Q4C', 'SHS', 'SHC', 'EXS',
+         'EXC']].mean().reset_index().round(2)
+    final = pd.merge(finalperiods, finalstats)
+
+
+
+    st.header("Between Games Period points")
+    periodbetdata1 = final.loc[final.Team == compare_teams_team1][['Team','Q1S', 'Q2S', 'FHS',
+                                                                   'Q3S', 'Q4S',
+                                                                   'SHS', 'EXS', ]].rename(
+        columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
+                 'EXS': 'Extra time Scored', 'FHS': 'First Half Scored',
+                 'SHS': 'Second Half Scored'})
+
+    periodbetdata2 = final.loc[final.Team == compare_teams_team2][
+        ['Team','Q1S', 'Q2S', 'FHS',
+         'Q3S', 'Q4S',
+         'SHS', 'EXS', ]].rename(
+        columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
+                 'EXS': 'Extra time Scored', 'FHS': 'First Half Scored',
+                 'SHS': 'Second Half Scored'})
+    periodbetdata = pd.concat([periodbetdata1, periodbetdata2])
+
+    interactive_table(periodbetdata.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+    st.header("Between Games Basic Stats")
+    basicbetdata1 = final.loc[final.Team == compare_teams_team1][
+        ['Team','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'ST', 'PF', 'PIR']].rename(
+        columns={'PTS': 'Points Scored',
+                 'AS': 'Assists made',
+                 'TO': 'Turnovers made',
+                 'TR': 'TotalRebounds taken',
+                 'OR': 'OffensiveRebounds taken',
+                 'DR': 'DefensiveRebounds taken',
+                 'BLK': 'Blocks',
+                 'ST': 'Steals made',
+                 'PF': 'Personal Fouls'})
+
+    basicbetdata2 = final.loc[final.Team == compare_teams_team2][
+        ['Team','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'ST', 'PF', 'PIR']].rename(
+        columns={'PTS': 'Points Scored',
+                 'AS': 'Assists made',
+                 'TO': 'Turnovers made',
+                 'TR': 'TotalRebounds taken',
+                 'OR': 'OffensiveRebounds taken',
+                 'DR': 'DefensiveRebounds taken',
+                 'BLK': 'Blocks',
+                 'ST': 'Steals made',
+                 'PF': 'Personal Fouls'})
+    basicbetdata = pd.concat([basicbetdata1, basicbetdata2])
+    interactive_table(basicbetdata.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+    st.header("Between Games Shooting Stats")
+    shootbetdata1 = final.loc[final.Team == compare_teams_team1][
+        ['Team','F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'FT Ratio', 'EFG(%)',
+         'TS(%)']].rename(
+        columns={'F2M': '2P Made',
+                 'F2A': '2P Attempt',
+                 'P2': '2P(%)',
+                 'F3M': '3P Made',
+                 'F3A': '3P Attempt',
+                 'P3': '3P(%)',
+                 'FTM': 'FT Made',
+                 'FTA': 'FT Attempt',
+                 'PFT': 'FT(%)',
+                 'FTR': 'FT Ratio',
+                 'EFG': 'EFG(%)',
+                 'TS': 'TS(%)'})
+
+    shootbetdata2 = final.loc[final.Team == compare_teams_team2][
+        ['Team','F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'FT Ratio', 'EFG(%)',
+         'TS(%)']].rename(
+        columns={'F2M': '2P Made',
+                 'F2A': '2P Attempt',
+                 'P2': '2P(%)',
+                 'F3M': '3P Made',
+                 'F3A': '3P Attempt',
+                 'P3': '3P(%)',
+                 'FTM': 'FT Made',
+                 'FTA': 'FT Attempt',
+                 'PFT': 'FT(%)',
+                 'FTR': 'FT Ratio',
+                 'EFG': 'EFG(%)',
+                 'TS': 'TS(%)'})
+    shootbetdata = pd.concat([shootbetdata1, shootbetdata2])
+    interactive_table(shootbetdata.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+    st.header("Between Games Advanced Stats")
+    advbetdata1 = final.loc[final.Team == compare_teams_team1][['Team','Possesions', 'Offensive Rating',
+                                                                'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(
+        1)
+
+    advbetdata2 = final.loc[final.Team == compare_teams_team2][['Team','Possesions', 'Offensive Rating',
+                                                                'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(
+        1)
+    advbetdata = pd.concat([advbetdata1, advbetdata2])
+    interactive_table(advbetdata.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+except:
+    st.error("No data available with this parameters")

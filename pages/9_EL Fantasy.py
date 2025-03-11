@@ -303,17 +303,33 @@ period_points["results"]=period_points["Win"].apply(result_format)
 period_points['EXS'].replace(0, np.nan, inplace=True)
 period_points['EXC'].replace(0, np.nan, inplace=True)
 
+st.sidebar.markdown('''
+  * ## [Filters](#filters)
+  * ## [Teams PIR by Position](#teams-pir-by-position)
+  * ## [Players PIR win and lose](#players-pir-win-and-lose)
 
 
-
-
-
-
-search_team_season_team1 = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
-search_team_phase_team1 = st.sidebar.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
-search_team_round_team1 = st.sidebar.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
-search_team_ha_team1 = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
-search_team_wl_team1 = st.sidebar.selectbox("Result:",['W', 'L','All'],index=2)
+''', unsafe_allow_html=True)
+st.header("Filters")
+f1, f2, f3, f4, f5 = st.columns(5)
+with f1:
+    search_team_season_team1 = st.selectbox("Season:",
+                                                    ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
+                                                     '2021-2022', '2022-2023', '2023-2024', '2024-2025', 'All'],
+                                                    index=8)
+with f2:
+    search_team_phase_team1 = st.selectbox("Phase:",
+                                                   ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
+                                                   index=4)
+with f3:
+    search_team_round_team1 = st.selectbox("Round:",
+                                                   ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2',
+                                                    'PO 3', 'PO 4', 'PO 5', 'Semi Final', 'Third Place', 'Final',
+                                                    'All'], index=12)
+with f4:
+    search_team_ha_team1 = st.selectbox("Home or Away games:", ['A', 'H', 'All'], index=2)
+with f5:
+    search_team_wl_team1 = st.selectbox("Result:",['W', 'L','All'],index=2)
 
 
 if "All" in search_team_ha_team1:
@@ -364,56 +380,55 @@ All_seasons_pos=pd.merge(All_Seasons1,Positions,on='Player')
 All_seasons_pos['PIR+']=All_seasons_pos['PTS']+All_seasons_pos['AS']+All_seasons_pos['TR']+All_seasons_pos['ST']+All_seasons_pos['BLK']+All_seasons_pos['RF']
 All_seasons_pos['PIR-']=All_seasons_pos['F2A']-All_seasons_pos['F2M']+All_seasons_pos['F3A']-All_seasons_pos['F3M']+All_seasons_pos['FTA']-All_seasons_pos['FTM']+All_seasons_pos['TO']+All_seasons_pos['PF']+All_seasons_pos['BLKR']
 
-playerspir,teamspirpos=st.tabs(['Players PIR +/-',"Team's PIR by Position"])
-with playerspir:
+st.header("Teams PIR by Position")
+teams_pir=All_seasons_pos.groupby(['Team','idseason'])['PIR'].sum().round(1).reset_index().groupby('Team')['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Team's PIR"})
+against_pir=All_seasons_pos.groupby(['Against','idseason'])['PIR'].sum().round(1).reset_index().groupby('Against')['PIR'].mean().round(1).reset_index().rename(columns={'Against':'Team','PIR':"Opp.'s PIR"})
+teams_pir=pd.merge(teams_pir,against_pir,on='Team')
+
+
+stats_by_pos = All_seasons_pos.groupby(['Team', 'Position', 'idseason']).sum()['PIR'].groupby(
+        ['Team', 'Position']).mean().reset_index().round(1).sort_values('Position')
+
+stats_by_pos_c=stats_by_pos.loc[stats_by_pos.Position=='C'].rename(columns={'PIR':"Team's Centers PIR"})
+stats_by_pos_c.drop('Position',axis=1,inplace=True)
+stats_by_pos_f=stats_by_pos.loc[stats_by_pos.Position=='F'].rename(columns={'PIR':"Team's Forwards PIR"})
+stats_by_pos_f.drop('Position',axis=1,inplace=True)
+stats_by_pos_g=stats_by_pos.loc[stats_by_pos.Position=='G'].rename(columns={'PIR':"Team's Guards PIR"})
+stats_by_pos_g.drop('Position',axis=1,inplace=True)
+
+teams_pir_by_pos=pd.merge(stats_by_pos_g,stats_by_pos_f,on='Team')
+teams_pir_by_pos=pd.merge(teams_pir_by_pos,stats_by_pos_c,on='Team')
+
+
+stats_by_pos_opp = All_seasons_pos.groupby(['Against', 'Position', 'idseason']).sum()['PIR'].groupby(
+        ['Against', 'Position']).mean().reset_index().round(1).sort_values('Position')
+
+stats_by_pos_c_opp=stats_by_pos_opp.loc[stats_by_pos_opp.Position=='C'].rename(columns={'PIR':"Opp.'s Centers PIR","Against":'Team'})
+stats_by_pos_c_opp.drop('Position',axis=1,inplace=True)
+stats_by_pos_f_opp=stats_by_pos_opp.loc[stats_by_pos_opp.Position=='F'].rename(columns={'PIR':"Opp.'s Forwards PIR","Against":'Team'})
+stats_by_pos_f_opp.drop('Position',axis=1,inplace=True)
+stats_by_pos_g_opp=stats_by_pos_opp.loc[stats_by_pos_opp.Position=='G'].rename(columns={'PIR':"Opp.'s Guards PIR","Against":'Team'})
+stats_by_pos_g_opp.drop('Position',axis=1,inplace=True)
+opp_pir_by_pos=pd.merge(stats_by_pos_g_opp,stats_by_pos_f_opp,on='Team')
+opp_pir_by_pos=pd.merge(opp_pir_by_pos,stats_by_pos_c_opp,on='Team')
+pir_by_pos=pd.merge(teams_pir_by_pos,opp_pir_by_pos)
+pir_by_pos=pd.merge(pir_by_pos,teams_pir)
+interactive_table(pir_by_pos[['Team',"Team's Guards PIR","Team's Forwards PIR","Team's Centers PIR","Team's PIR","Opp.'s Guards PIR","Opp.'s Forwards PIR","Opp.'s Centers PIR","Opp.'s PIR"]].set_index('Team'),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
 
-    player_pir=All_seasons_pos.groupby('Player')[['PIR+','PIR-','PIR']].mean().round(1).reset_index()
+st.header("Players PIR win and lose")
+player_pir=All_seasons_pos.groupby('Player')[['PIR+','PIR-','PIR']].mean().round(1).reset_index()
 
-    interactive_table(player_pir.set_index('Player'),
-                          paging=False, height=900, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+interactive_table(player_pir.set_index('Player'),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
-with teamspirpos:
-    teams_pir=All_seasons_pos.groupby(['Team','idseason'])['PIR'].sum().round(1).reset_index().groupby('Team')['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Team's PIR"})
-    against_pir=All_seasons_pos.groupby(['Against','idseason'])['PIR'].sum().round(1).reset_index().groupby('Against')['PIR'].mean().round(1).reset_index().rename(columns={'Against':'Team','PIR':"Opp.'s PIR"})
-    teams_pir=pd.merge(teams_pir,against_pir,on='Team')
-
-
-    stats_by_pos = All_seasons_pos.groupby(['Team', 'Position', 'idseason']).sum()['PIR'].groupby(
-            ['Team', 'Position']).mean().reset_index().round(1).sort_values('Position')
-
-    stats_by_pos_c=stats_by_pos.loc[stats_by_pos.Position=='C'].rename(columns={'PIR':"Team's Centers PIR"})
-    stats_by_pos_c.drop('Position',axis=1,inplace=True)
-    stats_by_pos_f=stats_by_pos.loc[stats_by_pos.Position=='F'].rename(columns={'PIR':"Team's Forwards PIR"})
-    stats_by_pos_f.drop('Position',axis=1,inplace=True)
-    stats_by_pos_g=stats_by_pos.loc[stats_by_pos.Position=='G'].rename(columns={'PIR':"Team's Guards PIR"})
-    stats_by_pos_g.drop('Position',axis=1,inplace=True)
-
-    teams_pir_by_pos=pd.merge(stats_by_pos_g,stats_by_pos_f,on='Team')
-    teams_pir_by_pos=pd.merge(teams_pir_by_pos,stats_by_pos_c,on='Team')
-
-
-    stats_by_pos_opp = All_seasons_pos.groupby(['Against', 'Position', 'idseason']).sum()['PIR'].groupby(
-            ['Against', 'Position']).mean().reset_index().round(1).sort_values('Position')
-
-    stats_by_pos_c_opp=stats_by_pos_opp.loc[stats_by_pos_opp.Position=='C'].rename(columns={'PIR':"Opp.'s Centers PIR","Against":'Team'})
-    stats_by_pos_c_opp.drop('Position',axis=1,inplace=True)
-    stats_by_pos_f_opp=stats_by_pos_opp.loc[stats_by_pos_opp.Position=='F'].rename(columns={'PIR':"Opp.'s Forwards PIR","Against":'Team'})
-    stats_by_pos_f_opp.drop('Position',axis=1,inplace=True)
-    stats_by_pos_g_opp=stats_by_pos_opp.loc[stats_by_pos_opp.Position=='G'].rename(columns={'PIR':"Opp.'s Guards PIR","Against":'Team'})
-    stats_by_pos_g_opp.drop('Position',axis=1,inplace=True)
-    opp_pir_by_pos=pd.merge(stats_by_pos_g_opp,stats_by_pos_f_opp,on='Team')
-    opp_pir_by_pos=pd.merge(opp_pir_by_pos,stats_by_pos_c_opp,on='Team')
-    pir_by_pos=pd.merge(teams_pir_by_pos,opp_pir_by_pos)
-    pir_by_pos=pd.merge(pir_by_pos,teams_pir)
-    interactive_table(pir_by_pos[['Team',"Team's Guards PIR","Team's Forwards PIR","Team's Centers PIR","Team's PIR","Opp.'s Guards PIR","Opp.'s Forwards PIR","Opp.'s Centers PIR","Opp.'s PIR"]].set_index('Team'),
-                          paging=False, height=900, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])

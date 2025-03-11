@@ -647,8 +647,8 @@ try:
             margin=dict(
                 l=30,
                 r=50,
-                b=0,
-                t=40,
+                b=10,
+                t=70,
                 pad=0
             ))
 
@@ -672,16 +672,15 @@ try:
 
         defe1.update_layout(
             autosize=True,
-             width=200,
+            width=200,
             height=180,
             margin=dict(
                 l=30,
                 r=50,
-                b=0,
-                t=40,
+                b=10,
+                t=70,
                 pad=0
-            )
-        )
+            ))
 
         st.write(defe1)
 
@@ -697,16 +696,15 @@ try:
 
         tot.update_layout(
             autosize=True,
-             width=200,
-           height=180,
+            width=200,
+            height=180,
             margin=dict(
                 l=30,
                 r=50,
-                b=0,
-                t=40,
+                b=10,
+                t=70,
                 pad=0
-            )
-        )
+            ))
 
         st.write(tot)
 

@@ -245,11 +245,26 @@ euroleague_2024_2025_results['Round']=euroleague_2024_2025_results['Fixture'].ap
 All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats])
 
 All_Seasons_results=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results])
-selected_season = st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
-selected_phase = st.sidebar.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
-selected_round = st.sidebar.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
-selected_ha = st.sidebar.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
-selected_wl = st.sidebar.selectbox("Result:",['W', 'L','All'],index=2)
+
+st.sidebar.markdown('''
+  * ## [Filters](#filters)
+  * ## [Teams Ratings](#teams-ratings)
+  * ## [Players Ratings](#players-ratings)
+  
+
+''', unsafe_allow_html=True)
+st.header("Filters")
+f1,f2,f3,f4,f5=st.columns(5)
+with f1:
+    selected_season = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
+with f2:
+    selected_phase = st.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
+with f3:
+    selected_round = st.selectbox("Round:",['First Round', 'Second Round','PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3', 'PO 4','PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],index=12)
+with f4:
+    selected_ha = st.selectbox("Home or Away games:",['A', 'H', 'All'],index=2)
+with f5:
+    selected_wl = st.selectbox("Result:",['W', 'L','All'],index=2)
 
 def team_rating_stat_higher(dataset,stat):
     dataset1=dataset[["Team",stat]].sort_values(stat,ascending=True).reset_index()
@@ -453,185 +468,183 @@ def null_replace(x):
         return x
 
 
-teams,players=st.tabs(['Team Ratings','Player Ratings'])
-with teams:
+
+st.header("Teams Ratings")
+
+avgteamstats = allstats_in_a_game1.groupby('Team')[['Q1S',
+                                                    'Q2S', 'Q1C', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q4S', 'Q3C', 'Q4C',
+                                                    'SHS', 'SHC', 'EXS', 'EXC',
+                                                    'PTS', 'opp PTS', 'AS', 'opp AS', 'F2M', 'F2A', 'opp F2M',
+                                                    'opp F2A',
+                                                    'F3M', 'F3A', 'opp F3M', 'opp F3A', 'FTM', 'FTA', 'opp FTM',
+                                                    'opp FTA',
+                                                    'OR', 'DR', 'TR', 'opp OR', 'opp DR', 'opp TR', 'ST', 'opp ST',
+                                                    'TO', 'opp TO', 'BLK', 'BLKR', 'PF', 'RF',
+                                                    'PIR', 'opp PIR', 'Possesions',
+                                                    'opp Possesions']].mean().reset_index().round(2)
+
+avgteamstats['2P(%)'] = 100 * (avgteamstats['F2M'] / avgteamstats['F2A'])
+avgteamstats['3P(%)'] = 100 * (avgteamstats['F3M'] / avgteamstats['F3A'])
+avgteamstats['FT(%)'] = 100 * (avgteamstats['FTM'] / avgteamstats['FTA'])
+avgteamstats['opp 2P(%)'] = 100 * (avgteamstats['opp F2M'] / avgteamstats['opp F2A'])
+avgteamstats['opp 3P(%)'] = 100 * (avgteamstats['opp F3M'] / avgteamstats['opp F3A'])
+avgteamstats['opp FT(%)'] = 100 * (avgteamstats['opp FTM'] / avgteamstats['opp FTA'])
+avgteamstats['Offensive Rating'] = 100 * (avgteamstats['PTS'] / avgteamstats['Possesions'])
+avgteamstats['EFG(%)'] = 100 * (avgteamstats['F2M'] + 1.5 * avgteamstats['F3M']) / (
+            avgteamstats['F2A'] + avgteamstats['F3A'])
+avgteamstats['TS(%)'] = 100 * (avgteamstats['PTS']) / (
+        2 * (avgteamstats['F2A'] + avgteamstats['F3A'] + 0.44 * avgteamstats['FTA']))
+avgteamstats['FT Ratio'] = avgteamstats['FTA'] / (avgteamstats['F3A'] + avgteamstats['F2A'])
+avgteamstats['AS-TO Ratio'] = avgteamstats['AS'] / avgteamstats['TO']
+avgteamstats['TO Ratio'] = 100 * (avgteamstats['TO'] / avgteamstats['Possesions'])
+avgteamstats['AS Ratio'] = 100 * (avgteamstats['AS'] / avgteamstats['Possesions'])
+avgteamstats['Defensive Rating'] = 100 * (avgteamstats['opp PTS'] / avgteamstats['opp Possesions'])
+avgteamstats['opp EFG(%)'] = 100 * (avgteamstats['opp F2M'] + 1.5 * avgteamstats['opp F3M']) / (
+        avgteamstats['opp F2A'] + avgteamstats['opp F3A'])
+avgteamstats['opp TS(%)'] = 100 * (avgteamstats['opp PTS']) / (
+        2 * (avgteamstats['opp F2A'] + avgteamstats['opp F3A'] + 0.44 * avgteamstats['opp FTA']))
+avgteamstats['opp FT Ratio'] = avgteamstats['opp FTA'] / (avgteamstats['opp F3A'] + avgteamstats['opp F2A'])
+avgteamstats['opp AS-TO Ratio'] = avgteamstats['opp AS'] / avgteamstats['opp TO']
+avgteamstats['opp TO Ratio'] = 100 * (avgteamstats['opp TO'] / avgteamstats['opp Possesions'])
+avgteamstats['opp AS Ratio'] = 100 * (avgteamstats['opp AS'] / avgteamstats['opp Possesions'])
+colsplus = ['AS', 'F2M', 'F2A', 'F3M', 'F3A', 'FTM',
+            'FTA', 'OR', 'DR', 'TR', 'BLK', 'RF', 'ST', '2P(%)', '3P(%)', 'FT(%)', 'EFG(%)', 'TS(%)', 'FT Ratio',
+            'AS-TO Ratio',
+            'AS Ratio', 'opp TO Ratio', 'Offensive Rating']
+
+colsminus = ['BLKR', 'PF', 'opp PTS', 'opp AS', 'opp F2M', 'opp F2A', 'opp 2P(%)', 'opp F3M', 'opp F3A',
+             'opp 3P(%)',
+             'opp FTM', 'opp FTA', 'opp FT(%)', 'opp OR', 'opp DR', 'opp TR', 'opp ST', 'Defensive Rating',
+             'opp EFG(%)', 'opp TS(%)',
+             'opp FT Ratio', 'opp AS-TO Ratio', 'opp AS Ratio', 'TO Ratio']
+
+teams_ratings1 = team_rating_stat_higher(avgteamstats, "PTS")
+for i in colsplus:
+    df2 = team_rating_stat_higher(avgteamstats, i)
+    teams_ratings1 = pd.merge(teams_ratings1, df2)
+
+teams_ratings2 = team_rating_stat_lower(avgteamstats, "TO")
+for i in colsminus:
+    df3 = team_rating_stat_lower(avgteamstats, i)
+    teams_ratings2 = pd.merge(teams_ratings2, df3)
+teams_ratings = pd.merge(teams_ratings1, teams_ratings2)
+
+offense_rating_data = teams_ratings[
+    ['Team', 'Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M',
+     'Rating F2A',
+     'Rating 2P(%)', 'Rating F3M', 'Rating F3A', 'Rating 3P(%)', 'Rating FTM', 'Rating FTA', 'Rating FT(%)',
+     'Rating FT Ratio',
+     'Rating EFG(%)', 'Rating TS(%)', "Rating Offensive Rating", 'Rating AS-TO Ratio', "Rating AS Ratio",
+     'Rating opp DR', 'Rating opp ST',
+     'Rating TO Ratio', 'Rating opp TO Ratio']].melt(id_vars='Team').groupby('Team')[
+    'value'].mean().reset_index().rename(columns={"value": "Offense"})
+
+defense_ratings_data = teams_ratings[
+    ['Team', 'Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK', 'Rating opp PTS', 'Rating opp AS',
+     'Rating opp F2M', 'Rating opp F2A', 'Rating opp 2P(%)', 'Rating opp F3M', 'Rating opp F3A', 'Rating opp 3P(%)',
+     'Rating opp FTM', 'Rating opp FTA', 'Rating opp FT(%)', 'Rating opp OR', 'Rating Defensive Rating',
+     'Rating opp EFG(%)', 'Rating opp TS(%)',
+     'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt(id_vars='Team').groupby('Team')[
+    'value'].mean().reset_index().rename(columns={"value": "Defense"})
+
+total_ratings_data = teams_ratings.melt(id_vars='Team').groupby('Team')['value'].mean().reset_index().rename(
+    columns={"value": "Overall"})
+
+ratings_team = pd.merge(pd.merge(offense_rating_data, defense_ratings_data), total_ratings_data)
+
+interactive_table(ratings_team.round(0).set_index('Team').sort_values('Overall',ascending=False),
+                  paging=False, height=900, width=4000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=True,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+st.header("Players Ratings")
+computestats=All_Seasons_filter.groupby('Player')[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().round(1).reset_index()
+
+
+computestats['P2']=100*(computestats['F2M']/computestats['F2A'])
+computestats['P2']=computestats['P2'].fillna(0)
+computestats['P3']=100*(computestats['F3M']/computestats['F3A'])
+computestats['P3']=computestats['P3'].fillna(0)
+computestats['PFT']=100*(computestats['FTM']/computestats['FTA'])
+computestats['PFT']=computestats['PFT'].fillna(0)
+computestats['POS']=0.96*(computestats['F2A']+computestats['F3A']-computestats['OR']+computestats['TO']+0.44*computestats['FTA'])
+computestats['ORA']=100*(computestats['PTS']/computestats['POS'])
+computestats['ORA']=computestats['ORA'].fillna(0)
+computestats['EFG']=100*(computestats['F2M']+1.5*computestats['F3M'])/(computestats['F2A']+computestats['F3A'])
+computestats['EFG']=computestats['EFG'].fillna(0)
+computestats['TS']=100*(computestats['PTS'])/(2*(computestats['F2A']+computestats['F3A']+0.44*computestats['FTA']))
+computestats['TS']=computestats['TS'].fillna(0)
+computestats['FTR']=computestats['FTA']/(computestats['F3A']+computestats['F2A'])
+computestats['FTR']=computestats['FTR'].fillna(0)
+computestats['ASTOR']=computestats['AS']/computestats['TO']
+computestats['ASTOR']=computestats['ASTOR'].fillna(0)
+computestats['TOR']=100*(computestats['TO']/computestats['POS'])
+computestats['TOR']=computestats['TOR'].fillna(0)
+computestats['ASR']=100*(computestats['AS']/computestats['POS'])
+computestats['ASR']=computestats['ASR'].fillna(0)
+computestats['USG'] = 100 * (((computestats['F3A'] + computestats['F2A']) + 0.44 * computestats['FTA'] + computestats['TO']) * (40)) / (computestats['MIN'] * (computestats['Team_F2A'] +computestats['Team_F3A'] + 0.44 * computestats['Team_FTA'] + computestats['Team_TO']))
+computestats['USG']=computestats['USG'].fillna(0)
+computestats['ORP'] = (100 * computestats['OR']) / (computestats['Team_OR'] + computestats['Team_opp_OR'])
+def player_rating_stat_higher(dataset,stat):
+    dataset1=dataset[["Player",stat]].sort_values(stat,ascending=True).reset_index()
+    dataset1.drop("index",axis=1,inplace=True)
+    final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Player.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
+    final_dataset.rename(columns={'Rating1':'Rating '+ stat},inplace=True)
+    final_dataset.drop(["index","Rating",stat],axis=1,inplace=True)
+    return final_dataset
+
+def player_rating_stat_lower(dataset,stat):
+    dataset1=dataset[["Player",stat]].sort_values(stat,ascending=False).reset_index()
+    dataset1.drop("index",axis=1,inplace=True)
+    final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Player.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
+    final_dataset.rename(columns={'Rating1':'Rating '+ stat},inplace=True)
+    final_dataset.drop(["index","Rating",stat],axis=1,inplace=True)
+    return final_dataset
+
+
+player_rating_stat_higher(computestats,'PTS')
+
+colsplus=['AS', 'F2M', 'F2A', 'F3M', 'F3A', 'FTM',
+       'FTA', 'OR', 'DR', 'TR',  'BLK',  'RF', 'ST', 'P2', 'P3', 'PFT','ORA','EFG','TS','FTR','ASTOR','ASR','USG','ORP']
+
+
+colsminus=[ 'BLKR',
+       'PF','TOR' ]
+
+players_ratings1=player_rating_stat_higher(computestats,"PTS")
+for i in colsplus:
+    df2=player_rating_stat_higher(computestats,i)
+    players_ratings1=pd.merge(players_ratings1,df2)
+
+players_ratings2=player_rating_stat_lower(computestats,"TO")
+for i in colsminus:
+    df3=player_rating_stat_lower(computestats,i)
+    players_ratings2=pd.merge(players_ratings2,df3)
+
+
+players_ratings=pd.merge(players_ratings1,players_ratings2)
 
 
 
-    avgteamstats = allstats_in_a_game1.groupby('Team')[['Q1S',
-                                                        'Q2S', 'Q1C', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q4S', 'Q3C', 'Q4C',
-                                                        'SHS', 'SHC', 'EXS', 'EXC',
-                                                        'PTS', 'opp PTS', 'AS', 'opp AS', 'F2M', 'F2A', 'opp F2M',
-                                                        'opp F2A',
-                                                        'F3M', 'F3A', 'opp F3M', 'opp F3A', 'FTM', 'FTA', 'opp FTM',
-                                                        'opp FTA',
-                                                        'OR', 'DR', 'TR', 'opp OR', 'opp DR', 'opp TR', 'ST', 'opp ST',
-                                                        'TO', 'opp TO', 'BLK', 'BLKR', 'PF', 'RF',
-                                                        'PIR', 'opp PIR', 'Possesions',
-                                                        'opp Possesions']].mean().reset_index().round(2)
 
-    avgteamstats['2P(%)'] = 100 * (avgteamstats['F2M'] / avgteamstats['F2A'])
-    avgteamstats['3P(%)'] = 100 * (avgteamstats['F3M'] / avgteamstats['F3A'])
-    avgteamstats['FT(%)'] = 100 * (avgteamstats['FTM'] / avgteamstats['FTA'])
-    avgteamstats['opp 2P(%)'] = 100 * (avgteamstats['opp F2M'] / avgteamstats['opp F2A'])
-    avgteamstats['opp 3P(%)'] = 100 * (avgteamstats['opp F3M'] / avgteamstats['opp F3A'])
-    avgteamstats['opp FT(%)'] = 100 * (avgteamstats['opp FTM'] / avgteamstats['opp FTA'])
-    avgteamstats['Offensive Rating'] = 100 * (avgteamstats['PTS'] / avgteamstats['Possesions'])
-    avgteamstats['EFG(%)'] = 100 * (avgteamstats['F2M'] + 1.5 * avgteamstats['F3M']) / (
-                avgteamstats['F2A'] + avgteamstats['F3A'])
-    avgteamstats['TS(%)'] = 100 * (avgteamstats['PTS']) / (
-            2 * (avgteamstats['F2A'] + avgteamstats['F3A'] + 0.44 * avgteamstats['FTA']))
-    avgteamstats['FT Ratio'] = avgteamstats['FTA'] / (avgteamstats['F3A'] + avgteamstats['F2A'])
-    avgteamstats['AS-TO Ratio'] = avgteamstats['AS'] / avgteamstats['TO']
-    avgteamstats['TO Ratio'] = 100 * (avgteamstats['TO'] / avgteamstats['Possesions'])
-    avgteamstats['AS Ratio'] = 100 * (avgteamstats['AS'] / avgteamstats['Possesions'])
-    avgteamstats['Defensive Rating'] = 100 * (avgteamstats['opp PTS'] / avgteamstats['opp Possesions'])
-    avgteamstats['opp EFG(%)'] = 100 * (avgteamstats['opp F2M'] + 1.5 * avgteamstats['opp F3M']) / (
-            avgteamstats['opp F2A'] + avgteamstats['opp F3A'])
-    avgteamstats['opp TS(%)'] = 100 * (avgteamstats['opp PTS']) / (
-            2 * (avgteamstats['opp F2A'] + avgteamstats['opp F3A'] + 0.44 * avgteamstats['opp FTA']))
-    avgteamstats['opp FT Ratio'] = avgteamstats['opp FTA'] / (avgteamstats['opp F3A'] + avgteamstats['opp F2A'])
-    avgteamstats['opp AS-TO Ratio'] = avgteamstats['opp AS'] / avgteamstats['opp TO']
-    avgteamstats['opp TO Ratio'] = 100 * (avgteamstats['opp TO'] / avgteamstats['opp Possesions'])
-    avgteamstats['opp AS Ratio'] = 100 * (avgteamstats['opp AS'] / avgteamstats['opp Possesions'])
-    colsplus = ['AS', 'F2M', 'F2A', 'F3M', 'F3A', 'FTM',
-                'FTA', 'OR', 'DR', 'TR', 'BLK', 'RF', 'ST', '2P(%)', '3P(%)', 'FT(%)', 'EFG(%)', 'TS(%)', 'FT Ratio',
-                'AS-TO Ratio',
-                'AS Ratio', 'opp TO Ratio', 'Offensive Rating']
+offense_rating_data=players_ratings[['Player','Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M', 'Rating F2A',
+     'Rating P2', 'Rating F3M', 'Rating F3A', 'Rating P3','Rating FTM', 'Rating FTA', 'Rating PFT', 'Rating FTR',
+     'Rating EFG', 'Rating TS', "Rating ORA",'Rating ASTOR','Rating TOR', "Rating ASR", 'Rating ORP']].melt(id_vars='Player').groupby('Player')['value'].mean().reset_index().rename(columns={"value":"Offense"})
 
-    colsminus = ['BLKR', 'PF', 'opp PTS', 'opp AS', 'opp F2M', 'opp F2A', 'opp 2P(%)', 'opp F3M', 'opp F3A',
-                 'opp 3P(%)',
-                 'opp FTM', 'opp FTA', 'opp FT(%)', 'opp OR', 'opp DR', 'opp TR', 'opp ST', 'Defensive Rating',
-                 'opp EFG(%)', 'opp TS(%)',
-                 'opp FT Ratio', 'opp AS-TO Ratio', 'opp AS Ratio', 'TO Ratio']
 
-    teams_ratings1 = team_rating_stat_higher(avgteamstats, "PTS")
-    for i in colsplus:
-        df2 = team_rating_stat_higher(avgteamstats, i)
-        teams_ratings1 = pd.merge(teams_ratings1, df2)
+defense_ratings_data = players_ratings[
+    ['Player','Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK']].melt(id_vars='Player').groupby('Player')['value'].mean().reset_index().rename(columns={"value":"Defense"})
 
-    teams_ratings2 = team_rating_stat_lower(avgteamstats, "TO")
-    for i in colsminus:
-        df3 = team_rating_stat_lower(avgteamstats, i)
-        teams_ratings2 = pd.merge(teams_ratings2, df3)
-    teams_ratings = pd.merge(teams_ratings1, teams_ratings2)
 
-    offense_rating_data = teams_ratings[
-        ['Team', 'Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M',
-         'Rating F2A',
-         'Rating 2P(%)', 'Rating F3M', 'Rating F3A', 'Rating 3P(%)', 'Rating FTM', 'Rating FTA', 'Rating FT(%)',
-         'Rating FT Ratio',
-         'Rating EFG(%)', 'Rating TS(%)', "Rating Offensive Rating", 'Rating AS-TO Ratio', "Rating AS Ratio",
-         'Rating opp DR', 'Rating opp ST',
-         'Rating TO Ratio', 'Rating opp TO Ratio']].melt(id_vars='Team').groupby('Team')[
-        'value'].mean().reset_index().rename(columns={"value": "Offense"})
+total_ratings_data = players_ratings.melt(id_vars='Player').groupby('Player')['value'].mean().reset_index().rename(columns={"value":"Overall"})
 
-    defense_ratings_data = teams_ratings[
-        ['Team', 'Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK', 'Rating opp PTS', 'Rating opp AS',
-         'Rating opp F2M', 'Rating opp F2A', 'Rating opp 2P(%)', 'Rating opp F3M', 'Rating opp F3A', 'Rating opp 3P(%)',
-         'Rating opp FTM', 'Rating opp FTA', 'Rating opp FT(%)', 'Rating opp OR', 'Rating Defensive Rating',
-         'Rating opp EFG(%)', 'Rating opp TS(%)',
-         'Rating opp FT Ratio', 'Rating opp AS-TO Ratio', 'Rating opp AS Ratio']].melt(id_vars='Team').groupby('Team')[
-        'value'].mean().reset_index().rename(columns={"value": "Defense"})
+ratings=pd.merge(pd.merge(offense_rating_data,defense_ratings_data),total_ratings_data)
 
-    total_ratings_data = teams_ratings.melt(id_vars='Team').groupby('Team')['value'].mean().reset_index().rename(
-        columns={"value": "Overall"})
-
-    ratings_team = pd.merge(pd.merge(offense_rating_data, defense_ratings_data), total_ratings_data)
-
-    interactive_table(ratings_team.round(0).set_index('Team').sort_values('Overall',ascending=False),
+interactive_table(ratings.round(0).set_index('Player').sort_values('Overall',ascending=False),
                       paging=False, height=900, width=4000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
                       scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
-
-with players:
-    computestats=All_Seasons_filter.groupby('Player')[['PTS','MIN','F2M', 'F2A','F3M', 'F3A','FTM', 'FTA','OR', 'DR', 'TR', 'AS', 'ST', 'TO', 'BLK', 'BLKR', 'PF', 'RF', 'PIR','Team_PTS','Team_F2M', 'Team_F2A','Team_F3M', 'Team_F3A','Team_FTM', 'Team_FTA','Team_OR', 'Team_DR', 'Team_TR', 'Team_AS', 'Team_ST', 'Team_TO', 'Team_BLK', 'Team_PF','Team_opp_PTS','Team_opp_F2M', 'Team_opp_F2A','Team_opp_F3M', 'Team_opp_F3A','Team_opp_FTM', 'Team_opp_FTA','Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().round(1).reset_index()
-
-
-    computestats['P2']=100*(computestats['F2M']/computestats['F2A'])
-    computestats['P2']=computestats['P2'].fillna(0)
-    computestats['P3']=100*(computestats['F3M']/computestats['F3A'])
-    computestats['P3']=computestats['P3'].fillna(0)
-    computestats['PFT']=100*(computestats['FTM']/computestats['FTA'])
-    computestats['PFT']=computestats['PFT'].fillna(0)
-    computestats['POS']=0.96*(computestats['F2A']+computestats['F3A']-computestats['OR']+computestats['TO']+0.44*computestats['FTA'])
-    computestats['ORA']=100*(computestats['PTS']/computestats['POS'])
-    computestats['ORA']=computestats['ORA'].fillna(0)
-    computestats['EFG']=100*(computestats['F2M']+1.5*computestats['F3M'])/(computestats['F2A']+computestats['F3A'])
-    computestats['EFG']=computestats['EFG'].fillna(0)
-    computestats['TS']=100*(computestats['PTS'])/(2*(computestats['F2A']+computestats['F3A']+0.44*computestats['FTA']))
-    computestats['TS']=computestats['TS'].fillna(0)
-    computestats['FTR']=computestats['FTA']/(computestats['F3A']+computestats['F2A'])
-    computestats['FTR']=computestats['FTR'].fillna(0)
-    computestats['ASTOR']=computestats['AS']/computestats['TO']
-    computestats['ASTOR']=computestats['ASTOR'].fillna(0)
-    computestats['TOR']=100*(computestats['TO']/computestats['POS'])
-    computestats['TOR']=computestats['TOR'].fillna(0)
-    computestats['ASR']=100*(computestats['AS']/computestats['POS'])
-    computestats['ASR']=computestats['ASR'].fillna(0)
-    computestats['USG'] = 100 * (((computestats['F3A'] + computestats['F2A']) + 0.44 * computestats['FTA'] + computestats['TO']) * (40)) / (computestats['MIN'] * (computestats['Team_F2A'] +computestats['Team_F3A'] + 0.44 * computestats['Team_FTA'] + computestats['Team_TO']))
-    computestats['USG']=computestats['USG'].fillna(0)
-    computestats['ORP'] = (100 * computestats['OR']) / (computestats['Team_OR'] + computestats['Team_opp_OR'])
-    def player_rating_stat_higher(dataset,stat):
-        dataset1=dataset[["Player",stat]].sort_values(stat,ascending=True).reset_index()
-        dataset1.drop("index",axis=1,inplace=True)
-        final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Player.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
-        final_dataset.rename(columns={'Rating1':'Rating '+ stat},inplace=True)
-        final_dataset.drop(["index","Rating",stat],axis=1,inplace=True)
-        return final_dataset
-
-    def player_rating_stat_lower(dataset,stat):
-        dataset1=dataset[["Player",stat]].sort_values(stat,ascending=False).reset_index()
-        dataset1.drop("index",axis=1,inplace=True)
-        final_dataset=dataset1.reset_index() >> mutate(Rating=(100*(X.index+1)/X.Player.nunique()),Rating1=(100-(100-X.Rating.round(0))*0.5).round(0))
-        final_dataset.rename(columns={'Rating1':'Rating '+ stat},inplace=True)
-        final_dataset.drop(["index","Rating",stat],axis=1,inplace=True)
-        return final_dataset
-
-
-    player_rating_stat_higher(computestats,'PTS')
-
-    colsplus=['AS', 'F2M', 'F2A', 'F3M', 'F3A', 'FTM',
-           'FTA', 'OR', 'DR', 'TR',  'BLK',  'RF', 'ST', 'P2', 'P3', 'PFT','ORA','EFG','TS','FTR','ASTOR','ASR','USG','ORP']
-
-
-    colsminus=[ 'BLKR',
-           'PF','TOR' ]
-
-    players_ratings1=player_rating_stat_higher(computestats,"PTS")
-    for i in colsplus:
-        df2=player_rating_stat_higher(computestats,i)
-        players_ratings1=pd.merge(players_ratings1,df2)
-
-    players_ratings2=player_rating_stat_lower(computestats,"TO")
-    for i in colsminus:
-        df3=player_rating_stat_lower(computestats,i)
-        players_ratings2=pd.merge(players_ratings2,df3)
-
-
-    players_ratings=pd.merge(players_ratings1,players_ratings2)
-
-
-
-
-    offense_rating_data=players_ratings[['Player','Rating PTS', 'Rating AS', 'Rating TO', 'Rating OR', 'Rating BLKR', 'Rating RF', 'Rating F2M', 'Rating F2A',
-         'Rating P2', 'Rating F3M', 'Rating F3A', 'Rating P3','Rating FTM', 'Rating FTA', 'Rating PFT', 'Rating FTR',
-         'Rating EFG', 'Rating TS', "Rating ORA",'Rating ASTOR','Rating TOR', "Rating ASR", 'Rating ORP']].melt(id_vars='Player').groupby('Player')['value'].mean().reset_index().rename(columns={"value":"Offense"})
-
-
-    defense_ratings_data = players_ratings[
-        ['Player','Rating ST', 'Rating DR', 'Rating PF', 'Rating BLK']].melt(id_vars='Player').groupby('Player')['value'].mean().reset_index().rename(columns={"value":"Defense"})
-
-
-    total_ratings_data = players_ratings.melt(id_vars='Player').groupby('Player')['value'].mean().reset_index().rename(columns={"value":"Overall"})
-
-    ratings=pd.merge(pd.merge(offense_rating_data,defense_ratings_data),total_ratings_data)
-
-    interactive_table(ratings.round(0).set_index('Player').sort_values('Overall',ascending=False),
-                          paging=False, height=900, width=4000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])

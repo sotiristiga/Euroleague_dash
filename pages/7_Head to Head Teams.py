@@ -646,7 +646,7 @@ try:
             height=180,
             margin=dict(
                 l=30,
-                r=50,
+                r=30,
                 b=10,
                 t=70,
                 pad=0

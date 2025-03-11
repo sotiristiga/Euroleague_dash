@@ -316,38 +316,68 @@ period_points["results"] = period_points["Win"].apply(result_format)
 period_points['EXS'].replace(0, np.nan, inplace=True)
 period_points['EXC'].replace(0, np.nan, inplace=True)
 
-st.sidebar.write("## Select First team filters")
-compare_teams_team1 = st.sidebar.selectbox("Choose First Team:",
-                                           All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
-compare_teams_ha_team1 = st.sidebar.selectbox("Home or Away games(First Team):", ['A', 'H', 'All'], index=2)
-compare_teams_season_team1 = st.sidebar.selectbox("Season(First Team):",
-                                                  ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                   '2021-2022', '2022-2023', '2023-2024',"2024-2025", 'All'], index=8)
-compare_teams_phase_team1 = st.sidebar.selectbox("Phase(First Team):",
-                                                 ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
-                                                 index=4)
-compare_teams_wl_team1 = st.sidebar.selectbox("Result(First Team):", ['W', 'L', 'All'], index=2)
-compare_teams_round_team1 = st.sidebar.selectbox("Round(First Team):",
-                                                 ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3',
-                                                  'PO 4', 'PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],
-                                                 index=12)
 
-st.sidebar.write("## ______________________________")
-st.sidebar.write("## Select Second team filters")
-compare_teams_team2 = st.sidebar.selectbox("Choose Second Team:",
-                                           All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique(),index=1)
-compare_teams_ha_team2 = st.sidebar.selectbox("Home or Away games(Second Team):", ['A', 'H', 'All'], index=2)
-compare_teams_season_team2 = st.sidebar.selectbox("Season(Second Team):",
-                                                  ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                   '2021-2022', '2022-2023', '2023-2024',"2024-2025", 'All'], index=8)
-compare_teams_phase_team2 = st.sidebar.selectbox("Phase(Second Team):",
-                                                 ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
-                                                 index=4)
-compare_teams_wl_team2 = st.sidebar.selectbox("Result(Second Team):", ['W', 'L', 'All'], index=2)
-compare_teams_round_team2 = st.sidebar.selectbox("Round(Second Team):",
-                                                 ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2', 'PO 3',
-                                                  'PO 4', 'PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],
-                                                 index=12)
+st.sidebar.markdown('''
+  * ## [Filters](#filters)
+  * ## [Team Ratings](#team-ratings)
+  * ## [Basic Stats](#basic-stats)
+  * ## [Shooting Stats](#shooting-stats)
+  * ## [Advanced Stats](#advanced-stats)
+  * ## [Between teams games stats](#between-teams-games-stats)
+  * ## [Between Games Period points](#between-games-period-games)
+  * ## [Between Games Basic Stats](#between-games-basic-stats)
+  * ## [Between Games Shooting Stats](#between-games-shooting-stats)
+  * ## [Between Games Advanced Stats](#between-games-advanced-stats)
+
+''', unsafe_allow_html=True)
+st.header("Filters")
+f1,f2=st.columns(2)
+with f1:
+    st.write("### Select First team filters")
+    f11,f12=st.columns(2)
+    with f11:
+        compare_teams_team1 = st.selectbox("Choose First Team:",
+                                                   All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
+        compare_teams_season_team1 = st.selectbox("Season(First Team):",
+                                                          ['2016-2017', '2017-2018', '2018-2019', '2019-2020',
+                                                           '2020-2021',
+                                                           '2021-2022', '2022-2023', '2023-2024', "2024-2025", 'All'],
+                                                          index=8)
+        compare_teams_phase_team1 = st.selectbox("Phase(First Team):",
+                                                         ['Regular Season', 'Play In', 'Play offs', 'Final Four',
+                                                          'All'],
+                                                         index=4)
+    with f12:
+        compare_teams_round_team1 = st.selectbox("Round(First Team):",
+                                                         ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2',
+                                                          'PO 3',
+                                                          'PO 4', 'PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],
+                                                         index=12)
+        compare_teams_ha_team1 = st.selectbox("Home or Away games(First Team):", ['A', 'H', 'All'], index=2)
+        compare_teams_wl_team1 = st.selectbox("Result(First Team):", ['W', 'L', 'All'], index=2)
+
+with f2:
+    st.write("### Select Second team filters")
+    f21,f22=st.columns(2)
+    with f21:
+        compare_teams_team2 = st.selectbox("Choose Second Team:",
+                                                   All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique(),index=1)
+        compare_teams_season_team2 = st.selectbox("Season(Second Team):",
+                                                          ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
+                                                           '2021-2022', '2022-2023', '2023-2024', "2024-2025", 'All'],
+                                                          index=8)
+        compare_teams_phase_team2 = st.selectbox("Phase(Second Team):",
+                                                         ['Regular Season', 'Play In', 'Play offs', 'Final Four',
+                                                          'All'],
+                                                         index=4)
+    with f22:
+        compare_teams_round_team2 = st.selectbox("Round(Second Team):",
+                                                         ['First Round', 'Second Round', 'PI 1', 'PI 2', 'PO 1', 'PO 2',
+                                                          'PO 3',
+                                                          'PO 4', 'PO 5', 'Semi Final', 'Third Place', 'Final', 'All'],
+                                                         index=12)
+        compare_teams_ha_team2 = st.selectbox("Home or Away games(Second Team):", ['A', 'H', 'All'], index=2)
+        compare_teams_wl_team2 = st.selectbox("Result(Second Team):", ['W', 'L', 'All'], index=2)
 
 
 def team_rating_stat_higher(dataset, stat):
@@ -580,15 +610,11 @@ if "All" in compare_teams_round_team2:
 else:
 
     select_round_player2 = compare_teams_round_team2
-
+st.header("Team Ratings")
 t1, rat1 ,t2,rat2= st.columns([1, 1, 1,1])
 try:
 
     with t1:
-
-
-
-
         st.write('### Team 1: '+ compare_teams_team1)
         st.write('Season: ' + select_season_player1)
         st.write('Phase: ' + select_phase_player1)
@@ -787,198 +813,197 @@ except:
     st.error("No data available with this parameters")
 
 
-st.write("### Euroleague Stats")
+
 try:
-    periods, basic, shooting, advanced = st.tabs(
-        ['Period Points', 'Basic Stats', 'Shooting Stats', 'Advanced Stats'])
-    with periods:
-        periodteam1 = (teamstats1[
-                           ['Team','Q1S', 'Q1C', 'Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q3C', 'Q4S', 'Q4C', 'SHS', 'SHC',
-                            'EXS', 'EXC']]
-                       .rename(
-            columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
-                     'EXS': 'Extra time Scored', 'FHS': 'First Half Scored', 'SHS': 'Second Half Scored',
-                     'Q1C': 'Q1 Conceed', 'Q2C': 'Q2 Conceed', 'Q3C': 'Q3 Conceed', 'Q4C': 'Q4 Conceed',
-                     'EXC': 'Extra time Conceed', 'FHC': 'First Half Conceed', 'SHC': 'Second Half Conceed'
-                     }))
-        periodteam2 = (
-            teamstats2[
-                ['Team','Q1S', 'Q1C', 'Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q3C', 'Q4S', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC']]
-            .rename(columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
-                     'EXS': 'Extra time Scored', 'FHS': 'First Half Scored', 'SHS': 'Second Half Scored',
-                     'Q1C': 'Q1 Conceed', 'Q2C': 'Q2 Conceed', 'Q3C': 'Q3 Conceed', 'Q4C': 'Q4 Conceed',
-                     'EXC': 'Extra time Conceed', 'FHC': 'First Half Conceed', 'SHC': 'Second Half Conceed'
-                             })
-            )
-        periodteam1[
-            'Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
-        periodteam2[
-            'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
-        periodteams = pd.concat([periodteam1, periodteam2])
-        interactive_table(periodteams.set_index('Team').round(1),
-                          paging=False, height=900, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
-
-    with basic:
-
-        basic_stats1 = teamstats1[
-            ['Team','PTS', 'opp PTS', 'AS', 'opp AS', 'TO', 'opp TO', 'TR', 'DR', 'OR', 'opp TR', 'opp DR', 'opp OR',
-             'BLK', 'BLKR', 'ST', 'opp ST', 'PF', 'RF', 'PIR', 'opp PIR']].rename(
-            columns={'PTS': 'Points Scored',
-                     'AS': 'Assists made',
-                     'TO': 'Turnovers made',
-                     'TR': 'TotalRebounds taken',
-                     'OR': 'OffensiveRebounds taken',
-                     'DR': 'DefensiveRebounds taken',
-                     'opp PTS': 'Points Conceed',
-                     'opp AS': 'opp Assists',
-                     'opp TO': 'opp Turnovers',
-                     'opp TR': 'Total Rebounds opp taken',
-                     'opp OR': 'Offensive Rebounds opp taken',
-                     'opp DR': 'Defensive Rebounds opp taken',
-                     'BLK': 'Blocks',
-                     'BLKR': 'Blocks Reversed',
-                     'ST': 'Steals made',
-                     'opp ST': 'opp Steals',
-                     'PF': 'Personal Fouls',
-                     'RF': 'Fouls Drawn',
-                     'opp PIR': 'opp PIR'}).round(1)
-
-        basic_stats2 = teamstats2[
-            ['Team','PTS', 'opp PTS', 'AS', 'opp AS', 'TO', 'opp TO', 'TR', 'DR', 'OR', 'opp TR', 'opp DR', 'opp OR',
-             'BLK', 'BLKR', 'ST', 'opp ST', 'PF', 'RF', 'PIR', 'opp PIR']].rename(
-            columns={'PTS': 'Points Scored',
-                     'AS': 'Assists made',
-                     'TO': 'Turnovers made',
-                     'TR': 'TotalRebounds taken',
-                     'OR': 'OffensiveRebounds taken',
-                     'DR': 'DefensiveRebounds taken',
-                     'opp PTS': 'Points Conceed',
-                     'opp AS': 'opp Assists',
-                     'opp TO': 'opp Turnovers',
-                     'opp TR': 'Total Rebounds opp taken',
-                     'opp OR': 'Offensive Rebounds opp taken',
-                     'opp DR': 'Defensive Rebounds opp taken',
-                     'BLK': 'Blocks',
-                     'BLKR': 'Blocks Reversed',
-                     'ST': 'Steals made',
-                     'opp ST': 'opp Steals',
-                     'PF': 'Personal Fouls',
-                     'RF': 'Fouls Drawn',
-                     'opp PIR': 'opp PIR'}).round(1)
-        basic_stats1[
-            'Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
-        basic_stats2[
-            'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
-
-        basic_stats_data = pd.concat([basic_stats1, basic_stats2])
-        interactive_table(basic_stats_data.set_index('Team').round(1),
-                          paging=False, height=900, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
-    with shooting:
-        shooting_stats1 = teamstats1[
-            ['Team','F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)', 'F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A',
-             'opp 3P(%)', 'FTM', 'FTA', 'FT(%)', 'opp FTM', 'opp FTA', 'opp FT(%)',
-             'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)', 'TS(%)', 'opp TS(%)']].rename(
-            columns={'F2M': '2P Made',
-                     'F2A': '2P Attempt',
-                     'P2': '2P(%)',
-                     'F3M': '3P Made',
-                     'F3A': '3P Attempt',
-                     'P3': '3P(%)',
-                     'FTM': 'FT Made',
-                     'FTA': 'FT Attempt',
-                     'PFT': 'FT(%)',
-                     'FTR': 'FT Ratio',
-                     'EFG': 'EFG(%)',
-                     'TS': 'TS(%)',
-                     'opp F2M': 'opp 2P Made',
-                     'opp F2A': 'opp 2P Attempt',
-                     'opp 2P(%)': 'opp 2P(%)',
-                     'opp F3M': 'opp 3P Made',
-                     'opp F3A': 'opp 3P Attempt',
-                     'opp 3P(%)': 'opp 3P(%)',
-                     'opp FTM': 'opp FT Made',
-                     'opp FTA': 'opp FT Attempt',
-                     'opp FT(%)': 'opp FT(%)',
-                     'opp FTR': 'opp FT Ratio',
-                     'opp EFG(%)': 'opp EFG(%)',
-                     'opp TS(%)': 'opp TS(%)',
-                     'FT Ratio': 'FT Ratio',
-                     'opp FT Ratio': 'opp FT Ratio'})
-
-        shooting_stats2 = teamstats2[
-            ['Team','F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)', 'F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A',
-             'opp 3P(%)', 'FTM', 'FTA', 'FT(%)', 'opp FTM', 'opp FTA', 'opp FT(%)',
-             'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)', 'TS(%)', 'opp TS(%)']].rename(
-            columns={'F2M': '2P Made',
-                     'F2A': '2P Attempt',
-                     'P2': '2P(%)',
-                     'F3M': '3P Made',
-                     'F3A': '3P Attempt',
-                     'P3': '3P(%)',
-                     'FTM': 'FT Made',
-                     'FTA': 'FT Attempt',
-                     'PFT': 'FT(%)',
-                     'FTR': 'FT Ratio',
-                     'EFG': 'EFG(%)',
-                     'TS': 'TS(%)',
-                     'opp F2M': 'opp 2P Made',
-                     'opp F2A': 'opp 2P Attempt',
-                     'opp 2P(%)': 'opp 2P(%)',
-                     'opp F3M': 'opp 3P Made',
-                     'opp F3A': 'opp 3P Attempt',
-                     'opp 3P(%)': 'opp 3P(%)',
-                     'opp FTM': 'opp FT Made',
-                     'opp FTA': 'opp FT Attempt',
-                     'opp FT(%)': 'opp FT(%)',
-                     'opp FTR': 'opp FT Ratio',
-                     'opp EFG(%)': 'opp EFG(%)',
-                     'opp TS(%)': 'opp TS(%)',
-                     'FT Ratio': 'FT Ratio',
-                     'opp FT Ratio': 'opp FT Ratio'})
-        shooting_stats1[
-            'Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
-        shooting_stats2[
-            'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
-        shooting_stats_data = pd.concat([shooting_stats1, shooting_stats2])
-
-        interactive_table(shooting_stats_data.set_index('Team').round(1),
+    st.header("Period Stats")
+    periodteam1 = (teamstats1[
+                       ['Team','Q1S', 'Q1C', 'Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q3C', 'Q4S', 'Q4C', 'SHS', 'SHC',
+                        'EXS', 'EXC']]
+                   .rename(
+        columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
+                 'EXS': 'Extra time Scored', 'FHS': 'First Half Scored', 'SHS': 'Second Half Scored',
+                 'Q1C': 'Q1 Conceed', 'Q2C': 'Q2 Conceed', 'Q3C': 'Q3 Conceed', 'Q4C': 'Q4 Conceed',
+                 'EXC': 'Extra time Conceed', 'FHC': 'First Half Conceed', 'SHC': 'Second Half Conceed'
+                 }))
+    periodteam2 = (
+        teamstats2[
+            ['Team','Q1S', 'Q1C', 'Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q3C', 'Q4S', 'Q4C', 'SHS', 'SHC', 'EXS', 'EXC']]
+        .rename(columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
+                 'EXS': 'Extra time Scored', 'FHS': 'First Half Scored', 'SHS': 'Second Half Scored',
+                 'Q1C': 'Q1 Conceed', 'Q2C': 'Q2 Conceed', 'Q3C': 'Q3 Conceed', 'Q4C': 'Q4 Conceed',
+                 'EXC': 'Extra time Conceed', 'FHC': 'First Half Conceed', 'SHC': 'Second Half Conceed'
+                         })
+        )
+    periodteam1[
+        'Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
+    periodteam2[
+        'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
+    periodteams = pd.concat([periodteam1, periodteam2])
+    interactive_table(periodteams.set_index('Team').round(1),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
                       scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
-    with advanced:
-        advanced_stats1 = (teamstats1[['Team','Possesions', 'opp Possesions', 'Offensive Rating', 'Defensive Rating',
-                                       'AS-TO Ratio', 'opp AS-TO Ratio', 'TO Ratio', 'opp TO Ratio', 'AS Ratio',
-                                       'opp AS Ratio']]
-                         )
 
-        advanced_stats2 = teamstats2[['Team','Possesions', 'opp Possesions', 'Offensive Rating', 'Defensive Rating',
-                                      'AS-TO Ratio', 'opp AS-TO Ratio', 'TO Ratio', 'opp TO Ratio', 'AS Ratio',
-                                      'opp AS Ratio']]
-        advanced_stats1['Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
-        advanced_stats2['Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
-        advanced_stats_data = pd.concat([advanced_stats1, advanced_stats2])
-        interactive_table(advanced_stats_data.set_index('Team').round(1),
-                          paging=False, height=900, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+    st.header("Basic Stats")
+
+    basic_stats1 = teamstats1[
+        ['Team','PTS', 'opp PTS', 'AS', 'opp AS', 'TO', 'opp TO', 'TR', 'DR', 'OR', 'opp TR', 'opp DR', 'opp OR',
+         'BLK', 'BLKR', 'ST', 'opp ST', 'PF', 'RF', 'PIR', 'opp PIR']].rename(
+        columns={'PTS': 'Points Scored',
+                 'AS': 'Assists made',
+                 'TO': 'Turnovers made',
+                 'TR': 'TotalRebounds taken',
+                 'OR': 'OffensiveRebounds taken',
+                 'DR': 'DefensiveRebounds taken',
+                 'opp PTS': 'Points Conceed',
+                 'opp AS': 'opp Assists',
+                 'opp TO': 'opp Turnovers',
+                 'opp TR': 'Total Rebounds opp taken',
+                 'opp OR': 'Offensive Rebounds opp taken',
+                 'opp DR': 'Defensive Rebounds opp taken',
+                 'BLK': 'Blocks',
+                 'BLKR': 'Blocks Reversed',
+                 'ST': 'Steals made',
+                 'opp ST': 'opp Steals',
+                 'PF': 'Personal Fouls',
+                 'RF': 'Fouls Drawn',
+                 'opp PIR': 'opp PIR'}).round(1)
+
+    basic_stats2 = teamstats2[
+        ['Team','PTS', 'opp PTS', 'AS', 'opp AS', 'TO', 'opp TO', 'TR', 'DR', 'OR', 'opp TR', 'opp DR', 'opp OR',
+         'BLK', 'BLKR', 'ST', 'opp ST', 'PF', 'RF', 'PIR', 'opp PIR']].rename(
+        columns={'PTS': 'Points Scored',
+                 'AS': 'Assists made',
+                 'TO': 'Turnovers made',
+                 'TR': 'TotalRebounds taken',
+                 'OR': 'OffensiveRebounds taken',
+                 'DR': 'DefensiveRebounds taken',
+                 'opp PTS': 'Points Conceed',
+                 'opp AS': 'opp Assists',
+                 'opp TO': 'opp Turnovers',
+                 'opp TR': 'Total Rebounds opp taken',
+                 'opp OR': 'Offensive Rebounds opp taken',
+                 'opp DR': 'Defensive Rebounds opp taken',
+                 'BLK': 'Blocks',
+                 'BLKR': 'Blocks Reversed',
+                 'ST': 'Steals made',
+                 'opp ST': 'opp Steals',
+                 'PF': 'Personal Fouls',
+                 'RF': 'Fouls Drawn',
+                 'opp PIR': 'opp PIR'}).round(1)
+    basic_stats1[
+        'Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
+    basic_stats2[
+        'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
+
+    basic_stats_data = pd.concat([basic_stats1, basic_stats2])
+    interactive_table(basic_stats_data.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
+    st.header("Shooting Stats")
+    shooting_stats1 = teamstats1[
+        ['Team','F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)', 'F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A',
+         'opp 3P(%)', 'FTM', 'FTA', 'FT(%)', 'opp FTM', 'opp FTA', 'opp FT(%)',
+         'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)', 'TS(%)', 'opp TS(%)']].rename(
+        columns={'F2M': '2P Made',
+                 'F2A': '2P Attempt',
+                 'P2': '2P(%)',
+                 'F3M': '3P Made',
+                 'F3A': '3P Attempt',
+                 'P3': '3P(%)',
+                 'FTM': 'FT Made',
+                 'FTA': 'FT Attempt',
+                 'PFT': 'FT(%)',
+                 'FTR': 'FT Ratio',
+                 'EFG': 'EFG(%)',
+                 'TS': 'TS(%)',
+                 'opp F2M': 'opp 2P Made',
+                 'opp F2A': 'opp 2P Attempt',
+                 'opp 2P(%)': 'opp 2P(%)',
+                 'opp F3M': 'opp 3P Made',
+                 'opp F3A': 'opp 3P Attempt',
+                 'opp 3P(%)': 'opp 3P(%)',
+                 'opp FTM': 'opp FT Made',
+                 'opp FTA': 'opp FT Attempt',
+                 'opp FT(%)': 'opp FT(%)',
+                 'opp FTR': 'opp FT Ratio',
+                 'opp EFG(%)': 'opp EFG(%)',
+                 'opp TS(%)': 'opp TS(%)',
+                 'FT Ratio': 'FT Ratio',
+                 'opp FT Ratio': 'opp FT Ratio'})
+
+    shooting_stats2 = teamstats2[
+        ['Team','F2M', 'F2A', '2P(%)', 'opp F2M', 'opp F2A', 'opp 2P(%)', 'F3M', 'F3A', '3P(%)', 'opp F3M', 'opp F3A',
+         'opp 3P(%)', 'FTM', 'FTA', 'FT(%)', 'opp FTM', 'opp FTA', 'opp FT(%)',
+         'FT Ratio', 'opp FT Ratio', 'EFG(%)', 'opp EFG(%)', 'TS(%)', 'opp TS(%)']].rename(
+        columns={'F2M': '2P Made',
+                 'F2A': '2P Attempt',
+                 'P2': '2P(%)',
+                 'F3M': '3P Made',
+                 'F3A': '3P Attempt',
+                 'P3': '3P(%)',
+                 'FTM': 'FT Made',
+                 'FTA': 'FT Attempt',
+                 'PFT': 'FT(%)',
+                 'FTR': 'FT Ratio',
+                 'EFG': 'EFG(%)',
+                 'TS': 'TS(%)',
+                 'opp F2M': 'opp 2P Made',
+                 'opp F2A': 'opp 2P Attempt',
+                 'opp 2P(%)': 'opp 2P(%)',
+                 'opp F3M': 'opp 3P Made',
+                 'opp F3A': 'opp 3P Attempt',
+                 'opp 3P(%)': 'opp 3P(%)',
+                 'opp FTM': 'opp FT Made',
+                 'opp FTA': 'opp FT Attempt',
+                 'opp FT(%)': 'opp FT(%)',
+                 'opp FTR': 'opp FT Ratio',
+                 'opp EFG(%)': 'opp EFG(%)',
+                 'opp TS(%)': 'opp TS(%)',
+                 'FT Ratio': 'FT Ratio',
+                 'opp FT Ratio': 'opp FT Ratio'})
+    shooting_stats1[
+        'Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
+    shooting_stats2[
+        'Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
+    shooting_stats_data = pd.concat([shooting_stats1, shooting_stats2])
+
+    interactive_table(shooting_stats_data.set_index('Team').round(1),
+                  paging=False, height=900, width=2000, showIndex=True,
+                  classes="display order-column nowrap table_with_monospace_font", searching=True,
+                  fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  columnDefs=[{"className": "dt-center", "targets": "_all"}])
+    st.header("Advanced Stats")
+    advanced_stats1 = (teamstats1[['Team','Possesions', 'opp Possesions', 'Offensive Rating', 'Defensive Rating',
+                                   'AS-TO Ratio', 'opp AS-TO Ratio', 'TO Ratio', 'opp TO Ratio', 'AS Ratio',
+                                   'opp AS Ratio']]
+                     )
+
+    advanced_stats2 = teamstats2[['Team','Possesions', 'opp Possesions', 'Offensive Rating', 'Defensive Rating',
+                                  'AS-TO Ratio', 'opp AS-TO Ratio', 'TO Ratio', 'opp TO Ratio', 'AS Ratio',
+                                  'opp AS Ratio']]
+    advanced_stats1['Team'] = compare_teams_team1 + " " + select_season_player1 + " " + select_phase_player1 + " " + select_round_player1 + " " + select_ha_player1 + " " + select_wl_player1
+    advanced_stats2['Team'] = compare_teams_team2 + " " + select_season_player2 + " " + select_phase_player2 + " " + select_round_player2 + " " + select_ha_player2 + " " + select_wl_player2
+    advanced_stats_data = pd.concat([advanced_stats1, advanced_stats2])
+    interactive_table(advanced_stats_data.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 except:
     st.error("No data available with this parameters")
 
 try:
-    st.write("### Between teams games stats")
+    st.header("Between teams games stats")
 
 
     def teams_format(Team):
@@ -1125,121 +1150,121 @@ try:
          'EXC']].mean().reset_index().round(2)
     final = pd.merge(finalperiods, finalstats)
 
-    periodsbet, basicbet, shootbet, advbet = st.tabs(['Period Points','Basic Stats','Shooting Stats','Advanced Stats'])
-
-    with periodsbet:
-        periodbetdata1 = final.loc[final.Team == compare_teams_team1][['Team','Q1S', 'Q2S', 'FHS',
-                                                                       'Q3S', 'Q4S',
-                                                                       'SHS', 'EXS', ]].rename(
-            columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
-                     'EXS': 'Extra time Scored', 'FHS': 'First Half Scored',
-                     'SHS': 'Second Half Scored'})
-
-        periodbetdata2 = final.loc[final.Team == compare_teams_team2][
-            ['Team','Q1S', 'Q2S', 'FHS',
-             'Q3S', 'Q4S',
-             'SHS', 'EXS', ]].rename(
-            columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
-                     'EXS': 'Extra time Scored', 'FHS': 'First Half Scored',
-                     'SHS': 'Second Half Scored'})
-        periodbetdata = pd.concat([periodbetdata1, periodbetdata2])
-
-        interactive_table(periodbetdata.set_index('Team').round(1),
-                          paging=False, height=900, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
-
-    with basicbet:
-        basicbetdata1 = final.loc[final.Team == compare_teams_team1][
-            ['Team','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'ST', 'PF', 'PIR']].rename(
-            columns={'PTS': 'Points Scored',
-                     'AS': 'Assists made',
-                     'TO': 'Turnovers made',
-                     'TR': 'TotalRebounds taken',
-                     'OR': 'OffensiveRebounds taken',
-                     'DR': 'DefensiveRebounds taken',
-                     'BLK': 'Blocks',
-                     'ST': 'Steals made',
-                     'PF': 'Personal Fouls'})
-
-        basicbetdata2 = final.loc[final.Team == compare_teams_team2][
-            ['Team','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'ST', 'PF', 'PIR']].rename(
-            columns={'PTS': 'Points Scored',
-                     'AS': 'Assists made',
-                     'TO': 'Turnovers made',
-                     'TR': 'TotalRebounds taken',
-                     'OR': 'OffensiveRebounds taken',
-                     'DR': 'DefensiveRebounds taken',
-                     'BLK': 'Blocks',
-                     'ST': 'Steals made',
-                     'PF': 'Personal Fouls'})
-        basicbetdata = pd.concat([basicbetdata1, basicbetdata2])
-        interactive_table(basicbetdata.set_index('Team').round(1),
-                          paging=False, height=900, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
-    with shootbet:
-        shootbetdata1 = final.loc[final.Team == compare_teams_team1][
-            ['Team','F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'FT Ratio', 'EFG(%)',
-             'TS(%)']].rename(
-            columns={'F2M': '2P Made',
-                     'F2A': '2P Attempt',
-                     'P2': '2P(%)',
-                     'F3M': '3P Made',
-                     'F3A': '3P Attempt',
-                     'P3': '3P(%)',
-                     'FTM': 'FT Made',
-                     'FTA': 'FT Attempt',
-                     'PFT': 'FT(%)',
-                     'FTR': 'FT Ratio',
-                     'EFG': 'EFG(%)',
-                     'TS': 'TS(%)'})
+    st.header("Between Games Period points")
+    periodbetdata1 = final.loc[final.Team == compare_teams_team1][['Team','Q1S', 'Q2S', 'FHS',
+                                                                   'Q3S', 'Q4S',
+                                                                   'SHS', 'EXS', ]].rename(
+        columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
+                 'EXS': 'Extra time Scored', 'FHS': 'First Half Scored',
+                 'SHS': 'Second Half Scored'})
 
-        shootbetdata2 = final.loc[final.Team == compare_teams_team2][
-            ['Team','F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'FT Ratio', 'EFG(%)',
-             'TS(%)']].rename(
-            columns={'F2M': '2P Made',
-                     'F2A': '2P Attempt',
-                     'P2': '2P(%)',
-                     'F3M': '3P Made',
-                     'F3A': '3P Attempt',
-                     'P3': '3P(%)',
-                     'FTM': 'FT Made',
-                     'FTA': 'FT Attempt',
-                     'PFT': 'FT(%)',
-                     'FTR': 'FT Ratio',
-                     'EFG': 'EFG(%)',
-                     'TS': 'TS(%)'})
-        shootbetdata = pd.concat([shootbetdata1, shootbetdata2])
-        interactive_table(shootbetdata.set_index('Team').round(1),
-                          paging=False, height=900, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+    periodbetdata2 = final.loc[final.Team == compare_teams_team2][
+        ['Team','Q1S', 'Q2S', 'FHS',
+         'Q3S', 'Q4S',
+         'SHS', 'EXS', ]].rename(
+        columns={'Q1S': 'Q1 Scored', 'Q2S': 'Q2 Scored', 'Q3S': 'Q3 Scored', 'Q4S': 'Q4 Scored',
+                 'EXS': 'Extra time Scored', 'FHS': 'First Half Scored',
+                 'SHS': 'Second Half Scored'})
+    periodbetdata = pd.concat([periodbetdata1, periodbetdata2])
+
+    interactive_table(periodbetdata.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+    st.header("Between Games Basic Stats")
+    basicbetdata1 = final.loc[final.Team == compare_teams_team1][
+        ['Team','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'ST', 'PF', 'PIR']].rename(
+        columns={'PTS': 'Points Scored',
+                 'AS': 'Assists made',
+                 'TO': 'Turnovers made',
+                 'TR': 'TotalRebounds taken',
+                 'OR': 'OffensiveRebounds taken',
+                 'DR': 'DefensiveRebounds taken',
+                 'BLK': 'Blocks',
+                 'ST': 'Steals made',
+                 'PF': 'Personal Fouls'})
+
+    basicbetdata2 = final.loc[final.Team == compare_teams_team2][
+        ['Team','PTS', 'AS', 'TO', 'TR', 'DR', 'OR', 'BLK', 'ST', 'PF', 'PIR']].rename(
+        columns={'PTS': 'Points Scored',
+                 'AS': 'Assists made',
+                 'TO': 'Turnovers made',
+                 'TR': 'TotalRebounds taken',
+                 'OR': 'OffensiveRebounds taken',
+                 'DR': 'DefensiveRebounds taken',
+                 'BLK': 'Blocks',
+                 'ST': 'Steals made',
+                 'PF': 'Personal Fouls'})
+    basicbetdata = pd.concat([basicbetdata1, basicbetdata2])
+    interactive_table(basicbetdata.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
-    with advbet:
-        advbetdata1 = final.loc[final.Team == compare_teams_team1][['Team','Possesions', 'Offensive Rating',
-                                                                    'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(
-            1)
+    st.header("Between Games Shooting Stats")
+    shootbetdata1 = final.loc[final.Team == compare_teams_team1][
+        ['Team','F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'FT Ratio', 'EFG(%)',
+         'TS(%)']].rename(
+        columns={'F2M': '2P Made',
+                 'F2A': '2P Attempt',
+                 'P2': '2P(%)',
+                 'F3M': '3P Made',
+                 'F3A': '3P Attempt',
+                 'P3': '3P(%)',
+                 'FTM': 'FT Made',
+                 'FTA': 'FT Attempt',
+                 'PFT': 'FT(%)',
+                 'FTR': 'FT Ratio',
+                 'EFG': 'EFG(%)',
+                 'TS': 'TS(%)'})
 
-        advbetdata2 = final.loc[final.Team == compare_teams_team2][['Team','Possesions', 'Offensive Rating',
-                                                                    'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(
-            1)
-        advbetdata = pd.concat([advbetdata1, advbetdata2])
-        interactive_table(advbetdata.set_index('Team').round(1),
-                          paging=False, height=900, width=2000, showIndex=True,
-                          classes="display order-column nowrap table_with_monospace_font", searching=True,
-                          fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
-                          columnDefs=[{"className": "dt-center", "targets": "_all"}])
+    shootbetdata2 = final.loc[final.Team == compare_teams_team2][
+        ['Team','F2M', 'F2A', '2P(%)', 'F3M', 'F3A', '3P(%)', 'FTM', 'FTA', 'FT(%)', 'FT Ratio', 'EFG(%)',
+         'TS(%)']].rename(
+        columns={'F2M': '2P Made',
+                 'F2A': '2P Attempt',
+                 'P2': '2P(%)',
+                 'F3M': '3P Made',
+                 'F3A': '3P Attempt',
+                 'P3': '3P(%)',
+                 'FTM': 'FT Made',
+                 'FTA': 'FT Attempt',
+                 'PFT': 'FT(%)',
+                 'FTR': 'FT Ratio',
+                 'EFG': 'EFG(%)',
+                 'TS': 'TS(%)'})
+    shootbetdata = pd.concat([shootbetdata1, shootbetdata2])
+    interactive_table(shootbetdata.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+    st.header("Between Games Advanced Stats")
+    advbetdata1 = final.loc[final.Team == compare_teams_team1][['Team','Possesions', 'Offensive Rating',
+                                                                'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(
+        1)
+
+    advbetdata2 = final.loc[final.Team == compare_teams_team2][['Team','Possesions', 'Offensive Rating',
+                                                                'AS-TO Ratio', 'TO Ratio', 'AS Ratio']].round(
+        1)
+    advbetdata = pd.concat([advbetdata1, advbetdata2])
+    interactive_table(advbetdata.set_index('Team').round(1),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
 except:

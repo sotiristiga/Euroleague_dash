@@ -320,6 +320,7 @@ period_points['EXC'].replace(0, np.nan, inplace=True)
 st.sidebar.markdown('''
   * ## [Filters](#filters)
   * ## [Team Ratings](#team-ratings)
+  * ## [Period Points](#period-points)
   * ## [Basic Stats](#basic-stats)
   * ## [Shooting Stats](#shooting-stats)
   * ## [Advanced Stats](#advanced-stats)
@@ -811,7 +812,7 @@ except:
 
 try:
 
-    st.header("Period Stats")
+    st.header("Period Points")
     periodteam1 = (teamstats1[
                        ['Team','Q1S', 'Q1C', 'Q2S', 'Q2C', 'FHS', 'FHC', 'Q3S', 'Q3C', 'Q4S', 'Q4C', 'SHS', 'SHC',
                         'EXS', 'EXC']]

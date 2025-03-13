@@ -523,14 +523,15 @@ with col2:
         off.update_layout(
             autosize=False,
             width=200,
-            height=180,
+            height=150,
             margin=dict(
                 l=30,
                 r=50,
-                b=0,
-                t=0,
+                b=10,
+                t=40,
                 pad=0
             ))
+
 
         st.write(off)
         defense_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player][
@@ -545,17 +546,17 @@ with col2:
             title={'text': "Defense"}))
 
         defe.update_layout(
-            autosize=True,
+           autosize=False,
             width=200,
-            height=180,
+            height=150,
             margin=dict(
                 l=30,
                 r=50,
-                b=0,
-                t=0,
+                b=10,
+                t=40,
                 pad=0
-            )
-        )
+            ))
+
 
         st.write(defe)
         total_ratings = players_ratings.loc[players_ratings['Player'] == search_player_player].melt(id_vars='Player')[
@@ -570,17 +571,17 @@ with col2:
             title={'text': "Overall"}))
 
         tot.update_layout(
-            autosize=True,
+            autosize=False,
             width=200,
-            height=180,
+            height=150,
             margin=dict(
                 l=30,
                 r=50,
-                b=0,
-                t=0,
+                b=10,
+                t=40,
                 pad=0
-            )
-        )
+            ))
+
 
         st.write(tot)
 

@@ -1,5 +1,3 @@
-
-
 import requests
 import pandas as pd
 import seaborn as sns
@@ -14,292 +12,120 @@ from streamlit_dynamic_filters import DynamicFilters
 import urllib.request
 from PIL import Image
 import time
-st.set_page_config(layout='wide',page_title="Euroleague",page_icon="🏀")
+from dplython import (DplyFrame, X, diamonds, select, sift, sample_n, sample_frac, head, arrange, mutate, group_by, summarize, DelayFunction)
+from itables.streamlit import interactive_table
+from itables import to_html_datatable
+from streamlit.components.v1 import html
+from plotly.subplots import make_subplots
+st.set_page_config(layout='wide', page_title="Standings")
+dataset2223=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/Football_Analysis/refs/heads/main/superleague2223.csv")
+dataset2324=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/Football_Analysis/refs/heads/main/superleague2324.csv")
+dataset2425=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/Football_Analysis/refs/heads/main/superleague2425.csv")
+dataset=pd.concat([dataset2324,dataset2425,dataset2223])
+f1,f2,f3,f4,f5=st.columns(5)
+with f1:
+    selected_season = st.selectbox("Season:", ['All', '2022-2023', '2023-2024', '2024-2025'], index=3)
+with f2:
+    selected_phase = st.selectbox("Phase:", ['Regular Season', 'Play offs', "Play In", 'Play out', 'All'], index=4)
+with f3:
+    selected_round = st.selectbox("Round:", ['First Round', 'Second Round', 'All'], index=2)
+with f4:
+    selected_ha = st.selectbox("Home or Away games:",['Away', 'Home', 'All'],index=2)
+with f5:
+    selected_wl = st.selectbox("Result:",['Win','Draw', 'Lose','All'],index=3)
 
-def download_image(url, save_as):
-    urllib.request.urlretrieve(url, save_as)
+teamsscored=dataset.groupby(['Team','Against','idseason'])[['Goals','Own goals']].sum().reset_index().rename(columns={'Goals':'Goals Team','Own goals':'Own goals Against'})
+againstscored=teamsscored.rename(columns={'Goals Team':'Goals Against','Own goals Against':'Own goals Team'})
+againstscored.drop('Against',axis=1,inplace=True)
+againstscored=againstscored.rename(columns={'Team':'Against'})
+goals=pd.merge(teamsscored,againstscored,how='left')
 
-download_image('https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/eurologo.png','eurologo.png')
-st.image(Image.open("eurologo.png"),width=100)
+goals['Goals Scored']=goals['Goals Team']+goals['Own goals Team']
+goals['Goals Conceed']=goals['Goals Against']+goals['Own goals Against']
 
-def fixture_format1(Fixture):
-    if Fixture<=15:
-        return "First Round"
-    elif Fixture>15 and Fixture<=30:
-        return "Second Round"
-    elif Fixture==31:
-        return "PO 1"
-    elif Fixture == 32:
-        return "PO 2"
-    elif Fixture == 33:
-        return "PO 3"
-    elif Fixture == 34:
-        return "PO 4"
-    elif Fixture == 35:
-        return "PO 5"
-    elif Fixture==36:
-        return "Semi Final"
-    elif Fixture==37:
-        return "Third Place"
-    elif Fixture==38:
-        return "Final"
-def fixture_format2(Fixture):
-    if Fixture <= 15:
-        return "First Round"
-    elif Fixture > 15 and Fixture <= 30:
-        return "Second Round"
-    elif Fixture == 31:
-        return "PO 1"
-    elif Fixture == 32:
-        return "PO 2"
-    elif Fixture == 33:
-        return "PO 3"
-    elif Fixture == 34:
-        return "PO 4"
-    elif Fixture == 35:
-        return "Semi Final"
-    elif Fixture == 36:
-        return "Third Place"
-    elif Fixture == 37:
-        return "Final"
-def fixture_format3(Fixture):
-    if Fixture <= 15:
-        return "First Round"
-    elif Fixture > 15 and Fixture <= 34:
-        return "Second Round"
-def fixture_format4(Fixture):
-    if Fixture <= 15:
-        return "First Round"
-    elif Fixture > 15 and Fixture <= 34:
-        return "Second Round"
-    elif Fixture == 35:
-        return "PO 1"
-    elif Fixture == 36:
-        return "PO 2"
-    elif Fixture == 37:
-        return "PO 3"
-    elif Fixture == 38:
-        return "PO 4"
-    elif Fixture == 39:
-        return "PO 5"
-    elif Fixture == 40:
-        return "Semi Final"
-    elif Fixture == 41:
-        return "Third Place"
-    elif Fixture == 42:
-        return "Final"
-
-def fixture_format5(Fixture):
-        if Fixture <= 15:
-            return "First Round"
-        elif Fixture > 15 and Fixture <= 34:
-            return "Second Round"
-        elif Fixture == 35:
-            return "PI 1"
-        elif Fixture == 36:
-            return "PI 2"
-        elif Fixture == 37:
-            return "PO 1"
-        elif Fixture == 38:
-            return "PO 2"
-        elif Fixture == 39:
-            return "PO 3"
-        elif Fixture == 40:
-            return "PO 4"
-        elif Fixture == 41:
-            return "PO 5"
-        elif Fixture == 42:
-            return "Semi Final"
-        elif Fixture == 43:
-            return "Third Place"
-        elif Fixture == 44:
-            return "Final"
+infodataset=dataset.groupby( ['Team', 'Against', 'idseason', 'Home_Away', 'Season', 'Round', 'Result','Phase']).count().reset_index()[['Team', 'Against', 'idseason', 'Home_Away', 'Season', 'Round', 'Result','Phase']]
+goals=pd.merge(infodataset,goals)
 
 
 
-lnk = '<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">'
+if "All" in selected_ha:
+    selected_ha = ['Away', 'Home']
+    dataset_filter=dataset.loc[dataset['Home_Away'].isin(selected_ha)]
+    goals_filter = goals.loc[goals['Home_Away'].isin(selected_ha)]
+    select_ha=''
+else:
+    dataset_filter=dataset.loc[dataset['Home_Away']==selected_ha]
+    goals_filter = goals.loc[goals['Home_Away'] == selected_ha]
+    select_ha = selected_ha
 
-def metrics_customize(red,green,blue,iconname,sline,i):
+if "All" in selected_season:
+    selected_season = [ '2022-2023','2023-2024','2024-2025']
+    dataset_filter=dataset_filter.loc[dataset_filter['Season'].isin(selected_season)]
+    goals_filter = goals_filter.loc[goals_filter['Season'].isin(selected_season)]
+    select_season = ''
+else:
+    dataset_filter=dataset_filter.loc[dataset_filter['Season']==selected_season]
+    goals_filter = goals_filter.loc[goals_filter['Season'] == selected_season]
+    select_season = selected_season
 
-    htmlstr = f"""<p style='background-color: rgb({red},{green},{blue}, 0.75); 
-                        color: rgb(0,0,0, 0.75); 
-                        font-size: 25px; 
-                        border-radius: 7px; 
-                        padding-left: 12px; 
-                        padding-top: 18px; 
-                        padding-bottom: 18px; 
-                        line-height:25px;'>
-                        <i class='{iconname} fa-xs'></i> {i}
-                        </style><BR><span style='font-size: 22px; 
-                        margin-top: 0;'>{sline}</style></span></p>"""
-    return htmlstr
-euroleague_2016_2017_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2016_2017_playerstats.csv")
-euroleague_2016_2017_playerstats['idseason']=euroleague_2016_2017_playerstats['IDGAME'] + "_" + euroleague_2016_2017_playerstats['Season']
-euroleague_2016_2017_playerstats[['Fixture', 'Game']] = euroleague_2016_2017_playerstats['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2016_2017_playerstats['Fixture']=pd.to_numeric(euroleague_2016_2017_playerstats['Fixture'])
-euroleague_2016_2017_playerstats['Round']=euroleague_2016_2017_playerstats['Fixture'].apply(fixture_format1)
+if "All" in selected_wl:
+    selected_wl = ['Win','Draw', 'Lose']
+    dataset_filter = dataset_filter.loc[dataset_filter['Result'].isin(selected_wl)]
+    goals_filter = goals_filter.loc[goals_filter['Result'].isin(selected_wl)]
+    select_wl = ''
+else:
+    dataset_filter= dataset_filter.loc[dataset_filter['Result'] == selected_wl]
+    goals_filter = goals_filter.loc[goals_filter['Result'] == selected_wl]
+    select_wl = selected_wl
 
+if "All" in selected_phase:
+    selected_phase = ['Regular Season', 'Play offs', "Play In",'Play out']
+    dataset_filter = dataset_filter.loc[dataset_filter['Phase'].isin(selected_phase)]
+    goals_filter = goals_filter.loc[goals_filter['Phase'].isin(selected_phase)]
+    select_phase = ''
+else:
+    dataset_filter = dataset_filter.loc[dataset_filter['Phase'] == selected_phase]
+    goals_filter = goals_filter.loc[goals_filter['Phase']==selected_phase]
+    select_phase = selected_phase
 
-euroleague_2017_2018_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2017_2018_playerstats.csv")
-euroleague_2017_2018_playerstats['idseason']=euroleague_2017_2018_playerstats['IDGAME'] + "_" + euroleague_2017_2018_playerstats['Season']
-euroleague_2017_2018_playerstats[['Fixture', 'Game']] = euroleague_2017_2018_playerstats['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2017_2018_playerstats['Fixture']=pd.to_numeric(euroleague_2017_2018_playerstats['Fixture'])
-euroleague_2017_2018_playerstats['Round']=euroleague_2017_2018_playerstats['Fixture'].apply(fixture_format2)
-
-
-euroleague_2018_2019_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2018_2019_playerstats.csv")
-euroleague_2018_2019_playerstats['idseason']=euroleague_2018_2019_playerstats['IDGAME'] + "_" + euroleague_2018_2019_playerstats['Season']
-euroleague_2018_2019_playerstats[['Fixture', 'Game']] = euroleague_2018_2019_playerstats['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2018_2019_playerstats['Fixture']=pd.to_numeric(euroleague_2018_2019_playerstats['Fixture'])
-euroleague_2018_2019_playerstats['Round']=euroleague_2018_2019_playerstats['Fixture'].apply(fixture_format1)
-
-
-euroleague_2019_2020_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2019_2020_playerstats.csv")
-euroleague_2019_2020_playerstats['idseason']=euroleague_2019_2020_playerstats['IDGAME'] + "_" + euroleague_2019_2020_playerstats['Season']
-euroleague_2019_2020_playerstats[['Fixture', 'Game']] = euroleague_2019_2020_playerstats['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2019_2020_playerstats['Fixture']=pd.to_numeric(euroleague_2019_2020_playerstats['Fixture'])
-euroleague_2019_2020_playerstats['Round']=euroleague_2019_2020_playerstats['Fixture'].apply(fixture_format3)
-
-
-euroleague_2020_2021_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2020_2021_playerstats.csv")
-euroleague_2020_2021_playerstats['idseason']=euroleague_2020_2021_playerstats['IDGAME'] + "_" + euroleague_2020_2021_playerstats['Season']
-euroleague_2020_2021_playerstats[['Fixture', 'Game']] = euroleague_2020_2021_playerstats['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2020_2021_playerstats['Fixture']=pd.to_numeric(euroleague_2020_2021_playerstats['Fixture'])
-euroleague_2020_2021_playerstats['Round']=euroleague_2020_2021_playerstats['Fixture'].apply(fixture_format4)
-
-euroleague_2021_2022_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2021_2022_playerstats.csv")
-euroleague_2021_2022_playerstats['idseason']=euroleague_2021_2022_playerstats['IDGAME'] + "_" + euroleague_2021_2022_playerstats['Season']
-euroleague_2021_2022_playerstats[['Fixture', 'Game']] = euroleague_2021_2022_playerstats['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2021_2022_playerstats['Fixture']=pd.to_numeric(euroleague_2021_2022_playerstats['Fixture'])
-euroleague_2021_2022_playerstats['Round']=euroleague_2021_2022_playerstats['Fixture'].apply(fixture_format4)
+if "All" in selected_round:
+    selected_round = ['First Round', 'Second Round' ]
+    dataset_filter = dataset_filter.loc[dataset_filter['Round'].isin(selected_round)]
+    goals_filter = goals_filter.loc[goals_filter['Round'].isin(selected_round)]
+    select_round = ''
+else:
+    dataset_filter = dataset_filter.loc[dataset_filter['Round'] == selected_round]
+    goals_filter = goals_filter.loc[goals_filter['Round'] == selected_round]
+    select_round = selected_round
 
 
-euroleague_2022_2023_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2022_2023_playerstats.csv")
-euroleague_2022_2023_playerstats['idseason']=euroleague_2022_2023_playerstats['IDGAME'] + "_" + euroleague_2022_2023_playerstats['Season']
-euroleague_2022_2023_playerstats[['Fixture', 'Game']] = euroleague_2022_2023_playerstats['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2022_2023_playerstats['Fixture']=pd.to_numeric(euroleague_2022_2023_playerstats['Fixture'])
-euroleague_2022_2023_playerstats['Round']=euroleague_2022_2023_playerstats['Fixture'].apply(fixture_format4)
+games=dataset_filter[['Team','idseason']].value_counts().reset_index()['Team'].value_counts().reset_index().rename(columns={'count':'Games'})
+wins=dataset_filter.loc[dataset_filter.Result=='Win'][['Team','idseason']].value_counts().reset_index()['Team'].value_counts().reset_index().rename(columns={'count':'Wins'})
+loses=dataset_filter.loc[dataset_filter.Result=='Lose'][['Team','idseason']].value_counts().reset_index()['Team'].value_counts().reset_index().rename(columns={'count':'Loses'})
+draws=dataset_filter.loc[dataset_filter.Result=='Draw'][['Team','idseason']].value_counts().reset_index()['Team'].value_counts().reset_index().rename(columns={'count':'Draws'})
 
-euroleague_2023_2024_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2023_2024_playerstats.csv")
-euroleague_2023_2024_playerstats['idseason']=euroleague_2023_2024_playerstats['IDGAME'] + "_" + euroleague_2023_2024_playerstats['Season']
-euroleague_2023_2024_playerstats[['Fixture', 'Game']] = euroleague_2023_2024_playerstats['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2023_2024_playerstats['Fixture']=pd.to_numeric(euroleague_2023_2024_playerstats['Fixture'])
-euroleague_2023_2024_playerstats['Round']=euroleague_2023_2024_playerstats['Fixture'].apply(fixture_format5)
+Team_Standings=pd.merge(games,wins,how='left',on='Team')
+Team_Standings=pd.merge(Team_Standings,draws,how='left',on='Team')
+Team_Standings=pd.merge(Team_Standings,loses,how='left',on='Team')
+Team_Standings['Wins']=Team_Standings['Wins'].fillna(0)
+Team_Standings['Loses']=Team_Standings['Loses'].fillna(0)
+Team_Standings['Draws']=Team_Standings['Draws'].fillna(0)
+Team_Standings['Points']=Team_Standings['Wins']*3+Team_Standings['Draws']*1
 
-euroleague_2024_2025_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2024_2025_playerstats.csv")
-euroleague_2024_2025_playerstats['idseason']=euroleague_2024_2025_playerstats['IDGAME'] + "_" + euroleague_2024_2025_playerstats['Season']
-euroleague_2024_2025_playerstats[['Fixture', 'Game']] = euroleague_2024_2025_playerstats['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2024_2025_playerstats['Fixture']=pd.to_numeric(euroleague_2024_2025_playerstats['Fixture'])
-euroleague_2024_2025_playerstats['Round']=euroleague_2024_2025_playerstats['Fixture'].apply(fixture_format5)
+total_goals=goals_filter.groupby('Team')[['Goals Scored','Goals Conceed']].sum().reset_index()
 
 
 
-euroleague_2016_2017_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2016_2017_results.csv")
-euroleague_2016_2017_results['idseason']=euroleague_2016_2017_results['IDGAME'] + "_" + euroleague_2016_2017_results['Season']
-euroleague_2016_2017_results[['Fixture', 'Game']] = euroleague_2016_2017_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2016_2017_results['Fixture']=pd.to_numeric(euroleague_2016_2017_results['Fixture'])
-euroleague_2016_2017_results['Round']=euroleague_2016_2017_results['Fixture'].apply(fixture_format1)
 
+Team_Standings=pd.merge(Team_Standings,total_goals,how='left',on='Team').sort_values('Points',ascending=False).reset_index()
+Team_Standings.drop('index',axis=1,inplace=True)
+Team_Standings=Team_Standings.reset_index()
+Team_Standings['Rank']=Team_Standings['index']+1
+Team_Standings.drop('index',axis=1,inplace=True)
+Team_Standings=Team_Standings[['Rank','Team','Points','Games','Wins','Draws','Loses','Goals Scored','Goals Conceed']]
 
-euroleague_2017_2018_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2017_2018_results.csv")
-euroleague_2017_2018_results['idseason']=euroleague_2017_2018_results['IDGAME'] + "_" + euroleague_2017_2018_results['Season']
-euroleague_2017_2018_results[['Fixture', 'Game']] = euroleague_2017_2018_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2017_2018_results['Fixture']=pd.to_numeric(euroleague_2017_2018_results['Fixture'])
-euroleague_2017_2018_results['Round']=euroleague_2017_2018_results['Fixture'].apply(fixture_format2)
+interactive_table(Team_Standings.set_index('Rank'),
+                      paging=False,height=960,width=20000,showIndex=True,classes="display order-column nowrap table_with_monospace_font",searching=False,fixedColumns=True,select=True,info=False,scrollCollapse=True,
+        scrollX=True,scrollY=1000,fixedHeader=True,scroller=True,columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
-
-euroleague_2018_2019_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2018_2019_results.csv")
-euroleague_2018_2019_results['idseason']=euroleague_2018_2019_results['IDGAME'] + "_" + euroleague_2018_2019_results['Season']
-euroleague_2018_2019_results[['Fixture', 'Game']] = euroleague_2018_2019_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2018_2019_results['Fixture']=pd.to_numeric(euroleague_2018_2019_results['Fixture'])
-euroleague_2018_2019_results['Round']=euroleague_2018_2019_results['Fixture'].apply(fixture_format1)
-
-
-euroleague_2019_2020_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2019_2020_results.csv")
-euroleague_2019_2020_results['idseason']=euroleague_2019_2020_results['IDGAME'] + "_" + euroleague_2019_2020_results['Season']
-euroleague_2019_2020_results[['Fixture', 'Game']] = euroleague_2019_2020_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2019_2020_results['Fixture']=pd.to_numeric(euroleague_2019_2020_results['Fixture'])
-euroleague_2019_2020_results['Round']=euroleague_2019_2020_results['Fixture'].apply(fixture_format3)
-
-
-euroleague_2020_2021_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2020_2021_results.csv")
-euroleague_2020_2021_results['idseason']=euroleague_2020_2021_results['IDGAME'] + "_" + euroleague_2020_2021_results['Season']
-euroleague_2020_2021_results[['Fixture', 'Game']] = euroleague_2020_2021_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2020_2021_results['Fixture']=pd.to_numeric(euroleague_2020_2021_results['Fixture'])
-euroleague_2020_2021_results['Round']=euroleague_2020_2021_results['Fixture'].apply(fixture_format4)
-
-euroleague_2021_2022_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2021_2022_results.csv")
-euroleague_2021_2022_results['idseason']=euroleague_2021_2022_results['IDGAME'] + "_" + euroleague_2021_2022_results['Season']
-euroleague_2021_2022_results[['Fixture', 'Game']] = euroleague_2021_2022_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2021_2022_results['Fixture']=pd.to_numeric(euroleague_2021_2022_results['Fixture'])
-euroleague_2021_2022_results['Round']=euroleague_2021_2022_results['Fixture'].apply(fixture_format4)
-
-
-euroleague_2022_2023_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2022_2023_results.csv")
-euroleague_2022_2023_results['idseason']=euroleague_2022_2023_results['IDGAME'] + "_" + euroleague_2022_2023_results['Season']
-euroleague_2022_2023_results[['Fixture', 'Game']] = euroleague_2022_2023_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2022_2023_results['Fixture']=pd.to_numeric(euroleague_2022_2023_results['Fixture'])
-euroleague_2022_2023_results['Round']=euroleague_2022_2023_results['Fixture'].apply(fixture_format4)
-
-euroleague_2023_2024_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2023_2024_results.csv")
-euroleague_2023_2024_results['idseason']=euroleague_2023_2024_results['IDGAME'] + "_" + euroleague_2023_2024_results['Season']
-euroleague_2023_2024_results[['Fixture', 'Game']] = euroleague_2023_2024_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2023_2024_results['Fixture']=pd.to_numeric(euroleague_2023_2024_results['Fixture'])
-euroleague_2023_2024_results['Round']=euroleague_2023_2024_results['Fixture'].apply(fixture_format5)
-
-euroleague_2024_2025_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2024_2025_results.csv")
-euroleague_2024_2025_results['idseason']=euroleague_2024_2025_results['IDGAME'] + "_" + euroleague_2024_2025_results['Season']
-euroleague_2024_2025_results[['Fixture', 'Game']] = euroleague_2024_2025_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2024_2025_results['Fixture']=pd.to_numeric(euroleague_2024_2025_results['Fixture'])
-euroleague_2024_2025_results['Round']=euroleague_2024_2025_results['Fixture'].apply(fixture_format5)
-
-
-All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats])
-
-All_Seasons_res=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results])
-
-
-st.sidebar.write("If an error message appears, please refresh the page")
-
-st.write("# Euroleague Stats from 2016-2017 to present")
-
-kpi1, kpi2, kpi3, kpi4,kpi5 = st.columns(5)
-with kpi1:
-    st.markdown(lnk + metrics_customize(240,153,48,"","Total Games",All_Seasons['idseason'].nunique()), unsafe_allow_html=True)
-    st.markdown(lnk + metrics_customize(240,153,48,"","Total Teams",All_Seasons['Team'].nunique()), unsafe_allow_html=True)
-    st.markdown(lnk + metrics_customize(240,153,48, "", "Total Players", All_Seasons['Player'].nunique()),
-        unsafe_allow_html=True)
-
-with kpi2:
-    st.markdown(lnk + metrics_customize(240,153,48, "", "Total Points", All_Seasons['PTS'].sum()),
-                unsafe_allow_html=True)
-    st.markdown(lnk + metrics_customize(240,153,48, "", "Total Assists", All_Seasons['AS'].sum()),
-                unsafe_allow_html=True)
-    st.markdown(lnk + metrics_customize(240,153,48, "", "Total Steals", All_Seasons['ST'].sum()),
-                unsafe_allow_html=True)
-
-with kpi3:
-    st.markdown(
-        lnk + metrics_customize(240,153,48, "", "Total 3P Points Made", All_Seasons['F3M'].sum()),
-        unsafe_allow_html=True)
-    st.markdown(
-        lnk + metrics_customize(240,153,48, "", "Total 2P Points Made", All_Seasons['F2M'].sum()),
-        unsafe_allow_html=True)
-    st.markdown(
-        lnk + metrics_customize(240,153,48, "", "Total Free Throws Points Made",
-                                All_Seasons['FTM'].sum()),
-        unsafe_allow_html=True)
-
-with kpi4:
-    st.markdown(
-        lnk + metrics_customize(240,153,48, "", "Total Turnovers", All_Seasons['TO'].sum()),
-        unsafe_allow_html=True)
-    st.markdown(
-        lnk + metrics_customize(240,153,48, "", "Total Blocks", All_Seasons['BLK'].sum()),
-        unsafe_allow_html=True)
-    st.markdown(
-        lnk + metrics_customize(240,153,48, "", "Total Fouls",
-                                All_Seasons['PF'].sum()),
-        unsafe_allow_html=True)
-
-st.write("# For Play by Play analysis: https://euroleagueplaybyplayanalysis.streamlit.app/ ")
+st.write('2023-2024: Olympiacos-Panathinaikos on Regular Season had postponed due to riots and could not record data')

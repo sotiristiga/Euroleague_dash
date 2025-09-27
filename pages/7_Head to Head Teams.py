@@ -342,7 +342,7 @@ with f1:
         compare_teams_season_team1 = st.selectbox("Season(First Team):",
                                                           ['2016-2017', '2017-2018', '2018-2019', '2019-2020',
                                                            '2020-2021',
-                                                           '2021-2022', '2022-2023', '2023-2024', "2024-2025", 'All'],
+                                                           '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026', 'All'],
                                                           index=8)
         compare_teams_phase_team1 = st.selectbox("Phase(First Team):",
                                                          ['Regular Season', 'Play In', 'Play offs', 'Final Four',
@@ -365,7 +365,7 @@ with f2:
                                                    All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique(),index=1)
         compare_teams_season_team2 = st.selectbox("Season(Second Team):",
                                                           ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                           '2021-2022', '2022-2023', '2023-2024', "2024-2025", 'All'],
+                                                           '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026', 'All'],
                                                           index=8)
         compare_teams_phase_team2 = st.selectbox("Phase(Second Team):",
                                                          ['Regular Season', 'Play In', 'Play offs', 'Final Four',
@@ -460,7 +460,7 @@ def compute_team_stats(dataset_stats, dataset_periods, Team_select, ha, season, 
 
     if "All" in season:
         season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
-                  '2022-2023', '2023-2024',"2024-2025"]
+                  '2022-2023', '2023-2024','2024-2025','2025-2026']
         allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Season'].isin(season)]
 
     else:

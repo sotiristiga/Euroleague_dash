@@ -1,11 +1,11 @@
 import requests
 import pandas as pd
+import sys
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-import streamlit
 import streamlit as st
 from math import ceil
 from datetime import date
@@ -13,7 +13,6 @@ from streamlit_dynamic_filters import DynamicFilters
 import urllib.request
 from PIL import Image
 import time
-from dplython import (DplyFrame, X, diamonds, select, sift, sample_n, sample_frac, head, arrange, mutate, group_by, summarize, DelayFunction)
 from itables.streamlit import interactive_table
 from itables import to_html_datatable
 from streamlit.components.v1 import html
@@ -244,6 +243,8 @@ euroleague_2024_2025_results['Round']=euroleague_2024_2025_results['Fixture'].ap
 
 Positions=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/PlayersPositions.csv")
 
+Fixtures=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/Euroleague%20fixtures%202526.csv")
+
 All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats])
 
 All_Seasons_results=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results])
@@ -306,6 +307,7 @@ period_points['EXC'].replace(0, np.nan, inplace=True)
 st.sidebar.markdown('''
   * ## [Filters](#filters)
   * ## [Teams PIR by Position](#teams-pir-by-position)
+  * ## [Suggested Players by position](#suggested-players-by-position)
   * ## [Players PIR win and lose](#players-pir-win-and-lose)
 
 
@@ -376,6 +378,9 @@ else:
 
 
 
+
+
+
 All_seasons_pos=pd.merge(All_Seasons1,Positions,on='Player')
 All_seasons_pos['PIR+']=All_seasons_pos['PTS']+All_seasons_pos['AS']+All_seasons_pos['TR']+All_seasons_pos['ST']+All_seasons_pos['BLK']+All_seasons_pos['RF']
 All_seasons_pos['PIR-']=All_seasons_pos['F2A']-All_seasons_pos['F2M']+All_seasons_pos['F3A']-All_seasons_pos['F3M']+All_seasons_pos['FTA']-All_seasons_pos['FTM']+All_seasons_pos['TO']+All_seasons_pos['PF']+All_seasons_pos['BLKR']
@@ -413,6 +418,12 @@ opp_pir_by_pos=pd.merge(stats_by_pos_g_opp,stats_by_pos_f_opp,on='Team')
 opp_pir_by_pos=pd.merge(opp_pir_by_pos,stats_by_pos_c_opp,on='Team')
 pir_by_pos=pd.merge(teams_pir_by_pos,opp_pir_by_pos)
 pir_by_pos=pd.merge(pir_by_pos,teams_pir)
+
+
+
+
+
+
 interactive_table(pir_by_pos[['Team',"Team's Guards PIR","Team's Forwards PIR","Team's Centers PIR","Team's PIR","Opp.'s Guards PIR","Opp.'s Forwards PIR","Opp.'s Centers PIR","Opp.'s PIR"]].set_index('Team'),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
@@ -420,6 +431,52 @@ interactive_table(pir_by_pos[['Team',"Team's Guards PIR","Team's Forwards PIR","
                       scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
+
+st.header("Suggested Players by position")
+Fixtures['Test_Fixture']=Fixtures['Fixture']+euroleague_2024_2025_playerstats['Fixture'].max()
+
+now_fixture=euroleague_2024_2025_playerstats['Fixture'].max()
+select_position=st.selectbox("Position:",['Guards', 'Forwards','Centers'],index=2)
+Fixtures_test=Fixtures.loc[Fixtures['Test_Fixture']==now_fixture+1][["Home_Team","Away_Team"]]
+
+take_home_teams=Fixtures_test.rename(columns={"Home_Team":"Team","Away_Team":"Against"})
+take_home_teams["HA"]="H"
+
+take_away_teams=Fixtures_test.rename(columns={"Home_Team":"Against","Away_Team":"Team"})
+take_away_teams["HA"]="A"
+
+take_teams=pd.concat([take_home_teams,take_away_teams])
+
+next_fixtures_opp=pd.merge(take_teams.rename(columns={"Home_Team":"Team","Away_Team":"Against"}),pir_by_pos[['Team',"Opp.'s Guards PIR","Opp.'s Forwards PIR","Opp.'s Centers PIR"]].rename(columns={"Team":"Against"}))
+select_guard=next_fixtures_opp[['Team',"Against","Opp.'s Guards PIR",'HA']].sort_values("Opp.'s Guards PIR",ascending=False)
+select_forward=next_fixtures_opp[['Team',"Against","Opp.'s Forwards PIR",'HA']].sort_values("Opp.'s Forwards PIR",ascending=False)
+select_center=next_fixtures_opp[['Team',"Against","Opp.'s Centers PIR",'HA']].sort_values("Opp.'s Centers PIR",ascending=False)
+
+players_pir_guard=All_seasons_pos.loc[All_seasons_pos.Position=='G'].groupby(['Player','Team'])['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Player's PIR"})
+players_pir_guard_ha=All_seasons_pos.loc[All_seasons_pos.Position=='G'].groupby(['Player','Team','HA'])['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Player's PIR at HA"})
+Guards=pd.merge(select_guard,players_pir_guard).sort_values(["Opp.'s Guards PIR","Player's PIR"],ascending=False).rename(columns={"Opp.'s Guards PIR":"Opp.'s "+select_position+" PIR"}).merge(players_pir_guard_ha)
+Guards["Position"]="Guards"
+
+players_pir_forw=All_seasons_pos.loc[All_seasons_pos.Position=='F'].groupby(['Player','Team'])['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Player's PIR"})
+players_pir_forw_ha=All_seasons_pos.loc[All_seasons_pos.Position=='F'].groupby(['Player','Team','HA'])['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Player's PIR at HA"})
+Forwards=pd.merge(select_forward,players_pir_forw).sort_values(["Opp.'s Forwards PIR","Player's PIR"],ascending=False).rename(columns={"Opp.'s Forwards PIR":"Opp.'s "+select_position+" PIR"}).merge(players_pir_forw_ha)
+Forwards["Position"]="Forwards"
+
+players_pir_cent=All_seasons_pos.loc[All_seasons_pos.Position=='C'].groupby(['Player','Team'])['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Player's PIR"})
+players_pir_cent_ha=All_seasons_pos.loc[All_seasons_pos.Position=='C'].groupby(['Player','Team','HA'])['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Player's PIR at HA"})
+Centers=pd.merge(select_center,players_pir_cent).sort_values(["Opp.'s Centers PIR","Player's PIR"],ascending=False).rename(columns={"Opp.'s Centers PIR":"Opp.'s "+select_position+" PIR"}).merge(players_pir_cent_ha)
+Centers["Position"]="Centers"
+
+suggested_players=pd.concat([Guards,Forwards,Centers])
+
+suggested_players_fil=suggested_players.loc[(suggested_players["Player's PIR"]>6) &(suggested_players["Position"]==select_position)].rename(columns={'HA':"Played"})
+suggested_players_fil.drop('Position',axis=1,inplace=True)
+interactive_table(suggested_players_fil[['Player','Team',"Player's PIR","Against","Opp.'s "+select_position+" PIR","Played","Player's PIR at HA"]].set_index('Player'),
+                      paging=False, height=900, width=2000, showIndex=True,
+                      classes="display order-column nowrap table_with_monospace_font", searching=True,
+                      fixedColumns=True, select=True, info=False, scrollCollapse=True,
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
 st.header("Players PIR win and lose")
@@ -431,4 +488,7 @@ interactive_table(player_pir.set_index('Player'),
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
                       scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+
 

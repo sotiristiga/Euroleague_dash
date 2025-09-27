@@ -386,7 +386,7 @@ with f1:
                                      All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
 with f2:
     search_team_season_team1 = st.selectbox("Season:", ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                        '2021-2022', '2022-2023', '2023-2024', '2024-2025', 'All'],
+                                                        '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026', 'All'],
                                             index=8)
 with f3:
     search_team_phase_team1 = st.selectbox("Phase:", ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
@@ -480,7 +480,7 @@ select_allstats_in_a_game['Total BLK'] = select_allstats_in_a_game['BLKR'] + sel
 
 if "All" in search_team_season_team1:
     search_team_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
-                                '2022-2023', '2023-2024', '2024-2025']
+                                '2022-2023', '2023-2024', '2024-2025','2025-2026']
     All_Seasons1 = All_Seasons.loc[All_Seasons['Season'].isin(search_team_season_team1)]
     period_points1 = period_points.loc[period_points['Season'].isin(search_team_season_team1)]
 

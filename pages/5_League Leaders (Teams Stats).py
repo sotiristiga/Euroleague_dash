@@ -329,7 +329,7 @@ st.sidebar.markdown('''
 st.header("Filters")
 f1,f2,f3,f4,f5=st.columns(5)
 with f1:
-    team_ranking_season = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','All'],index=8)
+    team_ranking_season = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','2025-2026','All'],index=8)
 with f2:
     team_ranking_phase = st.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 with f3:
@@ -395,7 +395,7 @@ else:
 
 
 if "All" in team_ranking_season:
-    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025']
+    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025','2025-2026']
     allstats_in_a_game1=allstats_in_a_game1.loc[allstats_in_a_game1['Season'].isin(team_ranking_season)]
 
 else:

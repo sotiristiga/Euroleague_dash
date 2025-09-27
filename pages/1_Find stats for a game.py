@@ -279,7 +279,7 @@ period_points["SHC"]=period_points["Q3C"]+period_points["Q4C"]
 
 All_Seasons['Fix_games']=All_Seasons.apply(lambda x: games_format(x['HA'],x['Team'],x['Against']),axis=1)
 
-search_season=st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025'],index=8)
+search_season=st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','2025-2026'],index=8)
 All_Seasons_season_sel=All_Seasons.loc[All_Seasons.Season==search_season]
 period_points_season_sel=period_points.loc[period_points.Season==search_season]
 

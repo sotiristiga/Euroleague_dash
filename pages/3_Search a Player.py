@@ -268,7 +268,7 @@ with f1:
 with f2:
     selected_season_player1 = st.selectbox("Season:",
                                                    ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                    '2021-2022', '2022-2023', '2023-2024', '2024-2025', 'All'], index=8)
+                                                    '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026', 'All'], index=8)
 
 with f3:
     selected_phase_player1 = st.selectbox("Phase:",
@@ -294,7 +294,7 @@ else:
     select_ha_player1 = selected_ha_player1
 
 if "All" in selected_season_player1:
-    selected_season_player1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025']
+    selected_season_player1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025','2025-2026']
     All_Seasons_filter=All_Seasons_filter.loc[All_Seasons_filter['Season'].isin(selected_season_player1)]
     select_season_player1 = ''
 else:

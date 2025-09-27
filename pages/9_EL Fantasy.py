@@ -317,7 +317,7 @@ f1, f2, f3, f4, f5 = st.columns(5)
 with f1:
     search_team_season_team1 = st.selectbox("Season:",
                                                     ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                     '2021-2022', '2022-2023', '2023-2024', '2024-2025', 'All'],
+                                                     '2021-2022', '2022-2023', '2023-2024', '2024-2025', '2025-2026', 'All'],
                                                     index=8)
 with f2:
     search_team_phase_team1 = st.selectbox("Phase:",
@@ -343,7 +343,7 @@ else:
 
 
 if "All" in search_team_season_team1:
-    search_team_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025']
+    search_team_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025', '2025-2026']
     All_Seasons1=All_Seasons1.loc[All_Seasons1['Season'].isin(search_team_season_team1)]
 
 else:

@@ -17,14 +17,14 @@ st.set_page_config(layout='wide',page_title="Euroleague",page_icon="🏀")
 st.markdown(
     """
     <style>
-    /* Hide top-right menu */
-    [data-testid="stToolbar"] {visibility: hidden;}
+    /* Hide top-right hamburger menu */
+    [data-testid="stToolbar"] {display: none !important;}
 
-    /* Hide entire footer including bottom-left Streamlit logo */
-    footer {visibility: hidden;}
+    /* Hide top header banner */
+    header {display: none !important;}
 
-    /* Hide top banner/header */
-    header {visibility: hidden;}
+    /* Hide footer completely, including bottom-left Streamlit logo */
+    footer {display: none !important;}
     </style>
     """,
     unsafe_allow_html=True

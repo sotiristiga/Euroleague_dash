@@ -287,6 +287,14 @@ euroleague_2023_2024_results[['Fixture', 'Game']] = euroleague_2023_2024_results
 euroleague_2023_2024_results['Fixture'] = pd.to_numeric(euroleague_2023_2024_results['Fixture'])
 euroleague_2023_2024_results['Round'] = euroleague_2023_2024_results['Fixture'].apply(fixture_format5)
 
+euroleague_2024_2025_results = pd.read_csv(
+    f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2024_2025_results.csv")
+euroleague_2024_2025_results['idseason'] = euroleague_2024_2025_results['IDGAME'] + "_" + euroleague_2024_2025_results[
+    'Season']
+euroleague_2024_2025_results[['Fixture', 'Game']] = euroleague_2024_2025_results['IDGAME'].str.split('_', n=1,
+                                                                                                     expand=True)
+euroleague_2024_2025_results['Fixture'] = pd.to_numeric(euroleague_2024_2025_results['Fixture'])
+euroleague_2024_2025_results['Round'] = euroleague_2024_2025_results['Fixture'].apply(fixture_format5)
 
 euroleague_2025_2026_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_playerstats.csv")
 euroleague_2025_2026_playerstats['idseason']=euroleague_2025_2026_playerstats['IDGAME'] + "_" + euroleague_2025_2026_playerstats['Season']

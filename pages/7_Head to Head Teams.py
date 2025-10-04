@@ -355,7 +355,7 @@ with f1:
                                                           ['2016-2017', '2017-2018', '2018-2019', '2019-2020',
                                                            '2020-2021',
                                                            '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026', 'All'],
-                                                          index=8)
+                                                          index=9)
         compare_teams_phase_team1 = st.selectbox("Phase(First Team):",
                                                          ['Regular Season', 'Play In', 'Play offs', 'Final Four',
                                                           'All'],
@@ -378,7 +378,7 @@ with f2:
         compare_teams_season_team2 = st.selectbox("Season(Second Team):",
                                                           ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
                                                            '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026', 'All'],
-                                                          index=8)
+                                                          index=9)
         compare_teams_phase_team2 = st.selectbox("Phase(Second Team):",
                                                          ['Regular Season', 'Play In', 'Play offs', 'Final Four',
                                                           'All'],

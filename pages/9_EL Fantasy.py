@@ -243,6 +243,7 @@ euroleague_2024_2025_results['Round']=euroleague_2024_2025_results['Fixture'].ap
 
 Positions=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/PlayersPositions.csv")
 
+
 Fixtures=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/Euroleague%20fixtures%202526.csv")
 
 euroleague_2025_2026_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_playerstats.csv")
@@ -448,11 +449,10 @@ interactive_table(pir_by_pos[['Team',"Team's Guards PIR","Team's Forwards PIR","
 
 
 st.header("Suggested Players by position")
-Fixtures['Test_Fixture']=Fixtures['Fixture']+euroleague_2024_2025_playerstats['Fixture'].max()
 
-now_fixture=euroleague_2024_2025_playerstats['Fixture'].max()
+now_fixture=euroleague_2025_2026_playerstats['Fixture'].max()
 select_position=st.selectbox("Position:",['Guards', 'Forwards','Centers'],index=2)
-Fixtures_test=Fixtures.loc[Fixtures['Test_Fixture']==now_fixture+1][["Home_Team","Away_Team"]]
+Fixtures_test=Fixtures.loc[Fixtures['Fixture']==now_fixture+1][["Home_Team","Away_Team"]]
 
 take_home_teams=Fixtures_test.rename(columns={"Home_Team":"Team","Away_Team":"Against"})
 take_home_teams["HA"]="H"
@@ -503,6 +503,9 @@ interactive_table(player_pir.set_index('Player'),
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
                       scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
+
+
+
 
 
 

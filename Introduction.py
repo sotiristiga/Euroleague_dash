@@ -14,21 +14,12 @@ from PIL import Image
 import time
 st.set_page_config(layout='wide',page_title="Euroleague",page_icon="🏀")
 
-st.markdown(
-    """
-    <style>
-    /* Hide top-right hamburger menu */
-    [data-testid="stToolbar"] {display: none !important;}
-
-    /* Hide top header banner */
-    header {display: none !important;}
-
-    /* Hide footer completely, including bottom-left Streamlit logo */
-    footer {display: none !important;}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+hide_streamlit_style = """
+            <style>
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 def download_image(url, save_as):
     urllib.request.urlretrieve(url, save_as)
 

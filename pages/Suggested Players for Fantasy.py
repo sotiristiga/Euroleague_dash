@@ -338,7 +338,7 @@ suggest["Player's PIR at HA"]=suggest["Player's PIR at HA"].replace(np.nan,0)
 suggest=suggest[['Player','Team',"Player's PIR","Against","Opp.'s "+select_position+" PIR","Played","Player's PIR at HA","CR"]].set_index('Player')
 suggest["CR"]=suggest["CR"].astype(float)
 suggest["Eff PIR"]=(suggest["Player's PIR"]/suggest["CR"]).round(2)
-interactive_table(suggest,
+interactive_table(suggest.loc[suggest["Player's PIR"]>6],
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,

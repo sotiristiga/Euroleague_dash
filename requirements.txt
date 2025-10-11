@@ -9,3 +9,4 @@ streamlit-dynamic-filters
 dplython
 itables
 euroleague-api
+urllib.request

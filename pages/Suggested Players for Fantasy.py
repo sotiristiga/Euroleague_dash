@@ -8,7 +8,7 @@ from itables.streamlit import interactive_table
 
 
 st.set_page_config(layout='wide',page_title="Euroleague fantasy",page_icon="🏀")
-st.sidebar.write("If an error message appears, please refresh the page")
+
 def download_image(url, save_as):
     urllib.request.urlretrieve(url, save_as)
 
@@ -148,6 +148,7 @@ All_Seasons['Player']=All_Seasons['Player'].str.replace('Will  Rayman','William 
 All_Seasons['Player']=All_Seasons['Player'].str.replace('Leopold  Cavaliere','Leo  Cavaliere')
 All_Seasons['Player']=All_Seasons['Player'].str.replace('Nate  Reuvers','Nathan  Reuvers')
 All_Seasons['Player']=All_Seasons['Player'].str.replace('David  Kraemer','David  Kramer')
+All_Seasons['Player']=All_Seasons['Player'].str.replace('Ebuka  Izundu','Izundu  Ebuka')
 
 
 def result_format(Win):
@@ -180,15 +181,6 @@ All_Seasons["HA1"] = All_Seasons['HA'].apply(ha_against_format)
 All_Seasons["Result1"] = All_Seasons['results'].apply(result_against_format)
 All_Seasons["Win"]=All_Seasons['results'].apply(wins_against_format)
 
-st.sidebar.markdown('''
-  * ## [Filters](#filters)
-  * ## [Teams PIR by Position](#teams-pir-by-position)
-  * ## [Suggested Players by position](#suggested-players-by-position)
-  * ## [Players PIR win and lose](#players-pir-win-and-lose)
-
-
-''', unsafe_allow_html=True)
-st.header("Filters")
 f1, f2, f3, f4= st.columns(4)
 with f1:
     search_team_phase_team1 = st.selectbox("Phase:",
@@ -291,13 +283,13 @@ take_away_teams["HA"]="A"
 take_teams=pd.concat([take_home_teams,take_away_teams])
 
 next_fixtures_opp=pd.merge(take_teams.rename(columns={"Home_Team":"Team","Away_Team":"Against"}),pir_by_pos[['Team',"Opp.'s Guards PIR","Opp.'s Forwards PIR","Opp.'s Centers PIR"]].rename(columns={"Team":"Against"}),how="outer")
-select_guard=next_fixtures_opp[['Team',"Against","Opp.'s Guards PIR",'HA']].sort_values("Opp.'s Guards PIR",ascending=False).head(8)
-select_forward=next_fixtures_opp[['Team',"Against","Opp.'s Forwards PIR",'HA']].sort_values("Opp.'s Forwards PIR",ascending=False).head(8)
-select_center=next_fixtures_opp[['Team',"Against","Opp.'s Centers PIR",'HA']].sort_values("Opp.'s Centers PIR",ascending=False).head(8)
+select_guard=next_fixtures_opp[['Team',"Against","Opp.'s Guards PIR",'HA']].sort_values("Opp.'s Guards PIR",ascending=False)
+select_forward=next_fixtures_opp[['Team',"Against","Opp.'s Forwards PIR",'HA']].sort_values("Opp.'s Forwards PIR",ascending=False)
+select_center=next_fixtures_opp[['Team',"Against","Opp.'s Centers PIR",'HA']].sort_values("Opp.'s Centers PIR",ascending=False)
 
 players_pir_guard=All_seasons_pos.loc[All_seasons_pos.Position=='G'].groupby(['Player','Team'])['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Player's PIR"})
 players_pir_guard_ha=All_seasons_pos.loc[All_seasons_pos.Position=='G'].groupby(['Player','Team','HA'])['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Player's PIR at HA"})
-Guards=pd.merge(select_guard,players_pir_guard,how="outer").sort_values(["Opp.'s Guards PIR","Player's PIR"],ascending=False).rename(columns={"Opp.'s Guards PIR":"Opp.'s "+select_position+" PIR"}).merge(players_pir_guard_ha,how="outer")
+Guards=pd.merge(select_guard,players_pir_guard,how="outer").sort_values(["Opp.'s Guards PIR","Player's PIR"],ascending=False).rename(columns={"Opp.'s Guards PIR":"Opp.'s "+select_position+" PIR"}).merge(players_pir_guard_ha)
 Guards["Position"]="Guards"
 
 players_pir_forw=All_seasons_pos.loc[All_seasons_pos.Position=='F'].groupby(['Player','Team'])['PIR'].mean().round(1).reset_index().rename(columns={'PIR':"Player's PIR"})
@@ -312,7 +304,7 @@ Centers["Position"]="Centers"
 
 suggested_players=pd.concat([Guards,Forwards,Centers])
 
-suggested_players_fil=suggested_players.loc[(suggested_players["Player's PIR"]>6) &(suggested_players["Position"]==select_position)].rename(columns={'HA':"Played"})
+suggested_players_fil=suggested_players.loc[(suggested_players["Position"]==select_position)].rename(columns={'HA':"Played"})
 suggested_players_fil.drop('Position',axis=1,inplace=True)
 
 
@@ -323,15 +315,24 @@ values=pd.DataFrame(tables[0].iloc[3:,:3].set_axis(['Player1', 'Team','CR'], axi
 values.columns=['Player1', 'Team','CR']
 
 
+
+
+
+Players_CR['Player1']=Players_CR['Player1'].str.replace('Ebuka Izundu','Izundu Ebuka')
 credits_data=pd.merge(Players_CR,values,on="Player1",how="outer")
 credits_data['Player'] = credits_data['First Name'] + "  " + credits_data['Last Name']
 credits_data['Player']=credits_data['Player'].fillna(credits_data["Player1"])
+credits_data['Player']=credits_data['Player'].str.replace('Nikolaos  Rogkavopoulos','Nikos  Rogkavopoulos')
 credits_data['Player']=credits_data['Player'].str.replace("Dan  Oturu","Daniel  Oturu")
 credits_data['Player']=credits_data['Player'].str.replace("Codi  Miller-Mcintyre","Codi  Miller-McIntyre")
 credits_data['Player']=credits_data['Player'].str.replace("Wade  Baldwin Iv","Wade  Baldwin IV")
 credits_data['Player']=credits_data['Player'].str.replace("Lonnie  Walker Iv","Lonnie  Walker IV")
-credits_data['Player']=credits_data['Player'].str.replace("Lonnie  Walker Iv","Lonnie  Walker IV")
-
+credits_data['Player']=credits_data['Player'].str.replace('Alexandros  Samodurov','Alexandros  Samontourov')
+credits_data['Player']=credits_data['Player'].str.replace('David  Mccormack','David  McCormack')
+credits_data['Player']=credits_data['Player'].str.replace('Ebuka Izundu','Izundu  Ebuka')
+credits_data['Player']=credits_data['Player'].str.replace('Leopold  Cavaliere','Leo  Cavaliere')
+credits_data['Player']=credits_data['Player'].str.replace('Jimmy  Clark Iii','Jimmy  Clark')
+credits_data['Player']=credits_data['Player'].str.replace('Tj  Shorts','TJ  Shorts II')
 suggest=pd.merge(suggested_players_fil,credits_data[["Player","CR"]],on="Player",how="left")
 suggest["Player's PIR at HA"]=suggest["Player's PIR at HA"].replace(np.nan,0)
 suggest=suggest[['Player','Team',"Player's PIR","Against","Opp.'s "+select_position+" PIR","Played","Player's PIR at HA","CR"]].set_index('Player')

@@ -9,3 +9,5 @@ streamlit-dynamic-filters
 dplython
 itables
 requests
+lxml
+html5lib

@@ -6,7 +6,6 @@ from PIL import Image
 
 from itables.streamlit import interactive_table
 
-from euroleague_api.boxscore_data import BoxScoreData
 
 st.set_page_config(layout='wide',page_title="Euroleague fantasy",page_icon="🏀")
 st.sidebar.write("If an error message appears, please refresh the page")

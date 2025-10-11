@@ -112,7 +112,7 @@ def fixture_format5(Fixture):
 
 
 Positions=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/PlayersPositions.csv")
-
+Players_CR=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/refs/heads/main/2025_2026_players.csv")
 
 Fixtures=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/Euroleague_dash/refs/heads/main/Euroleague%20fixtures%202526.csv")
 
@@ -324,52 +324,7 @@ values=pd.DataFrame(tables[0].iloc[3:,:3].set_axis(['Player1', 'Team','CR'], axi
 values.columns=['Player1', 'Team','CR']
 
 
-def players_seasons(seasons, games):
-    export_dataset = (BoxScoreData(competition="E").get_player_boxscore_stats_data(season=seasons, gamecode=games))
-    dataset=export_dataset.loc[(export_dataset.Team!="Total") & (export_dataset.Team!="Team") & (export_dataset.Player_ID!="Total") & (export_dataset.Player_ID!="Team") & (export_dataset.Minutes!="DNP")]
-    dataset[['Last Name', 'First Name']] = dataset['Player'].str.split(', ', expand=True)
-    players =dataset[['Last Name', 'First Name']]
-    return players
-
-
-export_dataset = pd.concat([players_seasons(2025,1),
-players_seasons(2025,2),
-players_seasons(2025,3),
-players_seasons(2025,4),
-players_seasons(2025,5),
-players_seasons(2025,6),
-players_seasons(2025,7),
-players_seasons(2025,8),
-players_seasons(2025,9),
-players_seasons(2025,10),
-players_seasons(2025,11),
-players_seasons(2025,12),
-players_seasons(2025,13),
-players_seasons(2025,14),
-players_seasons(2025,15),
-players_seasons(2025,16),
-players_seasons(2025,17),
-players_seasons(2025,18),
-players_seasons(2025,19),
-players_seasons(2025,20)])
-
-export_dataset['First Name'] = export_dataset['First Name'].str.upper().str.title()
-export_dataset['Last Name'] = export_dataset['Last Name'].str.upper().str.title()
-export_dataset['Player1'] = export_dataset['Last Name'] + " " + export_dataset['First Name']
-export_dataset=export_dataset[["Player1",'First Name','Last Name']].value_counts().reset_index()[["Player1",'First Name','Last Name']]
-export_dataset['Player1'] = export_dataset['Player1'].str.replace('Iv', 'IV')
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Alston Jr. Derrick","Alston Jr Derrick")
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Bacot Jr. Armando","Bacot Jr Armando")
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Boston Jr. Brandon","Boston Jr Brandon")
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Brissett O'Shae J","Brissett Oshae")
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Clark Iii Jimmy","Clark III Jimmy")
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Kraemer David","Kramer David")
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Leaf Tj","Leaf TJ")
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Mccormack David","McCormack David")
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Miller-Mcintyre Codi","Miller-McIntyre Codi")
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Shorts Tj","Shorts TJ")
-export_dataset["Player1"]=export_dataset["Player1"].str.replace("Wright IV Mckinley","Wright IV McKinley")
-credits_data=pd.merge(export_dataset,values,on="Player1",how="outer")
+credits_data=pd.merge(Players_CR,values,on="Player1",how="outer")
 credits_data['Player'] = credits_data['First Name'] + "  " + credits_data['Last Name']
 credits_data['Player']=credits_data['Player'].fillna(credits_data["Player1"])
 credits_data['Player']=credits_data['Player'].str.replace("Dan  Oturu","Daniel  Oturu")

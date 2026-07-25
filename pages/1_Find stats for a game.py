@@ -399,7 +399,7 @@ show(finalperiodpoints,
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
@@ -408,7 +408,7 @@ interactive_table(finalstats.set_index('Team'),
                   paging=False, height=900, width=20000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=False,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True,  filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 st.write("##### Player Stats")
@@ -416,5 +416,5 @@ interactive_table(finalAllSeasons,
                       paging=False, height=960, width=20000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])

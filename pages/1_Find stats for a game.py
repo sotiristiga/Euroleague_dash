@@ -12,7 +12,6 @@ from streamlit_dynamic_filters import DynamicFilters
 import urllib.request
 from PIL import Image
 import time
-from dplython import (DplyFrame, X, diamonds, select, sift, sample_n, sample_frac, head, arrange, mutate, group_by, summarize, DelayFunction)
 from itables.streamlit import interactive_table
 from itables import to_html_datatable
 from streamlit.components.v1 import html

@@ -13,7 +13,7 @@ import urllib.request
 from PIL import Image
 import time
 from itables.streamlit import interactive_table
-from itables import to_html_datatable
+from itables import to_html_datatable,show
 from streamlit.components.v1 import html
 from plotly.subplots import make_subplots
 
@@ -395,7 +395,7 @@ st.write("#### "+period_points_season_fixture_sel['Season'].unique()[0]+" "+peri
 
 
 st.write("##### Period Stats")
-interactive_table(finalperiodpoints,
+show(finalperiodpoints,
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,

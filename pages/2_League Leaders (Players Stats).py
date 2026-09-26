@@ -12,8 +12,6 @@ from streamlit_dynamic_filters import DynamicFilters
 import urllib.request
 from PIL import Image
 import time
-from dplython import (DplyFrame, X, diamonds, select, sift, sample_n, sample_frac, head, arrange, mutate, group_by,
-                      summarize, DelayFunction)
 from itables.streamlit import interactive_table
 from itables import to_html_datatable
 from streamlit.components.v1 import html
@@ -294,67 +292,73 @@ euroleague_2024_2025_results[['Fixture', 'Game']] = euroleague_2024_2025_results
 euroleague_2024_2025_results['Fixture'] = pd.to_numeric(euroleague_2024_2025_results['Fixture'])
 euroleague_2024_2025_results['Round'] = euroleague_2024_2025_results['Fixture'].apply(fixture_format5)
 
-euroleague_2025_2026_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_playerstats.csv")
-euroleague_2025_2026_playerstats['idseason']=euroleague_2025_2026_playerstats['IDGAME'] + "_" + euroleague_2025_2026_playerstats['Season']
-euroleague_2025_2026_playerstats[['Fixture', 'Game']] = euroleague_2025_2026_playerstats['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2025_2026_playerstats['Fixture']=pd.to_numeric(euroleague_2025_2026_playerstats['Fixture'])
-euroleague_2025_2026_playerstats['Round']=euroleague_2025_2026_playerstats['Fixture'].apply(fixture_format5)
+euroleague_2025_2026_playerstats = pd.read_csv(
+    f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_playerstats.csv")
+euroleague_2025_2026_playerstats['idseason'] = euroleague_2025_2026_playerstats['IDGAME'] + "_" + \
+                                               euroleague_2025_2026_playerstats['Season']
+euroleague_2025_2026_playerstats[['Fixture', 'Game']] = euroleague_2025_2026_playerstats['IDGAME'].str.split('_', n=1,
+                                                                                                             expand=True)
+euroleague_2025_2026_playerstats['Fixture'] = pd.to_numeric(euroleague_2025_2026_playerstats['Fixture'])
+euroleague_2025_2026_playerstats['Round'] = euroleague_2025_2026_playerstats['Fixture'].apply(fixture_format5)
 
-euroleague_2025_2026_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_results.csv")
-euroleague_2025_2026_results['idseason']=euroleague_2025_2026_results['IDGAME'] + "_" + euroleague_2025_2026_results['Season']
-euroleague_2025_2026_results[['Fixture', 'Game']] = euroleague_2025_2026_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2025_2026_results['Fixture']=pd.to_numeric(euroleague_2025_2026_results['Fixture'])
-euroleague_2025_2026_results['Round']=euroleague_2025_2026_results['Fixture'].apply(fixture_format5)
+euroleague_2025_2026_results = pd.read_csv(
+    f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_results.csv")
+euroleague_2025_2026_results['idseason'] = euroleague_2025_2026_results['IDGAME'] + "_" + euroleague_2025_2026_results[
+    'Season']
+euroleague_2025_2026_results[['Fixture', 'Game']] = euroleague_2025_2026_results['IDGAME'].str.split('_', n=1,
+                                                                                                     expand=True)
+euroleague_2025_2026_results['Fixture'] = pd.to_numeric(euroleague_2025_2026_results['Fixture'])
+euroleague_2025_2026_results['Round'] = euroleague_2025_2026_results['Fixture'].apply(fixture_format5)
 
 
-euroleague_2026_2027_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_results.csv")
-euroleague_2026_2027_results['idseason']=euroleague_2025_2026_results['IDGAME'] + "_" + euroleague_2025_2026_results['Season']
-euroleague_2026_2027_results[['Fixture', 'Game']] = euroleague_2025_2026_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2026_2027_results['Fixture']=pd.to_numeric(euroleague_2025_2026_results['Fixture'])
-euroleague_2026_2027_results['Round']=euroleague_2025_2026_results['Fixture'].apply(fixture_format5)
+euroleague_2026_2027_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2026_2027_results.csv")
+euroleague_2026_2027_results['idseason']=euroleague_2026_2027_results['IDGAME'] + "_" + euroleague_2026_2027_results['Season']
+euroleague_2026_2027_results[['Fixture', 'Game']] = euroleague_2026_2027_results['IDGAME'].str.split('_', n=1, expand=True)
+euroleague_2026_2027_results['Fixture']=pd.to_numeric(euroleague_2026_2027_results['Fixture'])
+euroleague_2026_2027_results['Round']=euroleague_2026_2027_results['Fixture'].apply(fixture_format5)
 
-euroleague_2026_2027_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_playerstats.csv")
-euroleague_2026_2027_playerstats['idseason']=euroleague_2025_2026_playerstats['IDGAME'] + "_" + euroleague_2026_2027_playerstats['Season']
+euroleague_2026_2027_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2026_2027_playerstats.csv")
+euroleague_2026_2027_playerstats['idseason']=euroleague_2026_2027_playerstats['IDGAME'] + "_" + euroleague_2026_2027_playerstats['Season']
 euroleague_2026_2027_playerstats[['Fixture', 'Game']] = euroleague_2026_2027_playerstats['IDGAME'].str.split('_', n=1, expand=True)
 euroleague_2026_2027_playerstats['Fixture']=pd.to_numeric(euroleague_2026_2027_playerstats['Fixture'])
 euroleague_2026_2027_playerstats['Round']=euroleague_2026_2027_playerstats['Fixture'].apply(fixture_format5)
+All_Seasons = pd.concat(
+    [euroleague_2016_2017_playerstats, euroleague_2017_2018_playerstats, euroleague_2018_2019_playerstats,
+     euroleague_2019_2020_playerstats, euroleague_2020_2021_playerstats, euroleague_2021_2022_playerstats,
+     euroleague_2022_2023_playerstats, euroleague_2023_2024_playerstats, euroleague_2024_2025_playerstats,
+     euroleague_2025_2026_playerstats, euroleague_2026_2027_playerstats])
 
-All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,
-                       euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,
-                       euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats,
-                      euroleague_2025_2026_playerstats,euroleague_2026_2027_playerstats])
+All_Seasons_res = pd.concat([euroleague_2016_2017_results, euroleague_2017_2018_results, euroleague_2018_2019_results,
+                             euroleague_2019_2020_results, euroleague_2020_2021_results, euroleague_2021_2022_results,
+                             euroleague_2022_2023_results, euroleague_2023_2024_results, euroleague_2024_2025_results,
+                             euroleague_2026_2027_results, euroleague_2025_2026_results])
 
-All_Seasons_res=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,
-                           euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,
-                           euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results,
-                          euroleague_2026_2027_results,euroleague_2025_2026_results])
-
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Yago Mateus dos Santos","Yago  Dos Santos")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Alberto   Abalde","Alberto  Abalde")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Wade  Baldwin Iv","Wade  Baldwin IV")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Devin   Booker","Devin  Booker")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("John  Brown III","John  Brown")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Leopold  Cavaliere","Leo  Cavaliere")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Jimmy   Clark","Jimmy  Clark")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Jimmy  Clark Iii","Jimmy  Clark")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Oscar  da Silva","Oscar  Da Silva")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Nando  de Colo","Nando  De Colo")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Pj  Dozier","P.J.  Dozier")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Izundu  Ebuka","Ebuka  Izundu")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Juan  Hernangomez","Juancho  Hernangomez")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("David  Kraemer","David  Kramer")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Zach  Leday","Zach  LeDay")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Nico  Mannion","Niccolo  Mannion")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("David  Mccormack","David  McCormack")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Shaquielle  Mckissic","Shaquielle  McKissic")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Codi  Miller-Mcintyre","Codi  Miller-McIntyre")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Daniel  Oturu","Dan  Oturu")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Alexandros  Samontourov","Alexandros  Samodurov")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Suad  Sehovic","Sead  Sehovic")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Tj  Shorts","TJ  Shorts II")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Lonnie  Walker Iv","Lonnie  Walker IV")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Duane  Washington Jr.","Duane  Washington")
-All_Seasons["Player"]=All_Seasons["Player"].str.replace("Aleksandr  Vezenkov","Sasha  Vezenkov")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Yago Mateus dos Santos", "Yago  Dos Santos")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Alberto   Abalde", "Alberto  Abalde")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Wade  Baldwin Iv", "Wade  Baldwin IV")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Devin   Booker", "Devin  Booker")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("John  Brown III", "John  Brown")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Leopold  Cavaliere", "Leo  Cavaliere")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Jimmy   Clark", "Jimmy  Clark")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Jimmy  Clark Iii", "Jimmy  Clark")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Oscar  da Silva", "Oscar  Da Silva")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Nando  de Colo", "Nando  De Colo")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Pj  Dozier", "P.J.  Dozier")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Izundu  Ebuka", "Ebuka  Izundu")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Juan  Hernangomez", "Juancho  Hernangomez")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("David  Kraemer", "David  Kramer")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Zach  Leday", "Zach  LeDay")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Nico  Mannion", "Niccolo  Mannion")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("David  Mccormack", "David  McCormack")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Shaquielle  Mckissic", "Shaquielle  McKissic")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Codi  Miller-Mcintyre", "Codi  Miller-McIntyre")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Daniel  Oturu", "Dan  Oturu")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Alexandros  Samontourov", "Alexandros  Samodurov")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Suad  Sehovic", "Sead  Sehovic")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Tj  Shorts", "TJ  Shorts II")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Lonnie  Walker Iv", "Lonnie  Walker IV")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Duane  Washington Jr.", "Duane  Washington")
+All_Seasons["Player"] = All_Seasons["Player"].str.replace("Aleksandr  Vezenkov", "Sasha  Vezenkov")
 
 st.sidebar.markdown('''
   * ## [Filters](#filters)
@@ -362,15 +366,16 @@ st.sidebar.markdown('''
   * ## [Total Stats](#total-stats)
   * ## [Record Stats](#record-stats)
   * ## [Best by Season average Stats](#best-by-season-average-stats)
-  
+
 ''', unsafe_allow_html=True)
 st.header("Filters")
 
 f1, f2, f3, f4, f5 = st.columns(5)
 with f1:
     selected_season_player1 = st.selectbox("Season:", ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                       '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026','2026-2027', 'All'],
-                                           index=9)
+                                                       '2021-2022', '2022-2023', '2023-2024', '2024-2025', '2025-2026',
+                                                       '2026-2027', 'All'],
+                                           index=10)
 
 with f2:
     selected_phase_player1 = st.selectbox("Phase:", ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
@@ -395,7 +400,7 @@ else:
 
 if "All" in selected_season_player1:
     selected_season_player1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
-                               '2022-2023', '2023-2024', '2024-2025','2025-2026','2026-2027']
+                               '2022-2023', '2023-2024', '2024-2025', '2025-2026', '2026-2027']
     All_Seasons_filter = All_Seasons_filter.loc[All_Seasons_filter['Season'].isin(selected_season_player1)]
     select_season_player1 = ''
 else:
@@ -466,50 +471,50 @@ compute_player_mean_stats = All_Seasons_filter.groupby('Player')[
      'Team_opp_F3M', 'Team_opp_F3A', 'Team_opp_FTM', 'Team_opp_FTA', 'Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR',
      'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().reset_index().round(1)
 compute_player_mean_stats['2P%'] = 100 * (
-            compute_player_mean_stats['2P Made'] / compute_player_mean_stats['2P Attempt'])
+        compute_player_mean_stats['2P Made'] / compute_player_mean_stats['2P Attempt'])
 compute_player_mean_stats['2P Made(%)'] = compute_player_mean_stats['2P Made'].astype(str) + " (" + \
                                           compute_player_mean_stats['2P%'].round(1).astype(str) + "%)"
 compute_player_mean_stats['2P Attempt(%)'] = compute_player_mean_stats['2P Attempt'].astype(str) + " (" + \
                                              compute_player_mean_stats['2P%'].round(1).astype(str) + "%)"
 compute_player_mean_stats['3P%'] = 100 * (
-            compute_player_mean_stats['3P Made'] / compute_player_mean_stats['3P Attempt'])
+        compute_player_mean_stats['3P Made'] / compute_player_mean_stats['3P Attempt'])
 compute_player_mean_stats['3P Made(%)'] = compute_player_mean_stats['3P Made'].astype(str) + " (" + \
                                           compute_player_mean_stats['3P%'].round(1).astype(str) + "%)"
 compute_player_mean_stats['3P Attempt(%)'] = compute_player_mean_stats['3P Attempt'].astype(str) + " (" + \
                                              compute_player_mean_stats['3P%'].round(1).astype(str) + "%)"
 compute_player_mean_stats['FT%'] = 100 * (
-            compute_player_mean_stats['FT Made'] / compute_player_mean_stats['FT Attempt'])
+        compute_player_mean_stats['FT Made'] / compute_player_mean_stats['FT Attempt'])
 compute_player_mean_stats['FT Made(%)'] = compute_player_mean_stats['FT Made'].astype(str) + " (" + \
                                           compute_player_mean_stats['FT%'].round(1).astype(str) + "%)"
 compute_player_mean_stats['FT Attempt(%)'] = compute_player_mean_stats['FT Attempt'].astype(str) + " (" + \
                                              compute_player_mean_stats['FT%'].round(1).astype(str) + "%)"
 compute_player_mean_stats['Possesions'] = 0.96 * (
-            compute_player_mean_stats['2P Attempt'] + compute_player_mean_stats['3P Attempt'] +
-            compute_player_mean_stats['Offensive Rebounds'] + compute_player_mean_stats['Turnovers'] + 0.44 *
-            compute_player_mean_stats['FT Attempt'])
+        compute_player_mean_stats['2P Attempt'] + compute_player_mean_stats['3P Attempt'] +
+        compute_player_mean_stats['Offensive Rebounds'] + compute_player_mean_stats['Turnovers'] + 0.44 *
+        compute_player_mean_stats['FT Attempt'])
 compute_player_mean_stats['Offensive Rating'] = 100 * (
-            compute_player_mean_stats['Points'] / compute_player_mean_stats['Possesions'])
+        compute_player_mean_stats['Points'] / compute_player_mean_stats['Possesions'])
 compute_player_mean_stats['EFG%'] = 100 * (
-            compute_player_mean_stats['2P Made'] + 1.5 * compute_player_mean_stats['3P Made']) / (
-                                                compute_player_mean_stats['2P Attempt'] + compute_player_mean_stats[
-                                            '3P Attempt'])
+        compute_player_mean_stats['2P Made'] + 1.5 * compute_player_mean_stats['3P Made']) / (
+                                            compute_player_mean_stats['2P Attempt'] + compute_player_mean_stats[
+                                        '3P Attempt'])
 compute_player_mean_stats['TS%'] = 100 * (compute_player_mean_stats['Points']) / (2 * (
-            compute_player_mean_stats['2P Attempt'] + compute_player_mean_stats['3P Attempt'] + 0.44 *
-            compute_player_mean_stats['FT Attempt']))
+        compute_player_mean_stats['2P Attempt'] + compute_player_mean_stats['3P Attempt'] + 0.44 *
+        compute_player_mean_stats['FT Attempt']))
 compute_player_mean_stats['FT Ratio'] = compute_player_mean_stats['FT Attempt'] / (
-            compute_player_mean_stats['3P Attempt'] + compute_player_mean_stats['2P Attempt'])
+        compute_player_mean_stats['3P Attempt'] + compute_player_mean_stats['2P Attempt'])
 compute_player_mean_stats['AS-TO ratio'] = compute_player_mean_stats['Assists'] / compute_player_mean_stats['Turnovers']
 compute_player_mean_stats['TO Ratio'] = 100 * (
-            compute_player_mean_stats['Turnovers'] / compute_player_mean_stats['Possesions'])
+        compute_player_mean_stats['Turnovers'] / compute_player_mean_stats['Possesions'])
 compute_player_mean_stats['AS Ratio'] = 100 * (
-            compute_player_mean_stats['Assists'] / compute_player_mean_stats['Possesions'])
+        compute_player_mean_stats['Assists'] / compute_player_mean_stats['Possesions'])
 compute_player_mean_stats['USG%'] = 100 * (((compute_player_mean_stats['3P Attempt'] + compute_player_mean_stats[
     '2P Attempt']) + 0.44 * compute_player_mean_stats['FT Attempt'] + compute_player_mean_stats['Turnovers']) * (
                                                40)) / (compute_player_mean_stats['MIN'] * (
-            compute_player_mean_stats['Team_F2A'] + compute_player_mean_stats['Team_F3A'] + 0.44 *
-            compute_player_mean_stats['Team_FTA'] + compute_player_mean_stats['Team_TO']))
+        compute_player_mean_stats['Team_F2A'] + compute_player_mean_stats['Team_F3A'] + 0.44 *
+        compute_player_mean_stats['Team_FTA'] + compute_player_mean_stats['Team_TO']))
 compute_player_mean_stats['OR%'] = (100 * compute_player_mean_stats['Offensive Rebounds']) / (
-            compute_player_mean_stats['Team_OR'] + compute_player_mean_stats['Team_opp_OR'])
+        compute_player_mean_stats['Team_OR'] + compute_player_mean_stats['Team_opp_OR'])
 compute_player_total_stats = All_Seasons_filter.groupby('Player')[
     ['Points', 'MIN', '2P Made', '2P Attempt', '3P Made', '3P Attempt', 'FT Made', 'FT Attempt', 'Offensive Rebounds',
      'Defensive Rebounds', 'Total Rebounds',
@@ -520,51 +525,51 @@ compute_player_total_stats = All_Seasons_filter.groupby('Player')[
      'Team_opp_DR', 'Team_opp_TR', 'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO',
      'Team_opp_BLK', 'Team_opp_PF']].sum().reset_index()
 compute_player_total_stats['2P%'] = 100 * (
-            compute_player_total_stats['2P Made'] / compute_player_total_stats['2P Attempt'])
+        compute_player_total_stats['2P Made'] / compute_player_total_stats['2P Attempt'])
 compute_player_total_stats['2P Made(%)'] = compute_player_total_stats['2P Made'].astype(str) + " (" + \
                                            compute_player_total_stats['2P%'].round(1).astype(str) + "%)"
 compute_player_total_stats['2P Attempt(%)'] = compute_player_total_stats['2P Attempt'].astype(str) + " (" + \
                                               compute_player_total_stats['2P%'].round(1).astype(str) + "%)"
 compute_player_total_stats['3P%'] = 100 * (
-            compute_player_total_stats['3P Made'] / compute_player_total_stats['3P Attempt'])
+        compute_player_total_stats['3P Made'] / compute_player_total_stats['3P Attempt'])
 compute_player_total_stats['3P Made(%)'] = compute_player_total_stats['3P Made'].astype(str) + " (" + \
                                            compute_player_total_stats['3P%'].round(1).astype(str) + "%)"
 compute_player_total_stats['3P Attempt(%)'] = compute_player_total_stats['3P Attempt'].astype(str) + " (" + \
                                               compute_player_total_stats['3P%'].round(1).astype(str) + "%)"
 compute_player_total_stats['FT%'] = 100 * (
-            compute_player_total_stats['FT Made'] / compute_player_total_stats['FT Attempt'])
+        compute_player_total_stats['FT Made'] / compute_player_total_stats['FT Attempt'])
 compute_player_total_stats['FT Made(%)'] = compute_player_total_stats['FT Made'].astype(str) + " (" + \
                                            compute_player_total_stats['FT%'].round(1).astype(str) + "%)"
 compute_player_total_stats['FT Attempt(%)'] = compute_player_total_stats['FT Attempt'].astype(str) + " (" + \
                                               compute_player_total_stats['FT%'].round(1).astype(str) + "%)"
 compute_player_total_stats['Possesions'] = 0.96 * (
-            compute_player_total_stats['2P Attempt'] + compute_player_total_stats['3P Attempt'] -
-            compute_player_total_stats['Offensive Rebounds'] + compute_player_total_stats['Turnovers'] + 0.44 *
-            compute_player_total_stats['FT Attempt'])
+        compute_player_total_stats['2P Attempt'] + compute_player_total_stats['3P Attempt'] -
+        compute_player_total_stats['Offensive Rebounds'] + compute_player_total_stats['Turnovers'] + 0.44 *
+        compute_player_total_stats['FT Attempt'])
 compute_player_total_stats['Offensive Rating'] = 100 * (
-            compute_player_total_stats['Points'] / compute_player_total_stats['Possesions'])
+        compute_player_total_stats['Points'] / compute_player_total_stats['Possesions'])
 compute_player_total_stats['EFG%'] = 100 * (
-            compute_player_total_stats['2P Made'] + 1.5 * compute_player_total_stats['3P Made']) / (
-                                                 compute_player_total_stats['2P Attempt'] + compute_player_total_stats[
-                                             '3P Attempt'])
+        compute_player_total_stats['2P Made'] + 1.5 * compute_player_total_stats['3P Made']) / (
+                                             compute_player_total_stats['2P Attempt'] + compute_player_total_stats[
+                                         '3P Attempt'])
 compute_player_total_stats['TS%'] = 100 * (compute_player_total_stats['Points']) / (2 * (
-            compute_player_total_stats['2P Attempt'] + compute_player_total_stats['3P Attempt'] + 0.44 *
-            compute_player_total_stats['FT Attempt']))
+        compute_player_total_stats['2P Attempt'] + compute_player_total_stats['3P Attempt'] + 0.44 *
+        compute_player_total_stats['FT Attempt']))
 compute_player_total_stats['FT Ratio'] = compute_player_total_stats['FT Attempt'] / (
-            compute_player_total_stats['3P Attempt'] + compute_player_total_stats['2P Attempt'])
+        compute_player_total_stats['3P Attempt'] + compute_player_total_stats['2P Attempt'])
 compute_player_total_stats['AS-TO ratio'] = compute_player_total_stats['Assists'] / compute_player_total_stats[
     'Turnovers']
 compute_player_total_stats['TO Ratio'] = 100 * (
-            compute_player_total_stats['Turnovers'] / compute_player_total_stats['Possesions'])
+        compute_player_total_stats['Turnovers'] / compute_player_total_stats['Possesions'])
 compute_player_total_stats['AS Ratio'] = 100 * (
-            compute_player_total_stats['Assists'] / compute_player_total_stats['Possesions'])
+        compute_player_total_stats['Assists'] / compute_player_total_stats['Possesions'])
 compute_player_total_stats['USG(%)'] = 100 * (((compute_player_total_stats['3P Attempt'] + compute_player_total_stats[
     '2P Attempt']) + 0.44 * compute_player_total_stats['FT Attempt'] + compute_player_total_stats['Turnovers']) * (
                                                   40)) / (compute_player_total_stats['MIN'] * (
-            compute_player_total_stats['Team_F2A'] + compute_player_total_stats['Team_F3A'] + 0.44 *
-            compute_player_total_stats['Team_FTA'] + compute_player_total_stats['Team_TO']))
+        compute_player_total_stats['Team_F2A'] + compute_player_total_stats['Team_F3A'] + 0.44 *
+        compute_player_total_stats['Team_FTA'] + compute_player_total_stats['Team_TO']))
 compute_player_total_stats['ΟR(%)'] = (100 * compute_player_total_stats['Offensive Rebounds']) / (
-            compute_player_total_stats['Team_OR'] + compute_player_total_stats['Team_opp_OR'])
+        compute_player_total_stats['Team_OR'] + compute_player_total_stats['Team_opp_OR'])
 
 compute_player_games = All_Seasons_filter['Player'].value_counts().reset_index()
 compute_player_games = compute_player_games.rename(columns={'count': 'Games'})
@@ -581,55 +586,55 @@ compute_player_mean_stats_season = All_Seasons.groupby(['Player', 'Season'])[
      'Team_opp_F3M', 'Team_opp_F3A', 'Team_opp_FTM', 'Team_opp_FTA', 'Team_opp_OR', 'Team_opp_DR', 'Team_opp_TR',
      'Team_opp_AS', 'Team_opp_ST', 'Team_opp_TO', 'Team_opp_BLK', 'Team_opp_PF']].mean().reset_index().round(1)
 compute_player_mean_stats_season['2P%'] = 100 * (
-            compute_player_mean_stats_season['2P Made'] / compute_player_mean_stats_season['2P Attempt'])
+        compute_player_mean_stats_season['2P Made'] / compute_player_mean_stats_season['2P Attempt'])
 compute_player_mean_stats_season['2P Made(%)'] = compute_player_mean_stats_season['2P Made'].astype(str) + " (" + \
                                                  compute_player_mean_stats_season['2P%'].round(1).astype(str) + "%)"
 compute_player_mean_stats_season['2P Attempt(%)'] = compute_player_mean_stats_season['2P Attempt'].astype(str) + " (" + \
                                                     compute_player_mean_stats_season['2P%'].round(1).astype(str) + "%)"
 compute_player_mean_stats_season['3P%'] = 100 * (
-            compute_player_mean_stats_season['3P Made'] / compute_player_mean_stats_season['3P Attempt'])
+        compute_player_mean_stats_season['3P Made'] / compute_player_mean_stats_season['3P Attempt'])
 compute_player_mean_stats_season['3P Made(%)'] = compute_player_mean_stats_season['3P Made'].astype(str) + " (" + \
                                                  compute_player_mean_stats_season['3P%'].round(1).astype(str) + "%)"
 compute_player_mean_stats_season['3P Attempt(%)'] = compute_player_mean_stats_season['3P Attempt'].astype(str) + " (" + \
                                                     compute_player_mean_stats_season['3P%'].round(1).astype(str) + "%)"
 compute_player_mean_stats_season['FT%'] = 100 * (
-            compute_player_mean_stats_season['FT Made'] / compute_player_mean_stats_season['FT Attempt'])
+        compute_player_mean_stats_season['FT Made'] / compute_player_mean_stats_season['FT Attempt'])
 compute_player_mean_stats_season['FT Made(%)'] = compute_player_mean_stats_season['FT Made'].astype(str) + " (" + \
                                                  compute_player_mean_stats_season['FT%'].round(1).astype(str) + "%)"
 compute_player_mean_stats_season['FT Attempt(%)'] = compute_player_mean_stats_season['FT Attempt'].astype(str) + " (" + \
                                                     compute_player_mean_stats_season['FT%'].round(1).astype(str) + "%)"
 compute_player_mean_stats_season['Possesions'] = 0.96 * (
-            compute_player_mean_stats_season['2P Attempt'] + compute_player_mean_stats_season['3P Attempt'] -
-            compute_player_mean_stats_season['Offensive Rebounds'] + compute_player_mean_stats_season[
-                'Turnovers'] + 0.44 * compute_player_mean_stats_season['FT Attempt'])
+        compute_player_mean_stats_season['2P Attempt'] + compute_player_mean_stats_season['3P Attempt'] -
+        compute_player_mean_stats_season['Offensive Rebounds'] + compute_player_mean_stats_season[
+            'Turnovers'] + 0.44 * compute_player_mean_stats_season['FT Attempt'])
 compute_player_mean_stats_season['Offensive Rating'] = 100 * (
-            compute_player_mean_stats_season['Points'] / compute_player_mean_stats_season['Possesions'])
+        compute_player_mean_stats_season['Points'] / compute_player_mean_stats_season['Possesions'])
 compute_player_mean_stats_season['EFG%'] = 100 * (
-            compute_player_mean_stats_season['2P Made'] + 1.5 * compute_player_mean_stats_season['3P Made']) / (
-                                                       compute_player_mean_stats_season['2P Attempt'] +
-                                                       compute_player_mean_stats_season['3P Attempt'])
+        compute_player_mean_stats_season['2P Made'] + 1.5 * compute_player_mean_stats_season['3P Made']) / (
+                                                   compute_player_mean_stats_season['2P Attempt'] +
+                                                   compute_player_mean_stats_season['3P Attempt'])
 compute_player_mean_stats_season['TS%'] = 100 * (compute_player_mean_stats_season['Points']) / (2 * (
-            compute_player_mean_stats_season['2P Attempt'] + compute_player_mean_stats_season['3P Attempt'] + 0.44 *
-            compute_player_mean_stats_season['FT Attempt']))
+        compute_player_mean_stats_season['2P Attempt'] + compute_player_mean_stats_season['3P Attempt'] + 0.44 *
+        compute_player_mean_stats_season['FT Attempt']))
 compute_player_mean_stats_season['FT Ratio'] = compute_player_mean_stats_season['FT Attempt'] / (
-            compute_player_mean_stats_season['3P Attempt'] + compute_player_mean_stats_season['2P Attempt'])
+        compute_player_mean_stats_season['3P Attempt'] + compute_player_mean_stats_season['2P Attempt'])
 compute_player_mean_stats_season['AS-TO ratio'] = compute_player_mean_stats_season['Assists'] / \
                                                   compute_player_mean_stats_season['Turnovers']
 compute_player_mean_stats_season['TO Ratio'] = 100 * (
-            compute_player_mean_stats_season['Turnovers'] / compute_player_mean_stats_season['Possesions'])
+        compute_player_mean_stats_season['Turnovers'] / compute_player_mean_stats_season['Possesions'])
 compute_player_mean_stats_season['AS Ratio'] = 100 * (
-            compute_player_mean_stats_season['Assists'] / compute_player_mean_stats_season['Possesions'])
+        compute_player_mean_stats_season['Assists'] / compute_player_mean_stats_season['Possesions'])
 compute_player_mean_stats_season['USG%'] = 100 * (((compute_player_mean_stats_season['3P Attempt'] +
                                                     compute_player_mean_stats_season['2P Attempt']) + 0.44 *
                                                    compute_player_mean_stats_season['FT Attempt'] +
                                                    compute_player_mean_stats_season['Turnovers']) * (40)) / (
-                                                       compute_player_mean_stats_season['MIN'] * (
-                                                           compute_player_mean_stats_season['Team_F2A'] +
-                                                           compute_player_mean_stats_season['Team_F3A'] + 0.44 *
-                                                           compute_player_mean_stats_season['Team_FTA'] +
-                                                           compute_player_mean_stats_season['Team_TO']))
+                                                   compute_player_mean_stats_season['MIN'] * (
+                                                   compute_player_mean_stats_season['Team_F2A'] +
+                                                   compute_player_mean_stats_season['Team_F3A'] + 0.44 *
+                                                   compute_player_mean_stats_season['Team_FTA'] +
+                                                   compute_player_mean_stats_season['Team_TO']))
 compute_player_mean_stats_season['OR%'] = (100 * compute_player_mean_stats_season['Offensive Rebounds']) / (
-            compute_player_mean_stats_season['Team_OR'] + compute_player_mean_stats['Team_opp_OR'])
+        compute_player_mean_stats_season['Team_OR'] + compute_player_mean_stats['Team_opp_OR'])
 
 compute_player_games_season = All_Seasons[['Player', 'Season']].value_counts().reset_index()
 compute_player_games_season = compute_player_games_season.rename(columns={'count': 'Games'})

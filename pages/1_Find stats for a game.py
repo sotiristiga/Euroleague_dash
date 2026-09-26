@@ -253,10 +253,26 @@ euroleague_2025_2026_results[['Fixture', 'Game']] = euroleague_2025_2026_results
 euroleague_2025_2026_results['Fixture']=pd.to_numeric(euroleague_2025_2026_results['Fixture'])
 euroleague_2025_2026_results['Round']=euroleague_2025_2026_results['Fixture'].apply(fixture_format5)
 
+euroleague_2026_2027_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_results.csv")
+euroleague_2026_2027_results['idseason']=euroleague_2025_2026_results['IDGAME'] + "_" + euroleague_2025_2026_results['Season']
+euroleague_2026_2027_results[['Fixture', 'Game']] = euroleague_2025_2026_results['IDGAME'].str.split('_', n=1, expand=True)
+euroleague_2026_2027_results['Fixture']=pd.to_numeric(euroleague_2025_2026_results['Fixture'])
+euroleague_2026_2027_results['Round']=euroleague_2025_2026_results['Fixture'].apply(fixture_format5)
 
-All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats,euroleague_2025_2026_playerstats])
+euroleague_2026_2027_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_playerstats.csv")
+euroleague_2026_2027_playerstats['idseason']=euroleague_2025_2026_playerstats['IDGAME'] + "_" + euroleague_2026_2027_playerstats['Season']
+euroleague_2026_2027_playerstats[['Fixture', 'Game']] = euroleague_2026_2027_playerstats['IDGAME'].str.split('_', n=1, expand=True)
+euroleague_2026_2027_playerstats['Fixture']=pd.to_numeric(euroleague_2026_2027_playerstats['Fixture'])
+euroleague_2026_2027_playerstats['Round']=euroleague_2026_2027_playerstats['Fixture'].apply(fixture_format5)
+All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,
+                       euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,
+                       euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats,
+                      euroleague_2025_2026_playerstats,euroleague_2026_2027_playerstats])
 
-All_Seasons_results=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results,euroleague_2025_2026_results])
+All_Seasons_res=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,
+                           euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,
+                           euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results,
+                          euroleague_2026_2027_results,euroleague_2025_2026_results])
 
 All_Seasons["Player"]=All_Seasons["Player"].str.replace("Yago Mateus dos Santos","Yago  Dos Santos")
 All_Seasons["Player"]=All_Seasons["Player"].str.replace("Alberto   Abalde","Alberto  Abalde")
@@ -318,7 +334,7 @@ period_points["SHC"]=period_points["Q3C"]+period_points["Q4C"]
 
 All_Seasons['Fix_games']=All_Seasons.apply(lambda x: games_format(x['HA'],x['Team'],x['Against']),axis=1)
 
-search_season=st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','2025-2026'],index=9)
+search_season=st.sidebar.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','2025-2026','2026-2027'],index=10)
 All_Seasons_season_sel=All_Seasons.loc[All_Seasons.Season==search_season]
 period_points_season_sel=period_points.loc[period_points.Season==search_season]
 

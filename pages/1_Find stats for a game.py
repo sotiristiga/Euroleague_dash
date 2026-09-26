@@ -253,14 +253,14 @@ euroleague_2025_2026_results[['Fixture', 'Game']] = euroleague_2025_2026_results
 euroleague_2025_2026_results['Fixture']=pd.to_numeric(euroleague_2025_2026_results['Fixture'])
 euroleague_2025_2026_results['Round']=euroleague_2025_2026_results['Fixture'].apply(fixture_format5)
 
-euroleague_2026_2027_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_results.csv")
-euroleague_2026_2027_results['idseason']=euroleague_2025_2026_results['IDGAME'] + "_" + euroleague_2025_2026_results['Season']
-euroleague_2026_2027_results[['Fixture', 'Game']] = euroleague_2025_2026_results['IDGAME'].str.split('_', n=1, expand=True)
-euroleague_2026_2027_results['Fixture']=pd.to_numeric(euroleague_2025_2026_results['Fixture'])
-euroleague_2026_2027_results['Round']=euroleague_2025_2026_results['Fixture'].apply(fixture_format5)
+euroleague_2026_2027_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2026_2027_results.csv")
+euroleague_2026_2027_results['idseason']=euroleague_2026_2027_results['IDGAME'] + "_" + euroleague_2026_2027_results['Season']
+euroleague_2026_2027_results[['Fixture', 'Game']] = euroleague_2026_2027_results['IDGAME'].str.split('_', n=1, expand=True)
+euroleague_2026_2027_results['Fixture']=pd.to_numeric(euroleague_2026_2027_results['Fixture'])
+euroleague_2026_2027_results['Round']=euroleague_2026_2027_results['Fixture'].apply(fixture_format5)
 
-euroleague_2026_2027_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2025_2026_playerstats.csv")
-euroleague_2026_2027_playerstats['idseason']=euroleague_2025_2026_playerstats['IDGAME'] + "_" + euroleague_2026_2027_playerstats['Season']
+euroleague_2026_2027_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2026_2027_playerstats.csv")
+euroleague_2026_2027_playerstats['idseason']=euroleague_2026_2027_playerstats['IDGAME'] + "_" + euroleague_2026_2027_playerstats['Season']
 euroleague_2026_2027_playerstats[['Fixture', 'Game']] = euroleague_2026_2027_playerstats['IDGAME'].str.split('_', n=1, expand=True)
 euroleague_2026_2027_playerstats['Fixture']=pd.to_numeric(euroleague_2026_2027_playerstats['Fixture'])
 euroleague_2026_2027_playerstats['Round']=euroleague_2026_2027_playerstats['Fixture'].apply(fixture_format5)

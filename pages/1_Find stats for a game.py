@@ -269,7 +269,7 @@ All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_pla
                        euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats,
                       euroleague_2025_2026_playerstats,euroleague_2026_2027_playerstats])
 
-All_Seasons_res=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,
+All_Seasons_results=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,
                            euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,
                            euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results,
                           euroleague_2026_2027_results,euroleague_2025_2026_results])

@@ -685,7 +685,7 @@ interactive_table(av.set_index('No.'),
                   paging=False, height=1200, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 st.header("Total Stats")
@@ -700,7 +700,7 @@ interactive_table(tot.set_index('No.'),
                   paging=False, height=1200, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 st.header("Record Stats")
@@ -716,7 +716,7 @@ interactive_table(rec.set_index('No.'),
                   paging=False, height=1200, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 st.header("Best by Season average Stats")
@@ -732,5 +732,5 @@ interactive_table(bs.set_index('No.'),
                   paging=False, height=1200, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])

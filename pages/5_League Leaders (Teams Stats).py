@@ -1,4 +1,5 @@
 import requests
+import sys
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -12,7 +13,6 @@ from streamlit_dynamic_filters import DynamicFilters
 import urllib.request
 from PIL import Image
 import time
-from dplython import (DplyFrame, X, diamonds, select, sift, sample_n, sample_frac, head, arrange, mutate, group_by, summarize, DelayFunction)
 from itables.streamlit import interactive_table
 from itables import to_html_datatable
 from streamlit.components.v1 import html
@@ -254,10 +254,30 @@ euroleague_2025_2026_results[['Fixture', 'Game']] = euroleague_2025_2026_results
 euroleague_2025_2026_results['Fixture']=pd.to_numeric(euroleague_2025_2026_results['Fixture'])
 euroleague_2025_2026_results['Round']=euroleague_2025_2026_results['Fixture'].apply(fixture_format5)
 
+euroleague_2026_2027_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2026_2027_results.csv")
+euroleague_2026_2027_results['idseason']=euroleague_2026_2027_results['IDGAME'] + "_" + euroleague_2026_2027_results['Season']
+euroleague_2026_2027_results[['Fixture', 'Game']] = euroleague_2026_2027_results['IDGAME'].str.split('_', n=1, expand=True)
+euroleague_2026_2027_results['Fixture']=pd.to_numeric(euroleague_2026_2027_results['Fixture'])
+euroleague_2026_2027_results['Round']=euroleague_2026_2027_results['Fixture'].apply(fixture_format5)
 
-All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats,euroleague_2025_2026_playerstats])
+euroleague_2026_2027_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2026_2027_playerstats.csv")
+euroleague_2026_2027_playerstats['idseason']=euroleague_2026_2027_playerstats['IDGAME'] + "_" + euroleague_2026_2027_playerstats['Season']
+euroleague_2026_2027_playerstats[['Fixture', 'Game']] = euroleague_2026_2027_playerstats['IDGAME'].str.split('_', n=1, expand=True)
+euroleague_2026_2027_playerstats['Fixture']=pd.to_numeric(euroleague_2026_2027_playerstats['Fixture'])
+euroleague_2026_2027_playerstats['Round']=euroleague_2026_2027_playerstats['Fixture'].apply(fixture_format5)
 
-All_Seasons_results=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results,euroleague_2025_2026_results])
+All_Seasons = pd.concat(
+    [euroleague_2016_2017_playerstats, euroleague_2017_2018_playerstats, euroleague_2018_2019_playerstats,
+     euroleague_2019_2020_playerstats, euroleague_2020_2021_playerstats, euroleague_2021_2022_playerstats,
+     euroleague_2022_2023_playerstats, euroleague_2023_2024_playerstats, euroleague_2024_2025_playerstats,
+     euroleague_2025_2026_playerstats,euroleague_2026_2027_playerstats])
+
+All_Seasons_results = pd.concat(
+    [euroleague_2016_2017_results, euroleague_2017_2018_results, euroleague_2018_2019_results,
+     euroleague_2019_2020_results, euroleague_2020_2021_results, euroleague_2021_2022_results,
+     euroleague_2022_2023_results, euroleague_2023_2024_results, euroleague_2024_2025_results,
+     euroleague_2025_2026_results,euroleague_2026_2027_results
+])
 
 
 def games_format(HA,Fixture,Season,Team,Against):
@@ -343,7 +363,7 @@ st.sidebar.markdown('''
 st.header("Filters")
 f1,f2,f3,f4,f5=st.columns(5)
 with f1:
-    team_ranking_season = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','2025-2026','All'],index=8)
+    team_ranking_season = st.selectbox("Season:",['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021','2021-2022', '2022-2023', '2023-2024','2024-2025','2025-2026','2026-2027','All'],index=10)
 with f2:
     team_ranking_phase = st.selectbox("Phase:",['Regular Season', 'Play In','Play offs', 'Final Four','All'],index=4)
 with f3:
@@ -409,7 +429,7 @@ else:
 
 
 if "All" in team_ranking_season:
-    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025','2025-2026']
+    team_ranking_season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020','2020-2021','2021-2022', '2022-2023','2023-2024','2024-2025','2025-2026','2026-2027']
     allstats_in_a_game1=allstats_in_a_game1.loc[allstats_in_a_game1['Season'].isin(team_ranking_season)]
 
 else:
@@ -456,7 +476,7 @@ try:
                           paging=False, height=900, width=2000, showIndex=True,
                           classes="display order-column nowrap table_with_monospace_font", searching=False,
                           fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,filter='bottom',
+                          scrollX=True, scrollY=1000, fixedHeader=True, scroller=False,filter='bottom',
                           columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 except:
@@ -469,7 +489,7 @@ interactive_table(periods.round(1).set_index('Team'),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False,filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
@@ -480,7 +500,7 @@ interactive_table(basicstats.set_index('Team'),
                   paging=False, height=900, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=False,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 st.header("Shooting Stats")
@@ -497,7 +517,7 @@ interactive_table(shootstats[['Team','F2M','F2A', '2P(%)','opp F2M','opp F2A','o
                   paging=False, height=900, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=False,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 st.header("Advanced Stats")
@@ -534,7 +554,7 @@ interactive_table(advstats.set_index('Team'),
                   paging=False, height=900, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=False,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
@@ -545,5 +565,5 @@ interactive_table(periodwins.set_index('Team'),
                   paging=False, height=900, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=False,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])

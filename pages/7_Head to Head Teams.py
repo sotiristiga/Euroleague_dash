@@ -12,8 +12,6 @@ from streamlit_dynamic_filters import DynamicFilters
 import urllib.request
 from PIL import Image
 import time
-from dplython import (DplyFrame, X, diamonds, select, sift, sample_n, sample_frac, head, arrange, mutate, group_by,
-                      summarize, DelayFunction)
 from itables.streamlit import interactive_table
 from itables import to_html_datatable
 from streamlit.components.v1 import html
@@ -354,8 +352,8 @@ with f1:
         compare_teams_season_team1 = st.selectbox("Season(First Team):",
                                                           ['2016-2017', '2017-2018', '2018-2019', '2019-2020',
                                                            '2020-2021',
-                                                           '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026', 'All'],
-                                                          index=9)
+                                                           '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026','2026-2027', 'All'],
+                                                          index=10)
         compare_teams_phase_team1 = st.selectbox("Phase(First Team):",
                                                          ['Regular Season', 'Play In', 'Play offs', 'Final Four',
                                                           'All'],
@@ -377,8 +375,8 @@ with f2:
                                                    All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique(),index=1)
         compare_teams_season_team2 = st.selectbox("Season(Second Team):",
                                                           ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                           '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026', 'All'],
-                                                          index=9)
+                                                           '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026', '2026-2027','All'],
+                                                          index=10)
         compare_teams_phase_team2 = st.selectbox("Phase(Second Team):",
                                                          ['Regular Season', 'Play In', 'Play offs', 'Final Four',
                                                           'All'],
@@ -394,10 +392,11 @@ with f2:
 
 
 def team_rating_stat_higher(dataset, stat):
-    dataset1 = dataset[["Team", stat]].sort_values(stat,ascending=True).reset_index()
+    dataset1 = dataset[["Team", stat]].sort_values(stat, ascending=True).reset_index()
     dataset1.drop("index", axis=1, inplace=True)
-    final_dataset = dataset1.reset_index() >> mutate(Rating=(100 * (X.index + 1) / X.Team.nunique()),
-                                                     Rating1=(100 - (100 - X.Rating.round(0)) * 0.5).round(0))
+    final_dataset = dataset1.reset_index()
+    final_dataset["Rating"] = ((100 * (final_dataset["index"] + 1) / final_dataset["Team"].nunique()))
+    final_dataset["Rating1"] = ((100 - (100 - final_dataset["Rating"].round(0)) * 0.5).round(0))
     final_dataset.rename(columns={'Rating1': 'Rating ' + stat}, inplace=True)
     final_dataset.drop(["index", "Rating", stat], axis=1, inplace=True)
     return final_dataset
@@ -406,8 +405,9 @@ def team_rating_stat_higher(dataset, stat):
 def team_rating_stat_lower(dataset, stat):
     dataset1 = dataset[["Team", stat]].sort_values(stat, ascending=False).reset_index()
     dataset1.drop("index", axis=1, inplace=True)
-    final_dataset = dataset1.reset_index() >> mutate(Rating=(100 * (X.index + 1) / X.Team.nunique()),
-                                                     Rating1=(100 - (100 - X.Rating.round(0)) * 0.5).round(0))
+    final_dataset = dataset1.reset_index()
+    final_dataset["Rating"] = ((100 * (final_dataset["index"] + 1) / final_dataset["Team"].nunique()))
+    final_dataset["Rating1"] = ((100 - (100 - final_dataset["Rating"].round(0)) * 0.5).round(0))
     final_dataset.rename(columns={'Rating1': 'Rating ' + stat}, inplace=True)
     final_dataset.drop(["index", "Rating", stat], axis=1, inplace=True)
     return final_dataset
@@ -472,7 +472,7 @@ def compute_team_stats(dataset_stats, dataset_periods, Team_select, ha, season, 
 
     if "All" in season:
         season = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
-                  '2022-2023', '2023-2024','2024-2025','2025-2026']
+                  '2022-2023', '2023-2024','2024-2025','2025-2026','2026-2027']
         allstats_in_a_game1 = allstats_in_a_game1.loc[allstats_in_a_game1['Season'].isin(season)]
 
     else:
@@ -852,7 +852,7 @@ try:
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
@@ -913,7 +913,7 @@ try:
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
     st.header("Shooting Stats")
     shooting_stats1 = teamstats1[
@@ -987,7 +987,7 @@ try:
                   paging=False, height=900, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
     st.header("Advanced Stats")
     advanced_stats1 = (teamstats1[['Team','Possesions', 'opp Possesions', 'Offensive Rating', 'Defensive Rating',
@@ -1005,7 +1005,7 @@ try:
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 except:
     st.error("No data available with this parameters")
@@ -1047,7 +1047,7 @@ try:
         between_teams_ha_team = st.selectbox("Home team:", [team1, team2, 'All'], index=2)
         between_teams_season_team = st.selectbox("Season:",
                                                  ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                  '2021-2022', '2022-2023', '2023-2024','2024-2025','2025-2026', 'All'], index=8)
+                                                  '2021-2022', '2022-2023', '2023-2024','2024-2025','2025-2026','2026-2027', 'All'], index=8)
     with filters2:
         between_teams_phase_team = st.selectbox("Phase:",
                                                 ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
@@ -1079,7 +1079,7 @@ try:
 
     if "All" in between_teams_season_team:
         between_teams_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
-                                      '2022-2023', '2023-2024','2024-2025','2025-2026']
+                                      '2022-2023', '2023-2024','2024-2025','2025-2026','2026-2027']
         between_stats1 = between_stats1.loc[between_stats1['Season'].isin(between_teams_season_team1)]
         between_periods1 = between_periods1.loc[between_periods1['Season'].isin(between_teams_season_team1)]
     else:
@@ -1181,7 +1181,7 @@ try:
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
     st.header("Between Games Basic Stats")
@@ -1213,7 +1213,7 @@ try:
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
@@ -1254,7 +1254,7 @@ try:
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
@@ -1271,7 +1271,7 @@ try:
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 

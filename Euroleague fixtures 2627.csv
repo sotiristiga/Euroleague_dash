@@ -1,0 +1,381 @@
+﻿Date,Time (CET),Home,Away,Result,Fixture,Game,IDGAME,Season,Home_Team,Away_Team
+24-Sep-26,4:00 PM,Dubai Basketball,Real Madrid,78-77,1,1,1_1,2026-2027,DUB,RMB
+24-Sep-26,4:00 PM,Hapoel Tel Aviv,FC Bayern Munich,84-86,1,2,1_2,2026-2027,HAP,BAY
+24-Sep-26,6:00 PM,Crvena Zvezda Belgrade,Zalgiris Kaunas,77-83,1,3,1_3,2026-2027,CRV,ZAL
+24-Sep-26,6:15 PM,Panathinaikos Athens,Paris Basketball,91-72,1,4,1_4,2026-2027,PAN,PRB
+24-Sep-26,6:30 PM,FC Barcelona,Anadolu Efes Istanbul,89-82,1,5,1_5,2026-2027,BAR,EFE
+24-Sep-26,6:30 PM,Baskonia Vitoria-Gasteiz,Olympiacos Piraeus,89-106,1,6,1_6,2026-2027,BAS,OLY
+24-Sep-26,6:45 PM,LDLC ASVEL,Maccabi Rapyd Tel Aviv,84-74,1,7,1_7,2026-2027,VIL,MAC
+25-Sep-26,5:00 PM,Besiktas Istanbul,Valencia Basket,94-96,1,8,1_8,2026-2027,BES,VAL
+25-Sep-26,5:45 PM,Fenerbahce Istanbul,Virtus Bologna,78-68,1,9,1_9,2026-2027,FEN,BOL
+25-Sep-26,6:45 PM,Partizan Belgrade,Armani Olimpia Milan,92-76,1,10,1_10,2026-2027,PAR,MIL
+29-Sep-26,4:00 PM,Dubai Basketball,FC Barcelona,Game preview,2,1,2_1,2026-2027,DUB,BAR
+29-Sep-26,5:00 PM,Anadolu Efes Istanbul,Real Madrid,Game preview,2,2,2_2,2026-2027,EFE,RMB
+29-Sep-26,5:00 PM,Zalgiris Kaunas,Olympiacos Piraeus,Game preview,2,3,2_3,2026-2027,ZAL,OLY
+29-Sep-26,5:45 PM,Fenerbahce Istanbul,FC Bayern Munich,Game preview,2,4,2_4,2026-2027,FEN,BAY
+29-Sep-26,6:00 PM,Crvena Zvezda Belgrade,Hapoel Tel Aviv,Game preview,2,5,2_5,2026-2027,CRV,HAP
+29-Sep-26,6:30 PM,Armani Olimpia Milan,Virtus Bologna,Game preview,2,6,2_6,2026-2027,MIL,BOL
+29-Sep-26,6:30 PM,Valencia Basket,Baskonia Vitoria-Gasteiz,Game preview,2,7,2_7,2026-2027,VAL,BAS
+29-Sep-26,6:45 PM,Paris Basketball,Partizan Belgrade,Game preview,2,8,2_8,2026-2027,PRB,PAR
+30-Sep-26,6:05 PM,Maccabi Rapyd Tel Aviv,Besiktas Istanbul,Game preview,2,9,2_9,2026-2027,MAC,BES
+30-Sep-26,6:15 PM,Panathinaikos Athens,LDLC ASVEL,Game preview,2,10,2_10,2026-2027,PAN,VIL
+1-Oct-26,5:00 PM,Besiktas Istanbul,FC Barcelona,Game preview,3,1,3_1,2026-2027,BES,BAR
+1-Oct-26,5:00 PM,Hapoel Tel Aviv,Real Madrid,Game preview,3,2,3_2,2026-2027,HAP,RMB
+1-Oct-26,6:00 PM,Crvena Zvezda Belgrade,Anadolu Efes Istanbul,Game preview,3,3,3_3,2026-2027,CRV,EFE
+1-Oct-26,6:30 PM,Virtus Bologna,Olympiacos Piraeus,Game preview,3,4,3_4,2026-2027,BOL,OLY
+1-Oct-26,6:45 PM,Paris Basketball,Zalgiris Kaunas,Game preview,3,5,3_5,2026-2027,PRB,ZAL
+2-Oct-26,5:45 PM,Fenerbahce Istanbul,Dubai Basketball,Game preview,3,6,3_6,2026-2027,FEN,DUB
+2-Oct-26,6:00 PM,LDLC ASVEL,Valencia Basket,Game preview,3,7,3_7,2026-2027,VIL,VAL
+2-Oct-26,6:15 PM,Panathinaikos Athens,Maccabi Rapyd Tel Aviv,Game preview,3,8,3_8,2026-2027,PAN,MAC
+2-Oct-26,6:30 PM,FC Bayern Munich,Partizan Belgrade,Game preview,3,9,3_9,2026-2027,BAY,PAR
+2-Oct-26,6:30 PM,Baskonia Vitoria-Gasteiz,Armani Olimpia Milan,Game preview,3,10,3_10,2026-2027,BAS,MIL
+7-Oct-26,6:45 PM,Paris Basketball,LDLC ASVEL,Game preview,4,1,4_1,2026-2027,PRB,VIL
+8-Oct-26,6:05 PM,Maccabi Rapyd Tel Aviv,Armani Olimpia Milan,Game preview,4,2,4_2,2026-2027,MAC,MIL
+8-Oct-26,6:15 PM,Panathinaikos Athens,Fenerbahce Istanbul,Game preview,4,3,4_3,2026-2027,PAN,FEN
+8-Oct-26,6:30 PM,FC Bayern Munich,Virtus Bologna,Game preview,4,4,4_4,2026-2027,BAY,BOL
+8-Oct-26,6:30 PM,Valencia Basket,Hapoel Tel Aviv,Game preview,4,5,4_5,2026-2027,VAL,HAP
+8-Oct-26,6:45 PM,Real Madrid,Partizan Belgrade,Game preview,4,6,4_6,2026-2027,RMB,PAR
+9-Oct-26,4:00 PM,Dubai Basketball,Crvena Zvezda Belgrade,Game preview,4,7,4_7,2026-2027,DUB,CRV
+9-Oct-26,6:15 PM,Olympiacos Piraeus,Anadolu Efes Istanbul,Game preview,4,8,4_8,2026-2027,OLY,EFE
+9-Oct-26,6:30 PM,FC Barcelona,Zalgiris Kaunas,Game preview,4,9,4_9,2026-2027,BAR,ZAL
+9-Oct-26,6:30 PM,Baskonia Vitoria-Gasteiz,Besiktas Istanbul,Game preview,4,10,4_10,2026-2027,BAS,BES
+13-Oct-26,5:45 PM,Fenerbahce Istanbul,Zalgiris Kaunas,Game preview,5,1,5_1,2026-2027,FEN,ZAL
+13-Oct-26,6:00 PM,LDLC ASVEL,Crvena Zvezda Belgrade,Game preview,5,2,5_2,2026-2027,VIL,CRV
+13-Oct-26,6:30 PM,Armani Olimpia Milan,Real Madrid,Game preview,5,3,5_3,2026-2027,MIL,RMB
+13-Oct-26,6:30 PM,FC Barcelona,Maccabi Rapyd Tel Aviv,Game preview,5,4,5_4,2026-2027,BAR,MAC
+13-Oct-26,6:30 PM,Baskonia Vitoria-Gasteiz,Dubai Basketball,Game preview,5,5,5_5,2026-2027,BAS,DUB
+13-Oct-26,6:30 PM,Partizan Belgrade,Panathinaikos Athens,Game preview,5,6,5_6,2026-2027,PAR,PAN
+13-Oct-26,7:00 PM,Valencia Basket,Olympiacos Piraeus,Game preview,5,7,5_7,2026-2027,VAL,OLY
+14-Oct-26,5:00 PM,Hapoel Tel Aviv,Besiktas Istanbul,Game preview,5,8,5_8,2026-2027,HAP,BES
+14-Oct-26,5:30 PM,Anadolu Efes Istanbul,FC Bayern Munich,Game preview,5,9,5_9,2026-2027,EFE,BAY
+14-Oct-26,6:45 PM,Paris Basketball,Virtus Bologna,Game preview,5,10,5_10,2026-2027,PRB,BOL
+15-Oct-26,5:45 PM,Fenerbahce Istanbul,Partizan Belgrade,Game preview,6,1,6_1,2026-2027,FEN,PAR
+15-Oct-26,6:30 PM,Armani Olimpia Milan,Dubai Basketball,Game preview,6,2,6_2,2026-2027,MIL,DUB
+15-Oct-26,6:30 PM,Valencia Basket,Maccabi Rapyd Tel Aviv,Game preview,6,3,6_3,2026-2027,VAL,MAC
+15-Oct-26,7:00 PM,Real Madrid,LDLC ASVEL,Game preview,6,4,6_4,2026-2027,RMB,VIL
+16-Oct-26,5:00 PM,Besiktas Istanbul,FC Bayern Munich,Game preview,6,5,6_5,2026-2027,BES,BAY
+16-Oct-26,5:00 PM,Zalgiris Kaunas,Anadolu Efes Istanbul,Game preview,6,6,6_6,2026-2027,ZAL,EFE
+16-Oct-26,6:00 PM,Crvena Zvezda Belgrade,Paris Basketball,Game preview,6,7,6_7,2026-2027,CRV,PRB
+16-Oct-26,6:15 PM,Panathinaikos Athens,Hapoel Tel Aviv,Game preview,6,8,6_8,2026-2027,PAN,HAP
+16-Oct-26,6:30 PM,FC Barcelona,Olympiacos Piraeus,Game preview,6,9,6_9,2026-2027,BAR,OLY
+16-Oct-26,6:30 PM,Virtus Bologna,Baskonia Vitoria-Gasteiz,Game preview,6,10,6_10,2026-2027,BOL,BAS
+21-Oct-26,5:00 PM,Hapoel Tel Aviv,Virtus Bologna,Game preview,7,1,7_1,2026-2027,HAP,BOL
+22-Oct-26,5:30 PM,Anadolu Efes Istanbul,Besiktas Istanbul,Game preview,7,2,7_2,2026-2027,EFE,BES
+22-Oct-26,6:05 PM,Maccabi Rapyd Tel Aviv,Real Madrid,Game preview,7,3,7_3,2026-2027,MAC,RMB
+22-Oct-26,6:15 PM,Panathinaikos Athens,Baskonia Vitoria-Gasteiz,Game preview,7,4,7_4,2026-2027,PAN,BAS
+22-Oct-26,6:30 PM,Armani Olimpia Milan,FC Barcelona,Game preview,7,5,7_5,2026-2027,MIL,BAR
+22-Oct-26,6:30 PM,FC Bayern Munich,Dubai Basketball,Game preview,7,6,7_6,2026-2027,BAY,DUB
+22-Oct-26,6:45 PM,Partizan Belgrade,Crvena Zvezda Belgrade,Game preview,7,7,7_7,2026-2027,PAR,CRV
+23-Oct-26,5:00 PM,Zalgiris Kaunas,LDLC ASVEL,Game preview,7,8,7_8,2026-2027,ZAL,VIL
+23-Oct-26,6:15 PM,Olympiacos Piraeus,Fenerbahce Istanbul,Game preview,7,9,7_9,2026-2027,OLY,FEN
+23-Oct-26,6:45 PM,Paris Basketball,Valencia Basket,Game preview,7,10,7_10,2026-2027,PRB,VAL
+27-Oct-26,4:00 PM,Dubai Basketball,Paris Basketball,Game preview,8,1,8_1,2026-2027,DUB,PRB
+27-Oct-26,7:00 PM,Crvena Zvezda Belgrade,Maccabi Rapyd Tel Aviv,Game preview,8,2,8_2,2026-2027,CRV,MAC
+27-Oct-26,7:15 PM,Panathinaikos Athens,Armani Olimpia Milan,Game preview,8,3,8_3,2026-2027,PAN,MIL
+27-Oct-26,7:30 PM,FC Bayern Munich,FC Barcelona,Game preview,8,4,8_4,2026-2027,BAY,BAR
+27-Oct-26,7:30 PM,Valencia Basket,Fenerbahce Istanbul,Game preview,8,5,8_5,2026-2027,VAL,FEN
+27-Oct-26,8:00 PM,Baskonia Vitoria-Gasteiz,Real Madrid,Game preview,8,6,8_6,2026-2027,BAS,RMB
+28-Oct-26,6:00 PM,Hapoel Tel Aviv,Anadolu Efes Istanbul,Game preview,8,7,8_7,2026-2027,HAP,EFE
+28-Oct-26,6:30 PM,Besiktas Istanbul,Olympiacos Piraeus,Game preview,8,8,8_8,2026-2027,BES,OLY
+28-Oct-26,7:00 PM,LDLC ASVEL,Partizan Belgrade,Game preview,8,9,8_9,2026-2027,VIL,PAR
+28-Oct-26,7:30 PM,Virtus Bologna,Zalgiris Kaunas,Game preview,8,10,8_10,2026-2027,BOL,ZAL
+29-Oct-26,7:00 PM,Crvena Zvezda Belgrade,FC Bayern Munich,Game preview,9,1,9_1,2026-2027,CRV,BAY
+29-Oct-26,7:05 PM,Maccabi Rapyd Tel Aviv,Paris Basketball,Game preview,9,2,9_2,2026-2027,MAC,PRB
+29-Oct-26,7:45 PM,Real Madrid,Fenerbahce Istanbul,Game preview,9,3,9_3,2026-2027,RMB,FEN
+30-Oct-26,4:00 PM,Dubai Basketball,Hapoel Tel Aviv,Game preview,9,4,9_4,2026-2027,DUB,HAP
+30-Oct-26,5:30 PM,Anadolu Efes Istanbul,Panathinaikos Athens,Game preview,9,5,9_5,2026-2027,EFE,PAN
+30-Oct-26,6:00 PM,Zalgiris Kaunas,Partizan Belgrade,Game preview,9,6,9_6,2026-2027,ZAL,PAR
+30-Oct-26,7:00 PM,LDLC ASVEL,Baskonia Vitoria-Gasteiz,Game preview,9,7,9_7,2026-2027,VIL,BAS
+30-Oct-26,7:15 PM,Olympiacos Piraeus,Armani Olimpia Milan,Game preview,9,8,9_8,2026-2027,OLY,MIL
+30-Oct-26,7:30 PM,FC Barcelona,Valencia Basket,Game preview,9,9,9_9,2026-2027,BAR,VAL
+30-Oct-26,7:30 PM,Virtus Bologna,Besiktas Istanbul,Game preview,9,10,9_10,2026-2027,BOL,BES
+4-Nov-26,5:45 PM,Fenerbahce Istanbul,Baskonia Vitoria-Gasteiz,Game preview,10,1,10_1,2026-2027,FEN,BAS
+4-Nov-26,7:45 PM,Real Madrid,Panathinaikos Athens,Game preview,10,2,10_2,2026-2027,RMB,PAN
+5-Nov-26,5:30 PM,Anadolu Efes Istanbul,Paris Basketball,Game preview,10,3,10_3,2026-2027,EFE,PRB
+5-Nov-26,6:00 PM,Hapoel Tel Aviv,FC Barcelona,Game preview,10,4,10_4,2026-2027,HAP,BAR
+5-Nov-26,7:00 PM,LDLC ASVEL,FC Bayern Munich,Game preview,10,5,10_5,2026-2027,VIL,BAY
+5-Nov-26,7:30 PM,Armani Olimpia Milan,Valencia Basket,Game preview,10,6,10_6,2026-2027,MIL,VAL
+6-Nov-26,5:00 PM,Besiktas Istanbul,Zalgiris Kaunas,Game preview,10,7,10_7,2026-2027,BES,ZAL
+6-Nov-26,7:15 PM,Olympiacos Piraeus,Crvena Zvezda Belgrade,Game preview,10,8,10_8,2026-2027,OLY,CRV
+6-Nov-26,7:30 PM,Virtus Bologna,Dubai Basketball,Game preview,10,9,10_9,2026-2027,BOL,DUB
+6-Nov-26,7:45 PM,Partizan Belgrade,Maccabi Rapyd Tel Aviv,Game preview,10,10,10_10,2026-2027,PAR,MAC
+11-Nov-26,7:45 PM,Paris Basketball,Fenerbahce Istanbul,Game preview,11,1,11_1,2026-2027,PRB,FEN
+11-Nov-26,7:45 PM,Partizan Belgrade,Baskonia Vitoria-Gasteiz,Game preview,11,2,11_2,2026-2027,PAR,BAS
+12-Nov-26,7:05 PM,Maccabi Rapyd Tel Aviv,Hapoel Tel Aviv,Game preview,11,3,11_3,2026-2027,MAC,HAP
+12-Nov-26,7:15 PM,Olympiacos Piraeus,Dubai Basketball,Game preview,11,4,11_4,2026-2027,OLY,DUB
+12-Nov-26,7:30 PM,Armani Olimpia Milan,Zalgiris Kaunas,Game preview,11,5,11_5,2026-2027,MIL,ZAL
+12-Nov-26,7:30 PM,Valencia Basket,FC Bayern Munich,Game preview,11,6,11_6,2026-2027,VAL,BAY
+12-Nov-26,8:00 PM,Real Madrid,Crvena Zvezda Belgrade,Game preview,11,7,11_7,2026-2027,RMB,CRV
+13-Nov-26,5:30 PM,Anadolu Efes Istanbul,Virtus Bologna,Game preview,11,8,11_8,2026-2027,EFE,BOL
+13-Nov-26,7:15 PM,Panathinaikos Athens,FC Barcelona,Game preview,11,9,11_9,2026-2027,PAN,BAR
+13-Nov-26,7:30 PM,LDLC ASVEL,Besiktas Istanbul,Game preview,11,10,11_10,2026-2027,VIL,BES
+17-Nov-26,4:00 PM,Dubai Basketball,Anadolu Efes Istanbul,Game preview,12,1,12_1,2026-2027,DUB,EFE
+17-Nov-26,5:45 PM,Fenerbahce Istanbul,LDLC ASVEL,Game preview,12,2,12_2,2026-2027,FEN,VIL
+17-Nov-26,6:00 PM,Zalgiris Kaunas,FC Bayern Munich,Game preview,12,3,12_3,2026-2027,ZAL,BAY
+17-Nov-26,7:05 PM,Maccabi Rapyd Tel Aviv,Olympiacos Piraeus,Game preview,12,4,12_4,2026-2027,MAC,OLY
+17-Nov-26,7:30 PM,Armani Olimpia Milan,Crvena Zvezda Belgrade,Game preview,12,5,12_5,2026-2027,MIL,CRV
+17-Nov-26,7:30 PM,FC Barcelona,Paris Basketball,Game preview,12,6,12_6,2026-2027,BAR,PRB
+17-Nov-26,7:30 PM,Baskonia Vitoria-Gasteiz,Hapoel Tel Aviv,Game preview,12,7,12_7,2026-2027,BAS,HAP
+17-Nov-26,7:45 PM,Partizan Belgrade,Valencia Basket,Game preview,12,8,12_8,2026-2027,PAR,VAL
+17-Nov-26,8:00 PM,Virtus Bologna,Panathinaikos Athens,Game preview,12,9,12_9,2026-2027,BOL,PAN
+18-Nov-26,5:00 PM,Besiktas Istanbul,Real Madrid,Game preview,12,10,12_10,2026-2027,BES,RMB
+19-Nov-26,6:00 PM,Zalgiris Kaunas,Panathinaikos Athens,Game preview,13,1,13_1,2026-2027,ZAL,PAN
+19-Nov-26,7:05 PM,Maccabi Rapyd Tel Aviv,Dubai Basketball,Game preview,13,2,13_2,2026-2027,MAC,DUB
+19-Nov-26,7:30 PM,Armani Olimpia Milan,Fenerbahce Istanbul,Game preview,13,3,13_3,2026-2027,MIL,FEN
+19-Nov-26,7:30 PM,FC Bayern Munich,Baskonia Vitoria-Gasteiz,Game preview,13,4,13_4,2026-2027,BAY,BAS
+19-Nov-26,7:45 PM,Paris Basketball,Hapoel Tel Aviv,Game preview,13,5,13_5,2026-2027,PRB,HAP
+19-Nov-26,8:00 PM,Valencia Basket,Virtus Bologna,Game preview,13,6,13_6,2026-2027,VAL,BOL
+20-Nov-26,5:30 PM,Anadolu Efes Istanbul,LDLC ASVEL,Game preview,13,7,13_7,2026-2027,EFE,VIL
+20-Nov-26,7:15 PM,Olympiacos Piraeus,Real Madrid,Game preview,13,8,13_8,2026-2027,OLY,RMB
+20-Nov-26,7:30 PM,FC Barcelona,Crvena Zvezda Belgrade,Game preview,13,9,13_9,2026-2027,BAR,CRV
+20-Nov-26,7:45 PM,Partizan Belgrade,Besiktas Istanbul,Game preview,13,10,13_10,2026-2027,PAR,BES
+24-Nov-26,5:00 PM,Besiktas Istanbul,Paris Basketball,Game preview,14,1,14_1,2026-2027,BES,PRB
+24-Nov-26,6:00 PM,Crvena Zvezda Belgrade,Virtus Bologna,Game preview,14,2,14_2,2026-2027,CRV,BOL
+24-Nov-26,7:30 PM,FC Bayern Munich,Maccabi Rapyd Tel Aviv,Game preview,14,3,14_3,2026-2027,BAY,MAC
+24-Nov-26,7:30 PM,Valencia Basket,Panathinaikos Athens,Game preview,14,4,14_4,2026-2027,VAL,PAN
+24-Nov-26,7:45 PM,LDLC ASVEL,Armani Olimpia Milan,Game preview,14,5,14_5,2026-2027,VIL,MIL
+24-Nov-26,8:00 PM,FC Barcelona,Fenerbahce Istanbul,Game preview,14,6,14_6,2026-2027,BAR,FEN
+25-Nov-26,4:00 PM,Dubai Basketball,Partizan Belgrade,Game preview,14,7,14_7,2026-2027,DUB,PAR
+25-Nov-26,7:15 PM,Olympiacos Piraeus,Hapoel Tel Aviv,Game preview,14,8,14_8,2026-2027,OLY,HAP
+25-Nov-26,7:30 PM,Baskonia Vitoria-Gasteiz,Anadolu Efes Istanbul,Game preview,14,9,14_9,2026-2027,BAS,EFE
+25-Nov-26,7:45 PM,Real Madrid,Zalgiris Kaunas,Game preview,14,10,14_10,2026-2027,RMB,ZAL
+3-Dec-26,5:30 PM,Anadolu Efes Istanbul,Valencia Basket,Game preview,15,1,15_1,2026-2027,EFE,VAL
+3-Dec-26,5:45 PM,Fenerbahce Istanbul,Crvena Zvezda Belgrade,Game preview,15,2,15_2,2026-2027,FEN,CRV
+3-Dec-26,6:00 PM,Hapoel Tel Aviv,Armani Olimpia Milan,Game preview,15,3,15_3,2026-2027,HAP,MIL
+3-Dec-26,7:30 PM,FC Bayern Munich,Paris Basketball,Game preview,15,4,15_4,2026-2027,BAY,PRB
+3-Dec-26,7:45 PM,Real Madrid,FC Barcelona,Game preview,15,5,15_5,2026-2027,RMB,BAR
+4-Dec-26,5:00 PM,Besiktas Istanbul,Panathinaikos Athens,Game preview,15,6,15_6,2026-2027,BES,PAN
+4-Dec-26,6:00 PM,Zalgiris Kaunas,Dubai Basketball,Game preview,15,7,15_7,2026-2027,ZAL,DUB
+4-Dec-26,7:15 PM,Olympiacos Piraeus,LDLC ASVEL,Game preview,15,8,15_8,2026-2027,OLY,VIL
+4-Dec-26,7:30 PM,Baskonia Vitoria-Gasteiz,Maccabi Rapyd Tel Aviv,Game preview,15,9,15_9,2026-2027,BAS,MAC
+4-Dec-26,7:30 PM,Virtus Bologna,Partizan Belgrade,Game preview,15,10,15_10,2026-2027,BOL,PAR
+10-Dec-26,5:45 PM,Fenerbahce Istanbul,Anadolu Efes Istanbul,Game preview,16,1,16_1,2026-2027,FEN,EFE
+10-Dec-26,6:00 PM,Hapoel Tel Aviv,LDLC ASVEL,Game preview,16,2,16_2,2026-2027,HAP,VIL
+10-Dec-26,6:00 PM,Zalgiris Kaunas,Baskonia Vitoria-Gasteiz,Game preview,16,3,16_3,2026-2027,ZAL,BAS
+10-Dec-26,7:30 PM,Armani Olimpia Milan,FC Bayern Munich,Game preview,16,4,16_4,2026-2027,MIL,BAY
+10-Dec-26,7:45 PM,Paris Basketball,Real Madrid,Game preview,16,5,16_5,2026-2027,PRB,RMB
+11-Dec-26,4:00 PM,Dubai Basketball,Besiktas Istanbul,Game preview,16,6,16_6,2026-2027,DUB,BES
+11-Dec-26,7:15 PM,Panathinaikos Athens,Olympiacos Piraeus,Game preview,16,7,16_7,2026-2027,PAN,OLY
+11-Dec-26,7:30 PM,Valencia Basket,Crvena Zvezda Belgrade,Game preview,16,8,16_8,2026-2027,VAL,CRV
+11-Dec-26,7:30 PM,Virtus Bologna,Maccabi Rapyd Tel Aviv,Game preview,16,9,16_9,2026-2027,BOL,MAC
+11-Dec-26,7:45 PM,Partizan Belgrade,FC Barcelona,Game preview,16,10,16_10,2026-2027,PAR,BAR
+15-Dec-26,5:45 PM,Fenerbahce Istanbul,Hapoel Tel Aviv,Game preview,17,1,17_1,2026-2027,FEN,HAP
+15-Dec-26,7:05 PM,Maccabi Rapyd Tel Aviv,Zalgiris Kaunas,Game preview,17,2,17_2,2026-2027,MAC,ZAL
+15-Dec-26,7:30 PM,Valencia Basket,Dubai Basketball,Game preview,17,3,17_3,2026-2027,VAL,DUB
+15-Dec-26,7:30 PM,Virtus Bologna,LDLC ASVEL,Game preview,17,4,17_4,2026-2027,BOL,VIL
+15-Dec-26,7:45 PM,Paris Basketball,Olympiacos Piraeus,Game preview,17,5,17_5,2026-2027,PRB,OLY
+15-Dec-26,7:45 PM,Real Madrid,FC Bayern Munich,Game preview,17,6,17_6,2026-2027,RMB,BAY
+16-Dec-26,5:00 PM,Besiktas Istanbul,Armani Olimpia Milan,Game preview,17,7,17_7,2026-2027,BES,MIL
+16-Dec-26,7:15 PM,Panathinaikos Athens,Crvena Zvezda Belgrade,Game preview,17,8,17_8,2026-2027,PAN,CRV
+16-Dec-26,7:30 PM,Baskonia Vitoria-Gasteiz,FC Barcelona,Game preview,17,9,17_9,2026-2027,BAS,BAR
+16-Dec-26,7:45 PM,Partizan Belgrade,Anadolu Efes Istanbul,Game preview,17,10,17_10,2026-2027,PAR,EFE
+17-Dec-26,5:45 PM,Fenerbahce Istanbul,Maccabi Rapyd Tel Aviv,Game preview,18,1,18_1,2026-2027,FEN,MAC
+17-Dec-26,6:00 PM,Hapoel Tel Aviv,Zalgiris Kaunas,Game preview,18,2,18_2,2026-2027,HAP,ZAL
+17-Dec-26,7:00 PM,LDLC ASVEL,Dubai Basketball,Game preview,18,3,18_3,2026-2027,VIL,DUB
+17-Dec-26,7:45 PM,Real Madrid,Valencia Basket,Game preview,18,4,18_4,2026-2027,RMB,VAL
+18-Dec-26,5:30 PM,Anadolu Efes Istanbul,Armani Olimpia Milan,Game preview,18,5,18_5,2026-2027,EFE,MIL
+18-Dec-26,7:15 PM,Olympiacos Piraeus,Partizan Belgrade,Game preview,18,6,18_6,2026-2027,OLY,PAR
+18-Dec-26,7:30 PM,Crvena Zvezda Belgrade,Besiktas Istanbul,Game preview,18,7,18_7,2026-2027,CRV,BES
+18-Dec-26,7:30 PM,FC Bayern Munich,Panathinaikos Athens,Game preview,18,8,18_8,2026-2027,BAY,PAN
+18-Dec-26,7:30 PM,Baskonia Vitoria-Gasteiz,Paris Basketball,Game preview,18,9,18_9,2026-2027,BAS,PRB
+18-Dec-26,7:45 PM,FC Barcelona,Virtus Bologna,Game preview,18,10,18_10,2026-2027,BAR,BOL
+22-Dec-26,5:00 PM,Besiktas Istanbul,Fenerbahce Istanbul,Game preview,19,1,19_1,2026-2027,BES,FEN
+22-Dec-26,6:00 PM,Hapoel Tel Aviv,Partizan Belgrade,Game preview,19,2,19_2,2026-2027,HAP,PAR
+22-Dec-26,7:00 PM,LDLC ASVEL,FC Barcelona,Game preview,19,3,19_3,2026-2027,VIL,BAR
+22-Dec-26,7:30 PM,FC Bayern Munich,Olympiacos Piraeus,Game preview,19,4,19_4,2026-2027,BAY,OLY
+22-Dec-26,7:30 PM,Virtus Bologna,Real Madrid,Game preview,19,5,19_5,2026-2027,BOL,RMB
+23-Dec-26,4:00 PM,Dubai Basketball,Panathinaikos Athens,Game preview,19,6,19_6,2026-2027,DUB,PAN
+23-Dec-26,6:00 PM,Zalgiris Kaunas,Valencia Basket,Game preview,19,7,19_7,2026-2027,ZAL,VAL
+23-Dec-26,7:00 PM,Crvena Zvezda Belgrade,Baskonia Vitoria-Gasteiz,Game preview,19,8,19_8,2026-2027,CRV,BAS
+23-Dec-26,7:05 PM,Maccabi Rapyd Tel Aviv,Anadolu Efes Istanbul,Game preview,19,9,19_9,2026-2027,MAC,EFE
+23-Dec-26,7:30 PM,Armani Olimpia Milan,Paris Basketball,Game preview,19,10,19_10,2026-2027,MIL,PRB
+29-Dec-26,5:45 PM,Fenerbahce Istanbul,Panathinaikos Athens,Game preview,20,1,20_1,2026-2027,FEN,PAN
+29-Dec-26,6:00 PM,Hapoel Tel Aviv,Maccabi Rapyd Tel Aviv,Game preview,20,2,20_2,2026-2027,HAP,MAC
+29-Dec-26,7:30 PM,Baskonia Vitoria-Gasteiz,Valencia Basket,Game preview,20,3,20_3,2026-2027,BAS,VAL
+29-Dec-26,7:45 PM,Partizan Belgrade,Zalgiris Kaunas,Game preview,20,4,20_4,2026-2027,PAR,ZAL
+29-Dec-26,8:00 PM,Real Madrid,Dubai Basketball,Game preview,20,5,20_5,2026-2027,RMB,DUB
+30-Dec-26,5:30 PM,Anadolu Efes Istanbul,FC Barcelona,Game preview,20,6,20_6,2026-2027,EFE,BAR
+30-Dec-26,7:00 PM,LDLC ASVEL,Olympiacos Piraeus,Game preview,20,7,20_7,2026-2027,VIL,OLY
+30-Dec-26,7:30 PM,FC Bayern Munich,Besiktas Istanbul,Game preview,20,8,20_8,2026-2027,BAY,BES
+30-Dec-26,7:30 PM,Virtus Bologna,Armani Olimpia Milan,Game preview,20,9,20_9,2026-2027,BOL,MIL
+30-Dec-26,7:45 PM,Paris Basketball,Crvena Zvezda Belgrade,Game preview,20,10,20_10,2026-2027,PRB,CRV
+6-Jan-27,7:30 PM,FC Barcelona,Besiktas Istanbul,Game preview,21,1,21_1,2026-2027,BAR,BES
+7-Jan-27,5:30 PM,Anadolu Efes Istanbul,Fenerbahce Istanbul,Game preview,21,2,21_2,2026-2027,EFE,FEN
+7-Jan-27,6:00 PM,Zalgiris Kaunas,Paris Basketball,Game preview,21,3,21_3,2026-2027,ZAL,PRB
+7-Jan-27,7:05 PM,Maccabi Rapyd Tel Aviv,Panathinaikos Athens,Game preview,21,4,21_4,2026-2027,MAC,PAN
+7-Jan-27,7:30 PM,Armani Olimpia Milan,Hapoel Tel Aviv,Game preview,21,5,21_5,2026-2027,MIL,HAP
+7-Jan-27,7:30 PM,Valencia Basket,Partizan Belgrade,Game preview,21,6,21_6,2026-2027,VAL,PAR
+8-Jan-27,4:00 PM,Dubai Basketball,FC Bayern Munich,Game preview,21,7,21_7,2026-2027,DUB,BAY
+8-Jan-27,7:00 PM,Crvena Zvezda Belgrade,LDLC ASVEL,Game preview,21,8,21_8,2026-2027,CRV,VIL
+8-Jan-27,7:30 PM,Baskonia Vitoria-Gasteiz,Virtus Bologna,Game preview,21,9,21_9,2026-2027,BAS,BOL
+8-Jan-27,7:45 PM,Real Madrid,Olympiacos Piraeus,Game preview,21,10,21_10,2026-2027,RMB,OLY
+12-Jan-27,4:00 PM,Dubai Basketball,Fenerbahce Istanbul,Game preview,22,1,22_1,2026-2027,DUB,FEN
+12-Jan-27,6:00 PM,Hapoel Tel Aviv,Paris Basketball,Game preview,22,2,22_2,2026-2027,HAP,PRB
+12-Jan-27,7:00 PM,Crvena Zvezda Belgrade,Real Madrid,Game preview,22,3,22_3,2026-2027,CRV,RMB
+12-Jan-27,7:00 PM,LDLC ASVEL,Zalgiris Kaunas,Game preview,22,4,22_4,2026-2027,VIL,ZAL
+12-Jan-27,7:05 PM,Maccabi Rapyd Tel Aviv,FC Bayern Munich,Game preview,22,5,22_5,2026-2027,MAC,BAY
+12-Jan-27,7:15 PM,Panathinaikos Athens,Valencia Basket,Game preview,22,6,22_6,2026-2027,PAN,VAL
+12-Jan-27,7:30 PM,FC Barcelona,Armani Olimpia Milan,Game preview,22,7,22_7,2026-2027,BAR,MIL
+12-Jan-27,7:30 PM,Virtus Bologna,Anadolu Efes Istanbul,Game preview,22,8,22_8,2026-2027,BOL,EFE
+13-Jan-27,5:00 PM,Besiktas Istanbul,Partizan Belgrade,Game preview,22,9,22_9,2026-2027,BES,PAR
+13-Jan-27,7:15 PM,Olympiacos Piraeus,Baskonia Vitoria-Gasteiz,Game preview,22,10,22_10,2026-2027,OLY,BAS
+14-Jan-27,6:00 PM,Hapoel Tel Aviv,Valencia Basket,Game preview,23,1,23_1,2026-2027,HAP,VAL
+14-Jan-27,6:00 PM,Zalgiris Kaunas,Crvena Zvezda Belgrade,Game preview,23,2,23_2,2026-2027,ZAL,CRV
+14-Jan-27,7:15 PM,Panathinaikos Athens,FC Bayern Munich,Game preview,23,3,23_3,2026-2027,PAN,BAY
+14-Jan-27,7:30 PM,Armani Olimpia Milan,LDLC ASVEL,Game preview,23,4,23_4,2026-2027,MIL,VIL
+14-Jan-27,7:45 PM,Real Madrid,Anadolu Efes Istanbul,Game preview,23,5,23_5,2026-2027,RMB,EFE
+15-Jan-27,4:00 PM,Dubai Basketball,Maccabi Rapyd Tel Aviv,Game preview,23,6,23_6,2026-2027,DUB,MAC
+15-Jan-27,5:00 PM,Besiktas Istanbul,Baskonia Vitoria-Gasteiz,Game preview,23,7,23_7,2026-2027,BES,BAS
+15-Jan-27,7:15 PM,Olympiacos Piraeus,Paris Basketball,Game preview,23,8,23_8,2026-2027,OLY,PRB
+15-Jan-27,7:30 PM,Virtus Bologna,FC Barcelona,Game preview,23,9,23_9,2026-2027,BOL,BAR
+15-Jan-27,7:45 PM,Partizan Belgrade,Fenerbahce Istanbul,Game preview,23,10,23_10,2026-2027,PAR,FEN
+21-Jan-27,5:45 PM,Fenerbahce Istanbul,Besiktas Istanbul,Game preview,24,1,24_1,2026-2027,FEN,BES
+21-Jan-27,6:00 PM,Hapoel Tel Aviv,Panathinaikos Athens,Game preview,24,2,24_2,2026-2027,HAP,PAN
+21-Jan-27,7:30 PM,FC Bayern Munich,Armani Olimpia Milan,Game preview,24,3,24_3,2026-2027,BAY,MIL
+21-Jan-27,7:45 PM,Paris Basketball,Baskonia Vitoria-Gasteiz,Game preview,24,4,24_4,2026-2027,PRB,BAS
+21-Jan-27,7:45 PM,Partizan Belgrade,Olympiacos Piraeus,Game preview,24,5,24_5,2026-2027,PAR,OLY
+21-Jan-27,7:45 PM,Real Madrid,Maccabi Rapyd Tel Aviv,Game preview,24,6,24_6,2026-2027,RMB,MAC
+22-Jan-27,5:30 PM,Anadolu Efes Istanbul,Dubai Basketball,Game preview,24,7,24_7,2026-2027,EFE,DUB
+22-Jan-27,6:00 PM,Zalgiris Kaunas,Virtus Bologna,Game preview,24,8,24_8,2026-2027,ZAL,BOL
+22-Jan-27,7:00 PM,Crvena Zvezda Belgrade,FC Barcelona,Game preview,24,9,24_9,2026-2027,CRV,BAR
+22-Jan-27,7:30 PM,Valencia Basket,LDLC ASVEL,Game preview,24,10,24_10,2026-2027,VAL,VIL
+28-Jan-27,5:00 PM,Besiktas Istanbul,Crvena Zvezda Belgrade,Game preview,25,1,25_1,2026-2027,BES,CRV
+28-Jan-27,7:15 PM,Olympiacos Piraeus,Maccabi Rapyd Tel Aviv,Game preview,25,2,25_2,2026-2027,OLY,MAC
+28-Jan-27,7:30 PM,FC Bayern Munich,Valencia Basket,Game preview,25,3,25_3,2026-2027,BAY,VAL
+28-Jan-27,7:30 PM,Baskonia Vitoria-Gasteiz,Zalgiris Kaunas,Game preview,25,4,25_4,2026-2027,BAS,ZAL
+28-Jan-27,7:30 PM,Virtus Bologna,Paris Basketball,Game preview,25,5,25_5,2026-2027,BOL,PRB
+29-Jan-27,5:45 PM,Fenerbahce Istanbul,Real Madrid,Game preview,25,6,25_6,2026-2027,FEN,RMB
+29-Jan-27,7:00 PM,LDLC ASVEL,Hapoel Tel Aviv,Game preview,25,7,25_7,2026-2027,VIL,HAP
+29-Jan-27,7:15 PM,Panathinaikos Athens,Anadolu Efes Istanbul,Game preview,25,8,25_8,2026-2027,PAN,EFE
+29-Jan-27,7:30 PM,Armani Olimpia Milan,Partizan Belgrade,Game preview,25,9,25_9,2026-2027,MIL,PAR
+29-Jan-27,7:30 PM,FC Barcelona,Dubai Basketball,Game preview,25,10,25_10,2026-2027,BAR,DUB
+2-Feb-27,5:30 PM,Anadolu Efes Istanbul,Zalgiris Kaunas,Game preview,26,1,26_1,2026-2027,EFE,ZAL
+2-Feb-27,7:05 PM,Maccabi Rapyd Tel Aviv,Virtus Bologna,Game preview,26,2,26_2,2026-2027,MAC,BOL
+2-Feb-27,7:15 PM,Panathinaikos Athens,Dubai Basketball,Game preview,26,3,26_3,2026-2027,PAN,DUB
+2-Feb-27,7:30 PM,Baskonia Vitoria-Gasteiz,Fenerbahce Istanbul,Game preview,26,4,26_4,2026-2027,BAS,FEN
+2-Feb-27,7:45 PM,Paris Basketball,Besiktas Istanbul,Game preview,26,5,26_5,2026-2027,PRB,BES
+2-Feb-27,7:45 PM,Partizan Belgrade,Real Madrid,Game preview,26,6,26_6,2026-2027,PAR,RMB
+3-Feb-27,6:00 PM,Hapoel Tel Aviv,Olympiacos Piraeus,Game preview,26,7,26_7,2026-2027,HAP,OLY
+3-Feb-27,7:30 PM,FC Barcelona,LDLC ASVEL,Game preview,26,8,26_8,2026-2027,BAR,VIL
+3-Feb-27,7:30 PM,FC Bayern Munich,Crvena Zvezda Belgrade,Game preview,26,9,26_9,2026-2027,BAY,CRV
+3-Feb-27,7:45 PM,Valencia Basket,Armani Olimpia Milan,Game preview,26,10,26_10,2026-2027,VAL,MIL
+4-Feb-27,4:00 PM,Dubai Basketball,Virtus Bologna,Game preview,27,1,27_1,2026-2027,DUB,BOL
+4-Feb-27,5:30 PM,Anadolu Efes Istanbul,Maccabi Rapyd Tel Aviv,Game preview,27,2,27_2,2026-2027,EFE,MAC
+4-Feb-27,6:00 PM,Zalgiris Kaunas,Besiktas Istanbul,Game preview,27,3,27_3,2026-2027,ZAL,BES
+4-Feb-27,7:45 PM,Real Madrid,Paris Basketball,Game preview,27,4,27_4,2026-2027,RMB,PRB
+5-Feb-27,7:00 PM,LDLC ASVEL,Fenerbahce Istanbul,Game preview,27,5,27_5,2026-2027,VIL,FEN
+5-Feb-27,7:15 PM,Olympiacos Piraeus,FC Bayern Munich,Game preview,27,6,27_6,2026-2027,OLY,BAY
+5-Feb-27,7:30 PM,Armani Olimpia Milan,Panathinaikos Athens,Game preview,27,7,27_7,2026-2027,MIL,PAN
+5-Feb-27,7:30 PM,Baskonia Vitoria-Gasteiz,Crvena Zvezda Belgrade,Game preview,27,8,27_8,2026-2027,BAS,CRV
+5-Feb-27,7:45 PM,Partizan Belgrade,Hapoel Tel Aviv,Game preview,27,9,27_9,2026-2027,PAR,HAP
+5-Feb-27,7:45 PM,Valencia Basket,FC Barcelona,Game preview,27,10,27_10,2026-2027,VAL,BAR
+10-Feb-27,6:00 PM,Hapoel Tel Aviv,Baskonia Vitoria-Gasteiz,Game preview,28,1,28_1,2026-2027,HAP,BAS
+10-Feb-27,7:00 PM,LDLC ASVEL,Anadolu Efes Istanbul,Game preview,28,2,28_2,2026-2027,VIL,EFE
+11-Feb-27,5:00 PM,Besiktas Istanbul,Dubai Basketball,Game preview,28,3,28_3,2026-2027,BES,DUB
+11-Feb-27,7:00 PM,Crvena Zvezda Belgrade,Partizan Belgrade,Game preview,28,4,28_4,2026-2027,CRV,PAR
+11-Feb-27,7:05 PM,Maccabi Rapyd Tel Aviv,FC Barcelona,Game preview,28,5,28_5,2026-2027,MAC,BAR
+11-Feb-27,7:30 PM,Valencia Basket,Paris Basketball,Game preview,28,6,28_6,2026-2027,VAL,PRB
+11-Feb-27,7:30 PM,Virtus Bologna,FC Bayern Munich,Game preview,28,7,28_7,2026-2027,BOL,BAY
+12-Feb-27,5:45 PM,Fenerbahce Istanbul,Armani Olimpia Milan,Game preview,28,8,28_8,2026-2027,FEN,MIL
+12-Feb-27,6:00 PM,Zalgiris Kaunas,Real Madrid,Game preview,28,9,28_9,2026-2027,ZAL,RMB
+12-Feb-27,7:15 PM,Olympiacos Piraeus,Panathinaikos Athens,Game preview,28,10,28_10,2026-2027,OLY,PAN
+4-Mar-27,7:15 PM,Panathinaikos Athens,Besiktas Istanbul,Game preview,29,1,29_1,2026-2027,PAN,BES
+4-Mar-27,7:30 PM,Valencia Basket,Zalgiris Kaunas,Game preview,29,2,29_2,2026-2027,VAL,ZAL
+4-Mar-27,7:30 PM,Virtus Bologna,Hapoel Tel Aviv,Game preview,29,3,29_3,2026-2027,BOL,HAP
+4-Mar-27,7:45 PM,Baskonia Vitoria-Gasteiz,Partizan Belgrade,Game preview,29,4,29_4,2026-2027,BAS,PAR
+4-Mar-27,7:45 PM,Paris Basketball,Maccabi Rapyd Tel Aviv,Game preview,29,5,29_5,2026-2027,PRB,MAC
+5-Mar-27,4:00 PM,Dubai Basketball,Olympiacos Piraeus,Game preview,29,6,29_6,2026-2027,DUB,OLY
+5-Mar-27,7:00 PM,Crvena Zvezda Belgrade,Fenerbahce Istanbul,Game preview,29,7,29_7,2026-2027,CRV,FEN
+5-Mar-27,7:30 PM,Armani Olimpia Milan,Anadolu Efes Istanbul,Game preview,29,8,29_8,2026-2027,MIL,EFE
+5-Mar-27,7:30 PM,FC Barcelona,Real Madrid,Game preview,29,9,29_9,2026-2027,BAR,RMB
+5-Mar-27,7:30 PM,FC Bayern Munich,LDLC ASVEL,Game preview,29,10,29_10,2026-2027,BAY,VIL
+9-Mar-27,5:00 PM,Besiktas Istanbul,LDLC ASVEL,Game preview,30,1,30_1,2026-2027,BES,VIL
+9-Mar-27,6:00 PM,Zalgiris Kaunas,FC Barcelona,Game preview,30,2,30_2,2026-2027,ZAL,BAR
+9-Mar-27,7:05 PM,Maccabi Rapyd Tel Aviv,Crvena Zvezda Belgrade,Game preview,30,3,30_3,2026-2027,MAC,CRV
+9-Mar-27,7:30 PM,FC Bayern Munich,Anadolu Efes Istanbul,Game preview,30,4,30_4,2026-2027,BAY,EFE
+9-Mar-27,7:30 PM,Baskonia Vitoria-Gasteiz,Panathinaikos Athens,Game preview,30,5,30_5,2026-2027,BAS,PAN
+9-Mar-27,7:30 PM,Virtus Bologna,Fenerbahce Istanbul,Game preview,30,6,30_6,2026-2027,BOL,FEN
+9-Mar-27,7:45 PM,Partizan Belgrade,Paris Basketball,Game preview,30,7,30_7,2026-2027,PAR,PRB
+9-Mar-27,7:45 PM,Real Madrid,Hapoel Tel Aviv,Game preview,30,8,30_8,2026-2027,RMB,HAP
+10-Mar-27,4:00 PM,Dubai Basketball,Valencia Basket,Game preview,30,9,30_9,2026-2027,DUB,VAL
+10-Mar-27,7:30 PM,Armani Olimpia Milan,Olympiacos Piraeus,Game preview,30,10,30_10,2026-2027,MIL,OLY
+11-Mar-27,5:30 PM,Anadolu Efes Istanbul,Partizan Belgrade,Game preview,31,1,31_1,2026-2027,EFE,PAR
+11-Mar-27,7:05 PM,Maccabi Rapyd Tel Aviv,LDLC ASVEL,Game preview,31,2,31_2,2026-2027,MAC,VIL
+11-Mar-27,7:30 PM,FC Bayern Munich,Hapoel Tel Aviv,Game preview,31,3,31_3,2026-2027,BAY,HAP
+11-Mar-27,7:45 PM,Paris Basketball,Panathinaikos Athens,Game preview,31,4,31_4,2026-2027,PRB,PAN
+11-Mar-27,7:45 PM,Real Madrid,Virtus Bologna,Game preview,31,5,31_5,2026-2027,RMB,BOL
+12-Mar-27,5:45 PM,Fenerbahce Istanbul,Valencia Basket,Game preview,31,6,31_6,2026-2027,FEN,VAL
+12-Mar-27,6:00 PM,Zalgiris Kaunas,Armani Olimpia Milan,Game preview,31,7,31_7,2026-2027,ZAL,MIL
+12-Mar-27,7:00 PM,Crvena Zvezda Belgrade,Dubai Basketball,Game preview,31,8,31_8,2026-2027,CRV,DUB
+12-Mar-27,7:15 PM,Olympiacos Piraeus,Besiktas Istanbul,Game preview,31,9,31_9,2026-2027,OLY,BES
+12-Mar-27,7:30 PM,FC Barcelona,Baskonia Vitoria-Gasteiz,Game preview,31,10,31_10,2026-2027,BAR,BAS
+18-Mar-27,5:45 PM,Fenerbahce Istanbul,Paris Basketball,Game preview,32,1,32_1,2026-2027,FEN,PRB
+18-Mar-27,7:05 PM,Maccabi Rapyd Tel Aviv,Valencia Basket,Game preview,32,2,32_2,2026-2027,MAC,VAL
+18-Mar-27,7:15 PM,Panathinaikos Athens,Zalgiris Kaunas,Game preview,32,3,32_3,2026-2027,PAN,ZAL
+18-Mar-27,7:45 PM,Partizan Belgrade,FC Bayern Munich,Game preview,32,4,32_4,2026-2027,PAR,BAY
+18-Mar-27,7:45 PM,Real Madrid,Baskonia Vitoria-Gasteiz,Game preview,32,5,32_5,2026-2027,RMB,BAS
+19-Mar-27,4:00 PM,Dubai Basketball,Armani Olimpia Milan,Game preview,32,6,32_6,2026-2027,DUB,MIL
+19-Mar-27,5:00 PM,Besiktas Istanbul,Anadolu Efes Istanbul,Game preview,32,7,32_7,2026-2027,BES,EFE
+19-Mar-27,7:00 PM,Crvena Zvezda Belgrade,Olympiacos Piraeus,Game preview,32,8,32_8,2026-2027,CRV,OLY
+19-Mar-27,7:00 PM,LDLC ASVEL,Virtus Bologna,Game preview,32,9,32_9,2026-2027,VIL,BOL
+19-Mar-27,7:30 PM,FC Barcelona,Hapoel Tel Aviv,Game preview,32,10,32_10,2026-2027,BAR,HAP
+23-Mar-27,4:00 PM,Dubai Basketball,Baskonia Vitoria-Gasteiz,Game preview,33,1,33_1,2026-2027,DUB,BAS
+23-Mar-27,5:30 PM,Anadolu Efes Istanbul,Crvena Zvezda Belgrade,Game preview,33,2,33_2,2026-2027,EFE,CRV
+23-Mar-27,6:00 PM,Hapoel Tel Aviv,Fenerbahce Istanbul,Game preview,33,3,33_3,2026-2027,HAP,FEN
+23-Mar-27,7:00 PM,LDLC ASVEL,Panathinaikos Athens,Game preview,33,4,33_4,2026-2027,VIL,PAN
+23-Mar-27,7:45 PM,Paris Basketball,Armani Olimpia Milan,Game preview,33,5,33_5,2026-2027,PRB,MIL
+23-Mar-27,7:45 PM,Partizan Belgrade,Virtus Bologna,Game preview,33,6,33_6,2026-2027,PAR,BOL
+24-Mar-27,6:00 PM,Zalgiris Kaunas,Maccabi Rapyd Tel Aviv,Game preview,33,7,33_7,2026-2027,ZAL,MAC
+24-Mar-27,7:15 PM,Olympiacos Piraeus,FC Barcelona,Game preview,33,8,33_8,2026-2027,OLY,BAR
+24-Mar-27,7:30 PM,FC Bayern Munich,Real Madrid,Game preview,33,9,33_9,2026-2027,BAY,RMB
+24-Mar-27,7:30 PM,Valencia Basket,Besiktas Istanbul,Game preview,33,10,33_10,2026-2027,VAL,BES
+25-Mar-27,5:30 PM,Anadolu Efes Istanbul,Baskonia Vitoria-Gasteiz,Game preview,34,1,34_1,2026-2027,EFE,BAS
+25-Mar-27,6:00 PM,Hapoel Tel Aviv,Dubai Basketball,Game preview,34,2,34_2,2026-2027,HAP,DUB
+25-Mar-27,7:00 PM,LDLC ASVEL,Paris Basketball,Game preview,34,3,34_3,2026-2027,VIL,PRB
+25-Mar-27,7:15 PM,Panathinaikos Athens,Partizan Belgrade,Game preview,34,4,34_4,2026-2027,PAN,PAR
+26-Mar-27,5:45 PM,Fenerbahce Istanbul,FC Barcelona,Game preview,34,5,34_5,2026-2027,FEN,BAR
+26-Mar-27,7:00 PM,Crvena Zvezda Belgrade,Valencia Basket,Game preview,34,6,34_6,2026-2027,CRV,VAL
+26-Mar-27,7:15 PM,Olympiacos Piraeus,Virtus Bologna,Game preview,34,7,34_7,2026-2027,OLY,BOL
+26-Mar-27,7:30 PM,Armani Olimpia Milan,Maccabi Rapyd Tel Aviv,Game preview,34,8,34_8,2026-2027,MIL,MAC
+26-Mar-27,7:30 PM,FC Bayern Munich,Zalgiris Kaunas,Game preview,34,9,34_9,2026-2027,BAY,ZAL
+26-Mar-27,7:45 PM,Real Madrid,Besiktas Istanbul,Game preview,34,10,34_10,2026-2027,RMB,BES
+31-Mar-27,5:30 PM,Anadolu Efes Istanbul,Olympiacos Piraeus,Game preview,35,1,35_1,2026-2027,EFE,OLY
+31-Mar-27,6:00 PM,Zalgiris Kaunas,Hapoel Tel Aviv,Game preview,35,2,35_2,2026-2027,ZAL,HAP
+31-Mar-27,6:30 PM,Virtus Bologna,Crvena Zvezda Belgrade,Game preview,35,3,35_3,2026-2027,BOL,CRV
+1-Apr-27,6:05 PM,Maccabi Rapyd Tel Aviv,Fenerbahce Istanbul,Game preview,35,4,35_4,2026-2027,MAC,FEN
+1-Apr-27,6:30 PM,Armani Olimpia Milan,Besiktas Istanbul,Game preview,35,5,35_5,2026-2027,MIL,BES
+1-Apr-27,6:30 PM,Valencia Basket,Real Madrid,Game preview,35,6,35_6,2026-2027,VAL,RMB
+1-Apr-27,6:45 PM,Paris Basketball,Dubai Basketball,Game preview,35,7,35_7,2026-2027,PRB,DUB
+2-Apr-27,6:30 PM,FC Barcelona,Panathinaikos Athens,Game preview,35,8,35_8,2026-2027,BAR,PAN
+2-Apr-27,6:30 PM,Baskonia Vitoria-Gasteiz,FC Bayern Munich,Game preview,35,9,35_9,2026-2027,BAS,BAY
+2-Apr-27,6:45 PM,Partizan Belgrade,LDLC ASVEL,Game preview,35,10,35_10,2026-2027,PAR,VIL
+6-Apr-27,5:00 PM,Besiktas Istanbul,Hapoel Tel Aviv,Game preview,36,1,36_1,2026-2027,BES,HAP
+6-Apr-27,5:45 PM,Fenerbahce Istanbul,Olympiacos Piraeus,Game preview,36,2,36_2,2026-2027,FEN,OLY
+6-Apr-27,6:30 PM,Crvena Zvezda Belgrade,Panathinaikos Athens,Game preview,36,3,36_3,2026-2027,CRV,PAN
+6-Apr-27,6:30 PM,Baskonia Vitoria-Gasteiz,LDLC ASVEL,Game preview,36,4,36_4,2026-2027,BAS,VIL
+6-Apr-27,6:30 PM,Virtus Bologna,Valencia Basket,Game preview,36,5,36_5,2026-2027,BOL,VAL
+6-Apr-27,6:45 PM,FC Barcelona,FC Bayern Munich,Game preview,36,6,36_6,2026-2027,BAR,BAY
+6-Apr-27,6:45 PM,Paris Basketball,Anadolu Efes Istanbul,Game preview,36,7,36_7,2026-2027,PRB,EFE
+6-Apr-27,6:45 PM,Real Madrid,Armani Olimpia Milan,Game preview,36,8,36_8,2026-2027,RMB,MIL
+7-Apr-27,4:00 PM,Dubai Basketball,Zalgiris Kaunas,Game preview,36,9,36_9,2026-2027,DUB,ZAL
+7-Apr-27,6:05 PM,Maccabi Rapyd Tel Aviv,Partizan Belgrade,Game preview,36,10,36_10,2026-2027,MAC,PAR
+8-Apr-27,5:00 PM,Hapoel Tel Aviv,Crvena Zvezda Belgrade,Game preview,37,1,37_1,2026-2027,HAP,CRV
+8-Apr-27,6:00 PM,LDLC ASVEL,Real Madrid,Game preview,37,2,37_2,2026-2027,VIL,RMB
+8-Apr-27,6:15 PM,Panathinaikos Athens,Virtus Bologna,Game preview,37,3,37_3,2026-2027,PAN,BOL
+8-Apr-27,6:30 PM,Armani Olimpia Milan,Baskonia Vitoria-Gasteiz,Game preview,37,4,37_4,2026-2027,MIL,BAS
+8-Apr-27,6:30 PM,FC Bayern Munich,Fenerbahce Istanbul,Game preview,37,5,37_5,2026-2027,BAY,FEN
+8-Apr-27,6:30 PM,Valencia Basket,Anadolu Efes Istanbul,Game preview,37,6,37_6,2026-2027,VAL,EFE
+8-Apr-27,6:45 PM,Paris Basketball,FC Barcelona,Game preview,37,7,37_7,2026-2027,PRB,BAR
+9-Apr-27,5:00 PM,Besiktas Istanbul,Maccabi Rapyd Tel Aviv,Game preview,37,8,37_8,2026-2027,BES,MAC
+9-Apr-27,6:15 PM,Olympiacos Piraeus,Zalgiris Kaunas,Game preview,37,9,37_9,2026-2027,OLY,ZAL
+9-Apr-27,6:45 PM,Partizan Belgrade,Dubai Basketball,Game preview,37,10,37_10,2026-2027,PAR,DUB
+15-Apr-27,5:00 PM,Zalgiris Kaunas,Fenerbahce Istanbul,Game preview,38,1,38_1,2026-2027,ZAL,FEN
+15-Apr-27,5:30 PM,Anadolu Efes Istanbul,Hapoel Tel Aviv,Game preview,38,2,38_2,2026-2027,EFE,HAP
+15-Apr-27,6:00 PM,Crvena Zvezda Belgrade,Armani Olimpia Milan,Game preview,38,3,38_3,2026-2027,CRV,MIL
+15-Apr-27,6:05 PM,Maccabi Rapyd Tel Aviv,Baskonia Vitoria-Gasteiz,Game preview,38,4,38_4,2026-2027,MAC,BAS
+15-Apr-27,6:15 PM,Panathinaikos Athens,Real Madrid,Game preview,38,5,38_5,2026-2027,PAN,RMB
+15-Apr-27,6:45 PM,Paris Basketball,FC Bayern Munich,Game preview,38,6,38_6,2026-2027,PRB,BAY
+16-Apr-27,4:00 PM,Dubai Basketball,LDLC ASVEL,Game preview,38,7,38_7,2026-2027,DUB,VIL
+16-Apr-27,5:00 PM,Besiktas Istanbul,Virtus Bologna,Game preview,38,8,38_8,2026-2027,BES,BOL
+16-Apr-27,6:15 PM,Olympiacos Piraeus,Valencia Basket,Game preview,38,9,38_9,2026-2027,OLY,VAL
+16-Apr-27,6:30 PM,FC Barcelona,Partizan Belgrade,Game preview,38,10,38_10,2026-2027,BAR,PAR

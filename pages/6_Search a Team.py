@@ -1,3 +1,4 @@
+import sys
 import requests
 import pandas as pd
 import seaborn as sns
@@ -12,7 +13,6 @@ from streamlit_dynamic_filters import DynamicFilters
 import urllib.request
 from PIL import Image
 import time
-from dplython import (DplyFrame, X, diamonds, select, sift, sample_n, sample_frac, head, arrange, mutate, group_by, summarize, DelayFunction)
 from itables.streamlit import interactive_table
 from itables import to_html_datatable
 from streamlit.components.v1 import html
@@ -308,11 +308,30 @@ euroleague_2025_2026_results[['Fixture', 'Game']] = euroleague_2025_2026_results
 euroleague_2025_2026_results['Fixture']=pd.to_numeric(euroleague_2025_2026_results['Fixture'])
 euroleague_2025_2026_results['Round']=euroleague_2025_2026_results['Fixture'].apply(fixture_format5)
 
+euroleague_2026_2027_results=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2026_2027_results.csv")
+euroleague_2026_2027_results['idseason']=euroleague_2026_2027_results['IDGAME'] + "_" + euroleague_2026_2027_results['Season']
+euroleague_2026_2027_results[['Fixture', 'Game']] = euroleague_2026_2027_results['IDGAME'].str.split('_', n=1, expand=True)
+euroleague_2026_2027_results['Fixture']=pd.to_numeric(euroleague_2026_2027_results['Fixture'])
+euroleague_2026_2027_results['Round']=euroleague_2026_2027_results['Fixture'].apply(fixture_format5)
 
-All_Seasons=pd.concat([euroleague_2016_2017_playerstats,euroleague_2017_2018_playerstats,euroleague_2018_2019_playerstats,euroleague_2019_2020_playerstats,euroleague_2020_2021_playerstats,euroleague_2021_2022_playerstats,euroleague_2022_2023_playerstats,euroleague_2023_2024_playerstats,euroleague_2024_2025_playerstats,euroleague_2025_2026_playerstats])
+euroleague_2026_2027_playerstats=pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/euroleague_2026_2027_playerstats.csv")
+euroleague_2026_2027_playerstats['idseason']=euroleague_2026_2027_playerstats['IDGAME'] + "_" + euroleague_2026_2027_playerstats['Season']
+euroleague_2026_2027_playerstats[['Fixture', 'Game']] = euroleague_2026_2027_playerstats['IDGAME'].str.split('_', n=1, expand=True)
+euroleague_2026_2027_playerstats['Fixture']=pd.to_numeric(euroleague_2026_2027_playerstats['Fixture'])
+euroleague_2026_2027_playerstats['Round']=euroleague_2026_2027_playerstats['Fixture'].apply(fixture_format5)
 
-All_Seasons_results=pd.concat([euroleague_2016_2017_results,euroleague_2017_2018_results,euroleague_2018_2019_results,euroleague_2019_2020_results,euroleague_2020_2021_results,euroleague_2021_2022_results,euroleague_2022_2023_results,euroleague_2023_2024_results,euroleague_2024_2025_results,euroleague_2025_2026_results])
+All_Seasons = pd.concat(
+    [euroleague_2016_2017_playerstats, euroleague_2017_2018_playerstats, euroleague_2018_2019_playerstats,
+     euroleague_2019_2020_playerstats, euroleague_2020_2021_playerstats, euroleague_2021_2022_playerstats,
+     euroleague_2022_2023_playerstats, euroleague_2023_2024_playerstats, euroleague_2024_2025_playerstats,
+     euroleague_2025_2026_playerstats,euroleague_2026_2027_playerstats])
 
+All_Seasons_results = pd.concat(
+    [euroleague_2016_2017_results, euroleague_2017_2018_results, euroleague_2018_2019_results,
+     euroleague_2019_2020_results, euroleague_2020_2021_results, euroleague_2021_2022_results,
+     euroleague_2022_2023_results, euroleague_2023_2024_results, euroleague_2024_2025_results,
+     euroleague_2025_2026_results,euroleague_2026_2027_results
+])
 
 
 Positions = pd.read_csv(f"https://raw.githubusercontent.com/sotiristiga/euroleague/main/PlayersPositions.csv")
@@ -425,8 +444,8 @@ with f1:
                                      All_Seasons['Team'].reset_index().sort_values('Team')['Team'].unique())
 with f2:
     search_team_season_team1 = st.selectbox("Season:", ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021',
-                                                        '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026', 'All'],
-                                            index=9)
+                                                        '2021-2022', '2022-2023', '2023-2024', '2024-2025','2025-2026','2026-2027', 'All'],
+                                            index=10)
 with f3:
     search_team_phase_team1 = st.selectbox("Phase:", ['Regular Season', 'Play In', 'Play offs', 'Final Four', 'All'],
                                            index=4)
@@ -519,7 +538,7 @@ select_allstats_in_a_game['Total BLK'] = select_allstats_in_a_game['BLKR'] + sel
 
 if "All" in search_team_season_team1:
     search_team_season_team1 = ['2016-2017', '2017-2018', '2018-2019', '2019-2020', '2020-2021', '2021-2022',
-                                '2022-2023', '2023-2024', '2024-2025','2025-2026']
+                                '2022-2023', '2023-2024', '2024-2025','2025-2026','2026-2027']
     All_Seasons1 = All_Seasons.loc[All_Seasons['Season'].isin(search_team_season_team1)]
     period_points1 = period_points.loc[period_points['Season'].isin(search_team_season_team1)]
 
@@ -639,8 +658,9 @@ else:
 def team_rating_stat_higher(dataset, stat):
     dataset1 = dataset[["Team", stat]].sort_values(stat, ascending=True).reset_index()
     dataset1.drop("index", axis=1, inplace=True)
-    final_dataset = dataset1.reset_index() >> mutate(Rating=(100 * (X.index + 1) / X.Team.nunique()),
-                                                     Rating1=(100 - (100 - X.Rating.round(0)) * 0.5).round(0))
+    final_dataset = dataset1.reset_index()
+    final_dataset["Rating"] = ((100 * (final_dataset["index"] + 1) / final_dataset["Team"].nunique()))
+    final_dataset["Rating1"] = ((100 - (100 - final_dataset["Rating"].round(0)) * 0.5).round(0))
     final_dataset.rename(columns={'Rating1': 'Rating ' + stat}, inplace=True)
     final_dataset.drop(["index", "Rating", stat], axis=1, inplace=True)
     return final_dataset
@@ -649,8 +669,9 @@ def team_rating_stat_higher(dataset, stat):
 def team_rating_stat_lower(dataset, stat):
     dataset1 = dataset[["Team", stat]].sort_values(stat, ascending=False).reset_index()
     dataset1.drop("index", axis=1, inplace=True)
-    final_dataset = dataset1.reset_index() >> mutate(Rating=(100 * (X.index + 1) / X.Team.nunique()),
-                                                     Rating1=(100 - (100 - X.Rating.round(0)) * 0.5).round(0))
+    final_dataset = dataset1.reset_index()
+    final_dataset["Rating"] = ((100 * (final_dataset["index"] + 1) / final_dataset["Team"].nunique()))
+    final_dataset["Rating1"] = ((100 - (100 - final_dataset["Rating"].round(0)) * 0.5).round(0))
     final_dataset.rename(columns={'Rating1': 'Rating ' + stat}, inplace=True)
     final_dataset.drop(["index", "Rating", stat], axis=1, inplace=True)
     return final_dataset
@@ -980,7 +1001,7 @@ interactive_table(pd.concat([games, wins, loses]).set_index('Played'),
                   paging=False, height=900, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 periodteam1 = (period_points1.loc[period_points1.Team == search_team_team1].groupby('Team')[
@@ -1002,7 +1023,7 @@ interactive_table(periodteams.set_index("Team"),
                   paging=False, height=900, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 basic_stats1 = teamstats.loc[teamstats.Team == search_team_team1][
@@ -1035,7 +1056,7 @@ interactive_table(basic_stats_data.set_index("Team"),
                   paging=False, height=900, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 st.write("##### Shooting Stats per game")
@@ -1077,7 +1098,7 @@ interactive_table(shooting_stats_data.set_index("Team"),
                   paging=False, height=900, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 st.write("##### Advanced Stats per game")
 advanced_stats1 = (teamstats.loc[teamstats.Team == search_team_team1][["Team", 'Possesions', 'Offensive Rating',
@@ -1093,7 +1114,7 @@ interactive_table(advanced_stats_data.set_index("Team"),
                   paging=False, height=1000, width=2000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
@@ -1208,7 +1229,7 @@ interactive_table(compute_player_stats_by_team(All_Seasons1, search_team_team1),
                   classes="display order-column nowrap table_with_monospace_font", searching=False,
                   fixedColumns=True,
                   select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False,
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 st.write("### Stats by Position")
 interactive_table(stats_by_pos.set_index('Position'),
@@ -1216,7 +1237,7 @@ interactive_table(stats_by_pos.set_index('Position'),
                   classes="display order-column nowrap table_with_monospace_font", searching=False,
                   fixedColumns=True,
                   select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True,
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False,
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 st.header("Opponent Players Stats")
@@ -1257,7 +1278,7 @@ interactive_table(compute_player_stats_by_team_against(All_Seasons2, search_team
                   paging=False, height=960, width=20000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 st.write("### Stats by Position")
@@ -1265,7 +1286,7 @@ interactive_table(stats_by_pos_opp.set_index('Position'),
                   paging=False, height=960, width=20000, showIndex=True,
                   classes="display order-column nowrap table_with_monospace_font", searching=True,
                   fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                  scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                   columnDefs=[{"className": "dt-center", "targets": "_all"}])
 st.header("Stats by game")
 Teams = All_Seasons1['Team'].unique()

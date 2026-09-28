@@ -993,7 +993,7 @@ st.write('##### History in Euroleague')
 interactive_table(pd.concat([parts, playoff, finalfour, title]).set_index('Euroleague'), paging=False, height=900,
                   width=2000, showIndex=True, classes = "display order-column nowrap table_with_monospace_font", searching = True,
 fixedColumns = True, select = True, info = False, scrollCollapse = True,
-scrollX = True, scrollY = 1000, fixedHeader = True, scroller = True, filter = 'bottom',
+scrollX = True, scrollY = 1000, fixedHeader = True, scroller=False, filter = 'bottom',
 columnDefs = [{"className": "dt-center", "targets": "_all"}])
 
 st.write('##### Games in Euroleague')
@@ -1190,7 +1190,7 @@ st.write('##### Stats against each team in Euroleague')
 interactive_table(compute_team_stats_against_each_team(All_Seasons1, All_Seasons2, period_points1).set_index('Against'),
                   paging=False, height=1000, width=2000, showIndex=True,
 classes = "display order-column nowrap table_with_monospace_font", searching = False, fixedColumns = True, select = True, info = False, scrollCollapse = True,
-scrollX = True, scrollY = 1000, fixedHeader = True, scroller = True, filter = 'bottom',
+scrollX = True, scrollY = 1000, fixedHeader = True, scroller=False, filter = 'bottom',
 columnDefs = [{"className": "dt-center", "targets": "_all"}])
 st.header("Player Stats")
 stats_by_pos = \
@@ -1515,7 +1515,7 @@ if team_ranking_stat == "All":
                       height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=False, fixedColumns=True,
                       select=True, info=False, scrollCollapse=True,
-    scrollX = True, scrollY = 1000, fixedHeader = True, scroller = True, filter = 'bottom',
+    scrollX = True, scrollY = 1000, fixedHeader = True, scroller=False, filter = 'bottom',
     columnDefs = [{"className": "dt-center", "targets": "_all"}])
 else:
     regex1 = "Against|Season|Phase|Round|Fixture|HA|results" + "|" + team_ranking_stat
@@ -1523,5 +1523,5 @@ else:
     select_allstats_in_a_game1.filter(regex=regex1).set_index('Against').sort_values('Fixture',
                                                                                      ascending=True), paging = False, height = 900, width = 2000, showIndex = True,
     classes = "display order-column nowrap table_with_monospace_font", searching = False, fixedColumns = True, select = True, info = False, scrollCollapse = True,
-    scrollX = True, scrollY = 1000, fixedHeader = True, scroller = True, filter = 'bottom',
+    scrollX = True, scrollY = 1000, fixedHeader = True, scroller=False, filter = 'bottom',
     columnDefs = [{"className": "dt-center", "targets": "_all"}])

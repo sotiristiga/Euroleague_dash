@@ -444,7 +444,7 @@ interactive_table(pir_by_pos[['Team',"Team's Guards PIR","Team's Forwards PIR","
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
@@ -490,7 +490,7 @@ interactive_table(suggested_players_fil[['Player','Team',"Player's PIR","Against
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
@@ -501,7 +501,7 @@ interactive_table(player_pir.set_index('Player'),
                       paging=False, height=900, width=2000, showIndex=True,
                       classes="display order-column nowrap table_with_monospace_font", searching=True,
                       fixedColumns=True, select=True, info=False, scrollCollapse=True,
-                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=True, filter='bottom',
+                      scrollX=True, scrollY=1000, fixedHeader=True, scroller=False, filter='bottom',
                       columnDefs=[{"className": "dt-center", "targets": "_all"}])
 
 
